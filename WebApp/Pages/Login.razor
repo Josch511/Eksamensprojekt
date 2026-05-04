@@ -1,0 +1,35 @@
+﻿@page "/"
+@using Core
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+<input placeholder="Email" @bind="email" />
+<br />
+<input placeholder="Password" type="password" @bind="password" />
+<br />
+<button @onclick="LoginUser">Login</button>
+
+<p>@message</p>
+
+@code {
+    string email, password, message;
+
+    async Task LoginUser()
+    {
+        var user = new { email, password };
+        var response = await Http.PostAsJsonAsync("https://localhost:7023/user/login", user);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var loggedInUser = await response.Content.ReadFromJsonAsync<UserCustomer>();
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            message = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Login failed");
+        }
+    }
+}

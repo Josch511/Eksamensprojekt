@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core
 {
-    public class order_items
+    public class OrderItems
     {
         public int _id { get; set; }
         public string serial { get; set; }

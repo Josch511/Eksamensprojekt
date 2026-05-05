@@ -7,11 +7,11 @@ namespace ServerAPI.Controllers;
 
 [ApiController]
 [Route("user")]
-public class UserController : ControllerBase
+public class UserCustomerController : ControllerBase
 {
     private readonly IUserCustomerRepository _userRepository;
 
-    public UserController(IUserCustomerRepository userRepository)
+    public UserCustomerController(IUserCustomerRepository userRepository)
     {
         _userRepository = userRepository;
     }

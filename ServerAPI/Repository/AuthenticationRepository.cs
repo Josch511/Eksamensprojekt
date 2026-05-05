@@ -1,6 +1,4 @@
 ﻿using Core;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace Repository;
@@ -9,9 +7,10 @@ public class AuthenticationRepo
 {
     public readonly IMongoDatabase db;
 
-    public AuthenticationRepo()
+    public AuthenticationRepo(IConfiguration configuration)
     {
-        var client = new MongoClient("mongodb+srv://jona:hihi@project.uc9xnf6.mongodb.net/");
+        var connectionString = configuration["Mongo:ConnectionString"];
+        var client = new MongoClient(connectionString);
         db = client.GetDatabase("eksamensprojekt");
     }
 }

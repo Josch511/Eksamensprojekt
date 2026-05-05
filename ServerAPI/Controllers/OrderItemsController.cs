@@ -6,7 +6,7 @@ namespace ServerAPI.Controllers;
 
 
 [ApiController]
-[Route("order_items")]
+[Route("orderItems")]
 public class OrderItemsController : ControllerBase
 {
     private readonly IOrderItemsRepository _orderItemsRepository;
@@ -17,6 +17,12 @@ public class OrderItemsController : ControllerBase
     }
 
 
-    [HttpGet()]
+    [HttpGet("customer/{customerId}")]
+    public async Task<IActionResult> GetByCustomerId(int customerId)
+    {
+        var orders = await _orderItemsRepository.GetOrdersByCustomerId(customerId);
+        return Ok(orders);
+    }
+
 }
 

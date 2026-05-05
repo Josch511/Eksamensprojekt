@@ -10,6 +10,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<AuthenticationRepo>();
 builder.Services.AddScoped<IUserCustomerRepository, UserCustomerRepository>();
+builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
 
 builder.Services.AddCors(options =>
 {

@@ -10,11 +10,11 @@ public class OrderItemsRepository : IOrderItemsRepository
 
     public OrderItemsRepository(AuthenticationRepo authRepo)
     {
-        _orderItems = authRepo.db.GetCollection<OrderItems>("order_items");
+        _orderItems = authRepo.db.GetCollection<OrderItems>("orderItems");
     }
 
-    public async Task<OrderItems> GetOrder(int id)
+    public async Task<List<OrderItems>> GetOrdersByCustomerId(int customerId)
     {
-        return await _orderItems.Find(o => o._id == id).FirstOrDefaultAsync();
+        return await _orderItems.Find(o => o.CustomerId == customerId).ToListAsync();
     }
 }

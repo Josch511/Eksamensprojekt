@@ -4,7 +4,7 @@ namespace Interface
 {
     public interface IOrderItemsRepository
     {
-        Task<OrderItems> GetOrder(int id);
+        Task<List<OrderItems>> GetOrdersByCustomerId(int customerId); 
     
     }
 }

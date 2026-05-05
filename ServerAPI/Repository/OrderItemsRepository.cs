@@ -13,5 +13,8 @@ public class OrderItemsRepository : IOrderItemsRepository
         _orderItems = authRepo.db.GetCollection<OrderItems>("order_items");
     }
 
-   
+    public async Task<OrderItems> GetOrder(int id)
+    {
+        return await _orderItems.Find(o => o._id == id).FirstOrDefaultAsync();
+    }
 }

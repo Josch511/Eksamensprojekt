@@ -15,6 +15,8 @@ public class OrderItemsController : ControllerBase
     {
         _orderItemsRepository = orderItemsRepository;
     }
+
+
+    [HttpGet()]
 }
 
-//test

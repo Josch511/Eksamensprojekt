@@ -10,7 +10,7 @@ public class OrderItemsRepository : IOrderItemsRepository
 
     public OrderItemsRepository(AuthenticationRepo authRepo)
     {
-        _orderItems = authRepo.db.GetCollection<OrderItemsCustomer>("order_items");
+        _orderItems = authRepo.db.GetCollection<OrderItems>("order_items");
     }
 
    

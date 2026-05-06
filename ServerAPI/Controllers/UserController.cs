@@ -7,17 +7,17 @@ namespace ServerAPI.Controllers;
 
 [ApiController]
 [Route("user")]
-public class UserCustomerController : ControllerBase
+public class UserController : ControllerBase
 {
-    private readonly IUserCustomerRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public UserCustomerController(IUserCustomerRepository userRepository)
+    public UserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserCustomer user)
+    public async Task<IActionResult> Login([FromBody] User user)
     {
         var existingUser = await _userRepository.LoginUser(user);
         return Ok(existingUser);

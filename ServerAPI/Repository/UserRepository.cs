@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using Repository;
 
-public class UserCustomerRepository : IUserCustomerRepository
+public class UserRepository : IUserRepository
 {
-    private readonly IMongoCollection<UserCustomer> _users;
+    private readonly IMongoCollection<User> _users;
 
-    public UserCustomerRepository(AuthenticationRepo authRepo)
+    public UserRepository(AuthenticationRepo authRepo)
     {
-        _users = authRepo.db.GetCollection<UserCustomer>("userCustomer");
+        _users = authRepo.db.GetCollection<User>("user");
     }
 
-    public async Task<UserCustomer> LoginUser(UserCustomer user)
+    public async Task<User> LoginUser(User user)
     {
         try
         {
@@ -33,7 +33,7 @@ public class UserCustomerRepository : IUserCustomerRepository
         }
     }
 
-    public async Task<UserCustomer?> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
         return await _users.Find(u => u.email == email).FirstOrDefaultAsync();
 

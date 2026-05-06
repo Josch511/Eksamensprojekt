@@ -2,6 +2,7 @@
 @using Core
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <h3>Login</h3>
 
@@ -10,6 +11,8 @@
 <input placeholder="Password" type="password" @bind="password" />
 <br />
 <button @onclick="LoginUser">Login</button>
+
+
 
 <p>@message</p>
 
@@ -23,7 +26,8 @@
 
         if (response.IsSuccessStatusCode)
         {
-            var loggedInUser = await response.Content.ReadFromJsonAsync<UserCustomer>();
+            var loggedInUser = await response.Content.ReadFromJsonAsync<User>();
+            await localStorage.SetItemAsync("userid", loggedInUser._id);
             Navigation.NavigateTo("/");
         }
         else

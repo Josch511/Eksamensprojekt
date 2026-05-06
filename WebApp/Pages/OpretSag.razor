@@ -1,28 +1,46 @@
 ﻿@page "/opret-sag"
 
-<PageTitle>Opret sag</PageTitle>
+<PageTitle>Create a case</PageTitle>
 <div class="case-parent">
     <div class="case-content">
-    <h2>Hvad drejer sagen sig om?</h2>
+        <h2>What is the case about?</h2>
 
-    <div class="case-type">
-        <h4>Sagstype</h4>
-        <div class="case-type_select">
-            <div class="case-type_select-item">
-                <div class="case_icon-wrapper">
-                    <img class="case_icon" src="assets/bug.svg"/>
+        <div class="case-type">
+            <h4>Case type</h4>
+            <div class="case-type_select">
+                <div class="case-type_select-item">
+                    <div class="case_icon-wrapper">
+                        <img class="case_icon" src="assets/bug.svg"/>
+                    </div>
+                    <p class="case-type_select-item-text">Problem/Error</p>
                 </div>
-                <p class="case-type_select-item-text">Problem / Fejl</p>
-            </div>
-            <div class="case-type_select-item">
-                <div class="case_icon-wrapper">
-                    <img class="case_icon" src="assets/settings-2.svg"/>
+                <div class="case-type_select-item">
+                    <div class="case_icon-wrapper">
+                        <img class="case_icon" src="assets/settings-2.svg"/>
+                    </div>
+                    <p class="case-type_select-item-text">Feature request</p>
                 </div>
-                <p class="case-type_select-item-text">Feature request</p>
             </div>
         </div>
+        <div class="case-departments"></div>
+        <h4>Område</h4>
+        <div>
+            <p class="case-type_select-item-text">Software</p>
+            <p class="case-type_select-item-text-">The machine is not working as expected</p>
+        </div>
+        <div>
+            <p class="case-type_select-item-text">Electronic</p>
+            <p class="case-type_select-item-text-">Scheduled service or inspection</p>
+        </div>
+        <div>
+            <p class="case-type_select-item-text">Mechanic</p>
+            <p class="case-type_select-item-text-">I want changes or optimizations</p>
+        </div>
+        <div>
+            <p class="case-type_select-item-text">Production</p>
+            <p class="case-type_select-item-text-">The machine is not working as expected</p>
+        </div>
     </div>
-    <div class="case-departments"></div>
-    <h4>Område</h4>
-    </div>
+    
+    
 </div>

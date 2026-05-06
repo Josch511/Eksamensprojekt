@@ -17,10 +17,10 @@ public class OrderItemsController : ControllerBase
     }
 
 
-    [HttpGet("customer/{customerId}")]
-    public async Task<IActionResult> GetByCustomerId(int customerId)
+    [HttpGet("customer/{userId}")]
+    public async Task<IActionResult> GetByCustomerId(int userId)
     {
-        var orders = await _orderItemsRepository.GetOrdersByCustomerId(customerId);
+        var orders = await _orderItemsRepository.GetOrdersByCustomerId(userId);
         return Ok(orders);
     }
 

@@ -13,7 +13,7 @@ namespace Core
         public string name { get; set; }
         public DateTime purchased_at { get; set; }
 
-        [BsonElement("customer_id")]
-        public int CustomerId { get; set; }
+        [BsonElement("userId")]
+        public int userId { get; set; }
     }
 }

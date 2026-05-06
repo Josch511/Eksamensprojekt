@@ -27,8 +27,8 @@
         if (response.IsSuccessStatusCode)
         {
             var loggedInUser = await response.Content.ReadFromJsonAsync<User>();
-            await localStorage.SetItemAsync("userid", loggedInUser._id);
-            Navigation.NavigateTo("/");
+            await localStorage.SetItemAsync("userId", loggedInUser._id);
+            Navigation.NavigateTo("/konto");
         }
         else
         {

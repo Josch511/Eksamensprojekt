@@ -1,21 +1,56 @@
 ﻿@page "/konto"
+@inject IOrderService OrderService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@using Core
 
 <PageTitle>Min side</PageTitle>
 
 <h2>Mine produkter</h2>
 
-<div class="order-list">
-    <div class="order-item">
-        <img class="order-item_image" src="https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80">
-        <div class="order-item_info">
-            <h3>BC 100 - Portioning Machine</h3>
-            
-            <div class="order-item_info_details">
-                <p>Serienummer</p>
-                <p>Dato</p>
+@if (orders == null)
+{
+    <p>Loader...</p>
+}
+else if (!orders.Any())
+{
+    <p>Ingen produkter fundet.</p>
+}
+else
+{
+    <div class="order-list">
+
+        @foreach (var order in orders)
+        {
+            <div class="order-item">
+
+                <img class="order-item_image" src="@order.image_url">
+
+                <div class="order-item_info">
+
+                    <h3>@order.name</h3>
+
+                    <div class="order-item_info_details">
+                        <p>@order.serial</p>
+                        <p>@order.purchased_at.ToShortDateString()</p>
+                    </div>
+
+                    <button>Opret sag</button>
+
+                </div>
             </div>
-            <button>Opret sag</button>
-        
-        </div>
+        }
+
     </div>
-</div>
+}
+
+@code {
+
+    private List<OrderItems> orders = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = await localStorage.GetItemAsync<int>("userId");
+
+        orders = await OrderService.GetCustomerOrders(userId);
+    }
+}

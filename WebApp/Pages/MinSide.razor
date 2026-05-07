@@ -1,4 +1,4 @@
-﻿@page "/konto"
+﻿@page "/account"
 @inject IOrderService OrderService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @using Core
@@ -30,11 +30,11 @@ else
                     <h3>@order.name</h3>
 
                     <div class="order-item_info_details">
-                        <p>@order.serial</p>
-                        <p>@order.purchased_at.ToShortDateString()</p>
+                        <p>Serial: @order.serial</p>
+                        <p>Purchased: @order.purchased_at.ToShortDateString()</p>
                     </div>
 
-                    <button>Opret sag</button>
+                    <button>Create case</button>
 
                 </div>
             </div>

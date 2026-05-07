@@ -4,9 +4,9 @@
 @inject NavigationManager Navigation
 @using Core
 
-<PageTitle>Min side</PageTitle>
+<PageTitle>My account</PageTitle>
 
-<h2>Mine produkter</h2>
+<h2>My products</h2>
 
 @if (orders == null)
 {
@@ -14,7 +14,7 @@
 }
 else if (!orders.Any())
 {
-    <p>Ingen produkter fundet.</p>
+    <p>No products found.</p>
 }
 else
 {
@@ -62,6 +62,6 @@ else
     {
         await localStorage.SetItemAsync("selectedOrderItemId", orderItemId);
 
-        Navigation.NavigateTo("/opret-sag");
+        Navigation.NavigateTo("/create-case");
     }
 }

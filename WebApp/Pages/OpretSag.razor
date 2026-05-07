@@ -53,3 +53,16 @@
         </div>
     </div>
 </div>
+
+
+
+
+@code {
+
+    private int selectedOrderItemId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        selectedOrderItemId = await localStorage.GetItemAsync<int>("selectedOrderItemId");
+    }
+}

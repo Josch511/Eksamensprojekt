@@ -1,0 +1,26 @@
+﻿@page "/contact-person"
+@using WebApp.Services
+
+<PageTitle>Contact Person</PageTitle>
+<div class="case-parent">
+    <div class="case-content">
+        <h2>Contact Person</h2>
+        <form class="form-default">
+            <div class="input-container">
+                <label for="contactName">Name</label>
+                <input type="text" id="contactName" class="input-default" required>
+            </div>
+            <div class="input-container">
+                <label for="contactPhone">Telephone</label>
+                <input type="tel" id="casePhone" class="input-default" required>
+            </div>
+            <div class="input-container">
+                <label for="contactEmail">Email</label>
+                <input type="email" id="caseEmail" class="input-default" required>
+            </div>
+            
+            <input type="submit" value="Submit" class="btn-primary"/>
+        </form>
+    
+    </div>
+</div>

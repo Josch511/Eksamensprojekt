@@ -1,4 +1,6 @@
-﻿@page "/caseconfirm"
+﻿@page "/case-confirm"
+@using WebApp.Services
+@inject CreateCaseService CaseService
 
 <div class="case-parent">
     <div class="case-content">
@@ -8,51 +10,51 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Product</p>
-                <p>@order?.name</p>
+                <p>PRODUCT NAME</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Serial number</p>
-                <p>@order?.serial</p>
+                <p>SERIAL</p>
             </div>
         </div>
 
-        <h5 style="margin-top: 10px;">Case details</h5>
+        <h5 style="margin-top: 25px;">Case details</h5>
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Case type</p>
-                <p>@type</p>
+                <p>TYPE</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Department</p>
-                <p>@department</p>
+                <p>DEPARTMENT</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Case title</p>
-                <p>Fejl123</p>
+                <p>@CaseService.Data.CaseInfo.Title</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Description</p>
-                <p>blbalbalba</p>
+                <p>@CaseService.Data.CaseInfo.Description</p>
             </div>
         </div>
 
-        <h5 style="margin-top: 10px;">Contact details</h5>
+        <h5 style="margin-top: 25px;">Contact details</h5>
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Name</p>
-                <p>Jonathan</p>
+                <p>@CaseService.Data.CaseContact.Name</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Telephone number</p>
-                <p>12513136</p>
+                <p>@CaseService.Data.CaseContact.Telephone</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Email</p>
-                <p>@user?.email</p>
+                <p>@CaseService.Data.CaseContact.Email</p>
             </div>
         </div>
 
-        <button @onclick="Send" class="btn-primary" style="width:100%; margin-top: 15px;">Submit</button>
+        <button @onclick="Send" class="btn-primary" style="width:100%; margin-top: 25px;">Submit</button>
     </div>
 </div>
 
@@ -66,10 +68,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        orderId = await localStorage.GetItemAsync<int>("selectedOrderItemId");
-        type = await localStorage.GetItemAsync<int>("type");
-        department = await localStorage.GetItemAsync<int>("department");
+        await CaseService.Load();
     }
+
     private void Send()
     {
         Navigation.NavigateTo("/casedetail");

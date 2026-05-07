@@ -1,6 +1,7 @@
 ﻿@page "/account"
 @inject IOrderService OrderService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager Navigation
 @using Core
 
 <PageTitle>Min side</PageTitle>
@@ -34,7 +35,9 @@ else
                         <p>Purchased: @order.purchased_at.ToShortDateString()</p>
                     </div>
 
-                    <button>Create case</button>
+                    <button @onclick="() => CreateCase(order._id)">
+                        Create case
+                    </button>
 
                 </div>
             </div>
@@ -52,5 +55,13 @@ else
         var userId = await localStorage.GetItemAsync<int>("userId");
 
         orders = await OrderService.GetCustomerOrders(userId);
+    }
+
+
+    private async Task CreateCase(int orderItemId)
+    {
+        await localStorage.SetItemAsync("selectedOrderItemId", orderItemId);
+
+        Navigation.NavigateTo("/opret-sag");
     }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/create-case"
+@inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Create a case</PageTitle>
@@ -13,13 +14,13 @@
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/bug.svg"/>
                     </div>
-                    <p class="case-type_select-item-text">Problem/Error</p>
+                    <button class="case-type_select-item-text">Problem/Error</button>
                 </div>
                 <div class="case-type_select-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/settings-2.svg"/>
                     </div>
-                    <p class="case-type_select-item-text">Feature request</p>
+                    <button class="case-type_select-item-text">Feature request</button>
                 </div>
             </div>
         </div>
@@ -30,25 +31,25 @@
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/code-xml.svg"/>
                     </div>
-                    <p class="department-item-title">Software</p>
+                    <button class="department-item-title">Software</button>
                 </div>
                 <div class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/plug.svg"/>
                     </div>
-                    <p class="department-item-title">Electronic</p>
+                    <button class="department-item-title">Electronic</button>
                 </div>
                 <div class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/wrench.svg"/>
                     </div>
-                    <p class="department-item-title">Mechanic</p>
+                    <button class="department-item-title">Mechanic</button>
                 </div>
                 <div class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/factory.svg"/>
                     </div>
-                    <p class="department-item-title">Production</p>
+                    <button class="department-item-title">Production</button>
                 </div>
             </div>
         </div>

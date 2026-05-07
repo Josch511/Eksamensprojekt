@@ -1,42 +1,50 @@
 ﻿@page "/caseconfirm"
+@using Core
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <h3>CaseConfirm</h3>
+    <div>
+        <h2>Confirm your information</h2>
 
-<div>
-	<h2>Confirm your information</h2>
-	<h4>Product details</h4>
-		<h5>Product:</h5>
-		<p>SM-211</p>
-		<h5>Serialnumber:</h5>
-		<p>ABC123456</p>
-	<h4>Case details</h4>
-		<h5>Case type:</h5>
-		<p>Problem</p>
-		<h5>Case title:</h5>
-		<p>Fejl123</p>
-		<h5>Description:</h5>
-		<p>blbalbalba</p>
-	<h4>Contact details</h4>
-		<h5>Name:</h5>
-		<p>Jonathan</p>
-		<h5>Telephone number:</h5>
-		<p>12513136</p>
-		<h5>Email:</h5>
-		<p>jonathan@gmail.com</p>
+        <h4>Product details</h4>
+        <h5>Product:</h5>
+        <p>@order.name</p>
+        <h5>Serialnumber:</h5>
+        <p>@order.serial</p>
 
-		<button>Send</button>
-</div>
+        <h4>Case details</h4>
+        <h5>Case type:</h5>
+        <p>@type</p>
+        <h5>Department:</h5>
+        <p>@department</p>
+        <h5>Case title:</h5>
+        <p>Fejl123</p>
+        <h5>Description:</h5>
+        <p>blbalbalba</p>
 
+        <h4>Contact details</h4>
+        <h5>Name:</h5>
+        <p>Jonathan</p>
+        <h5>Telephone number:</h5>
+        <p>12513136</p>
+        <h5>Email:</h5>
+        <p>jonathan@gmail.com</p>
 
-
+        <button>Send</button>
+    </div>
+}
 
 @code {
+    private int selectedOrderItemId;
+    private int type;
+    private int department;
 
-	private int selectedOrderItemId;
+    private OrderItems? order;
 
-	protected override async Task OnInitializedAsync()
-	{
-		selectedOrderItemId = await localStorage.GetItemAsync<int>("selectedOrderItemId");
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        selectedOrderItemId = await localStorage.GetItemAsync<int>("selectedOrderItemId");
+        type = await localStorage.GetItemAsync<int>("type");
+        department = await localStorage.GetItemAsync<int>("department");
+    }
 }

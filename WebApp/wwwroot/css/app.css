@@ -245,3 +245,35 @@ code {
     background-color: #DDE2E4;
     border-radius: 8px;
 }
+
+.department-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.department-item-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.department-item-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.department-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.department-item:hover{
+    background-color: var(--background-hover);
+}

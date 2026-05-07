@@ -11,6 +11,7 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<CreateCaseService>();
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri("https://localhost:7023/")

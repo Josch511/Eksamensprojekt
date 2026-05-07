@@ -63,7 +63,7 @@ a, .btn-link {
 }
 
 .btn-primary:hover {
-    color: var(--color-brand-hover);
+    background-color: var(--color-brand-hover);
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {

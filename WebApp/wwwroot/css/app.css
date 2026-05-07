@@ -43,6 +43,18 @@ p {
     margin: 0px;
 }
 
+.secondary {
+    color: var(--color-secondary);
+}
+
+.text-s {
+    font-size: 12px;
+}
+
+.weight-r {
+    font-weight: 400;
+}
+
 h1:focus {
     outline: none;
 }
@@ -309,6 +321,11 @@ code {
     padding: 10px 14px;
     border: var(--border-default);
     border-radius: 8px;
+}
+
+.label-group {
+    gap: 4px;
+    margin-bottom: 12px;
 }
 
 .image-upload-group {

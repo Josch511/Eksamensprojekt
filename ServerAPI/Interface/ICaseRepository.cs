@@ -5,5 +5,7 @@ namespace ServerAPI.Interface
     public interface ICaseRepository
     {
         Task<List<Cases>> GetAllCases();
+        Task CreateCase(Cases newcase);
+
     }
 }

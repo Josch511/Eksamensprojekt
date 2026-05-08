@@ -10,15 +10,15 @@
         <form class="form-default" @onsubmit="Next" @onsubmit:preventDefault>
             <div class="input-container">
                 <label for="contactName">Name</label>
-                <input type="text" @bind="CaseService.Data.CaseContact.Name" id="contactName" class="input-default" required>
+                <input type="text" @bind="CaseService.CurrentCase.CaseContact.Name" id="contactName" class="input-default" required>
             </div>
             <div class="input-container">
                 <label for="contactPhone">Telephone</label>
-                <input type="tel" @bind="CaseService.Data.CaseContact.Telephone" id="casePhone" class="input-default" required>
+                <input type="tel" @bind="CaseService.CurrentCase.CaseContact.Telephone" id="casePhone" class="input-default" required>
             </div>
             <div class="input-container">
                 <label for="contactEmail">Email</label>
-                <input type="email" @bind="CaseService.Data.CaseContact.Email" id="caseEmail" class="input-default">
+                <input type="email" @bind="CaseService.CurrentCase.CaseContact.Email" id="caseEmail" class="input-default">
             </div>
             
             <input type="submit" value="Submit" class="btn-primary"/>

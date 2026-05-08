@@ -24,4 +24,12 @@ public class CaseController : ControllerBase
         var cases = await _caseRepository.GetAllCases();
         return Ok(cases);
     }
+
+
+    [HttpPost]
+    public async Task<IActionResult> CreateCase([FromBody] Cases newCase)
+    {
+        await _caseRepository.CreateCase(newCase);
+        return Ok(newCase);
+    }
 }

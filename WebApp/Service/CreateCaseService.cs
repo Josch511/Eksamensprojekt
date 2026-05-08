@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Core;
 using System.Net.Http.Json;
 
 
@@ -35,17 +36,37 @@ public class CreateCaseService
         await localStorage.RemoveItemAsync(Key);
     }
 
-    
+
     public async Task Submit()
     {
         if (CaseIsValid())
         {
-            var response = await http.PostAsJsonAsync("/api/cases", Data);
+            var newCase = new Cases
+            {
+                title = Data.CaseInfo.Title,
+
+                description = Data.CaseInfo.Description,
+
+                media = new List<string>
+            {
+                Data.CaseInfo.AttachmentUrl
+            },
+
+                status = "Open",
+
+                created_at = DateOnly.FromDateTime(DateTime.Now),
+
+                updated_at = DateOnly.FromDateTime(DateTime.Now),
+
+                order_item_id = Data.OrderId
+            };
+
+            var response = await http.PostAsJsonAsync("/api/cases", newCase);
             response.EnsureSuccessStatusCode();
-            await Clear();   
+            await Clear();
         }
     }
-    
+
     public class CaseDraft
     {
         public int OrderId { get; set; }

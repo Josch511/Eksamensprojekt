@@ -13,8 +13,8 @@ namespace Core
         public string status { get; set; }
         public DateOnly updated_at { get; set; }
         public DateOnly created_at { get; set; }
-        public int user_id { get; set; }
-        public int department_id { get; set; }
+        public int? user_id { get; set; }
+        public int? department_id { get; set; }
         public int order_item_id { get; set; }
 
 

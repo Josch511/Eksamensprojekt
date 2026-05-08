@@ -2,6 +2,7 @@
 @using WebApp.Services
 @inject CreateCaseService CaseService
 
+
 <div class="case-parent">
     <div class="case-content">
         <h2>Review your case</h2>
@@ -10,11 +11,11 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Product</p>
-                <p>PRODUCT NAME</p>
+                <p>@CaseService.Data.Name</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Serial number</p>
-                <p>SERIAL</p>
+                <p>@CaseService.Data.Serial</p>
             </div>
         </div>
 
@@ -22,19 +23,19 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Case type</p>
-                <p>TYPE</p>
+                <p>@caseTypeLabel</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Department</p>
-                <p>DEPARTMENT</p>
+                <p>@departmentLabel</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Case title</p>
-                <p>@CaseService.CurrentCase.CaseInfo.Title</p>
+                <p>@CaseService.Data.CaseInfo.Title</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Description</p>
-                <p>@CaseService.CurrentCase.CaseInfo.Description</p>
+                <p>@CaseService.Data.CaseInfo.Description</p>
             </div>
         </div>
 
@@ -42,15 +43,15 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Name</p>
-                <p>@CaseService.CurrentCase.CaseContact.Name</p>
+                <p>@CaseService.Data.CaseContact.Name</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Telephone number</p>
-                <p>@CaseService.CurrentCase.CaseContact.Telephone</p>
+                <p>@CaseService.Data.CaseContact.Telephone</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Email</p>
-                <p>@CaseService.CurrentCase.CaseContact.Email</p>
+                <p>@CaseService.Data.CaseContact.Email</p>
             </div>
         </div>
 
@@ -59,20 +60,41 @@
 </div>
 
 @code {
-    private int orderId;
-    private int type;
-    private int department;
-
-    private OrderItems? order;
-    private User? user;
+    private string caseTypeLabel = string.Empty;
+    private string departmentLabel = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         await CaseService.Load();
+        IdChange();
     }
 
-    private void Send()
+    private async Task Send()
     {
+        await CaseService.Submit();
+
         Navigation.NavigateTo("/casedetail");
+    }
+
+    private void IdChange()
+    {
+        var typeId = CaseService.Data.CaseTypeId;
+        var deptId = CaseService.Data.CaseDepartmentId;
+
+        caseTypeLabel = typeId switch
+        {
+            1 => "Problem / Error",
+            2 => "Feature request",
+            _ => "Other"
+        };
+
+        departmentLabel = deptId switch
+        {
+            1 => "Software",
+            2 => "Mechanic",
+            3 => "Electronic",
+            4 => "Production",
+            _ => "Other"
+        };
     }
 }

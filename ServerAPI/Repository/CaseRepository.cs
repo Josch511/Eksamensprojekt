@@ -16,6 +16,20 @@ public class CaseRepository : ICaseRepository
 
     public async Task CreateCase(Cases newcase)
     {
+        var highestCase = await _cases
+            .Find(_ => true)
+            .SortByDescending(c => c._id)
+            .FirstOrDefaultAsync();
+
+        if (highestCase == null)
+        {
+            newcase._id = 1;
+        }
+        else
+        {
+            newcase._id = highestCase._id + 1;
+        }
+
         await _cases.InsertOneAsync(newcase);
     }
 

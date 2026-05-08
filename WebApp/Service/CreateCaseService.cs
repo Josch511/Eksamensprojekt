@@ -8,28 +8,28 @@ namespace WebApp.Services;
 public class CreateCaseService
 {
     private const string Key = "createcase";
-    
+
     private readonly ILocalStorageService localStorage;
     private readonly HttpClient http;
-    
+
     public CaseDraft Data { get; set; } = new();
-    
+
     public CreateCaseService(ILocalStorageService localStorage, HttpClient http)
     {
         this.localStorage = localStorage;
         this.http = http;
     }
-    
+
     public async Task Load()
     {
         Data = await localStorage.GetItemAsync<CaseDraft>(Key) ?? new CaseDraft();
     }
-    
+
     public async Task Save()
     {
         await localStorage.SetItemAsync(Key, Data);
     }
-    
+
     public async Task Clear()
     {
         Data = new CaseDraft();
@@ -39,40 +39,39 @@ public class CreateCaseService
 
     public async Task Submit()
     {
-        if (CaseIsValid())
+        var newCase = new Cases
         {
-            var newCase = new Cases
-            {
-                title = Data.CaseInfo.Title,
+            title = Data.CaseInfo.Title,
 
-                description = Data.CaseInfo.Description,
+            description = Data.CaseInfo.Description,
 
-                media = new List<string>
-            {
-                Data.CaseInfo.AttachmentUrl
-            },
+            media = new List<string>
+        {
+            Data.CaseInfo.AttachmentUrl
+        },
 
-                status = "Open",
+            status = "Open",
 
-                created_at = DateOnly.FromDateTime(DateTime.Now),
+            created_at = DateOnly.FromDateTime(DateTime.Now),
 
-                updated_at = DateOnly.FromDateTime(DateTime.Now),
+            updated_at = DateOnly.FromDateTime(DateTime.Now),
 
-                order_item_id = Data.OrderId
-            };
+            order_item_id = Data.OrderId
+        };
 
-            var response = await http.PostAsJsonAsync("/api/cases", newCase);
-            response.EnsureSuccessStatusCode();
-            await Clear();
-        }
+        var response = await http.PostAsJsonAsync("cases", newCase);
+
+        response.EnsureSuccessStatusCode();
+
+        await Clear();
     }
-
     public class CaseDraft
     {
         public int OrderId { get; set; }
         public int CaseTypeId { get; set; }
         public int CaseDepartmentId { get; set; }
-
+        public string Serial { get; set; }
+        public string Name { get; set; }
         public CaseInfo CaseInfo { get; set; } = new();
         public CaseContact CaseContact { get; set; } = new();
     }
@@ -83,14 +82,14 @@ public class CreateCaseService
         public string? Description { get; set; }
         public string? AttachmentUrl { get; set; }
     }
-    
+
     public class CaseContact
     {
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Telephone { get; set; }
     }
-    
+
     // Validation of data
     public bool CaseOrderIdIsValid()
     {
@@ -102,7 +101,7 @@ public class CreateCaseService
         return (Data.CaseTypeId > 0)
                && (Data.CaseDepartmentId > 0);
     }
-    
+
     public bool CaseInfoIsValid()
     {
         return !string.IsNullOrWhiteSpace(Data.CaseInfo.Title)

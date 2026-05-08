@@ -37,7 +37,7 @@ else
                         <p>Purchased: @order.purchased_at.ToShortDateString()</p>
                     </div>
 
-                    <button @onclick="() => CreateCase(order._id)">
+                    <button @onclick="() => CreateCase(order)">
                         Create case
                     </button>
 
@@ -60,14 +60,16 @@ else
     }
 
 
-    private async Task CreateCase(int orderItemId)
+    private async Task CreateCase(OrderItems order)
     {
         await CaseService.Load();
-        
-        CaseService.Data.OrderId = orderItemId;
-        
+
+        CaseService.Data.OrderId = order._id;
+        CaseService.Data.Serial = order.serial;
+        CaseService.Data.Name = order.name;
+
         await CaseService.Save();
-        
+
         if (CaseService.CaseOrderIdIsValid())
         {
             Navigation.NavigateTo("/create-case");

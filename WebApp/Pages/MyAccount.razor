@@ -3,6 +3,8 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @using Core
+@using WebApp.Services
+@inject CreateCaseService CaseService
 
 <PageTitle>My account</PageTitle>
 
@@ -60,8 +62,15 @@ else
 
     private async Task CreateCase(int orderItemId)
     {
-        await localStorage.SetItemAsync("selectedOrderItemId", orderItemId);
-
-        Navigation.NavigateTo("/create-case");
+        await CaseService.Load();
+        
+        CaseService.Data.OrderId = orderItemId;
+        
+        await CaseService.Save();
+        
+        if (CaseService.CaseOrderIdIsValid())
+        {
+            Navigation.NavigateTo("/create-case");
+        }
     }
 }

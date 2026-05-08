@@ -252,7 +252,7 @@ code {
     background-color: var(--background-hover);
 }
 
-.case-type_select-item:active {
+.case-type_select-item.active {
     background-color: var(--background-hover);
     border-color: var(--color-primary);
 }
@@ -298,6 +298,11 @@ code {
 
 .department-item:hover{
     background-color: var(--background-hover);
+}
+
+.department-item.active {
+    background-color: var(--background-hover);
+    border-color: var(--color-primary);
 }
 
 .form-default {
@@ -360,4 +365,13 @@ code {
 
 .sr-only-file-input {
     display: none;
+}
+
+.content-footer {
+    padding-top: 32px;
+    display: flex;
+}
+
+.content-footer .btn-primary {
+    width: 100%
 }

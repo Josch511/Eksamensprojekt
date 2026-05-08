@@ -11,13 +11,13 @@
         <div class="case-type">
             <h4>Case type</h4>
             <div class="case-type_select">
-                <button class="case-type_select-item">
+                <button class="case-type_select-item @(CaseService.Data.CaseTypeId == 1 ? "active" : "")" @onclick='() => SelectCaseType(1)'>
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/bug.svg"/>
                     </div>
                     <p class="case-type_select-item-text">Problem/Error</p>
                 </button>
-                <button class="case-type_select-item">
+                <button class="case-type_select-item @(CaseService.Data.CaseTypeId == 2 ? "active" : "")" @onclick='() => SelectCaseType(2)'>
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/settings-2.svg"/>
                     </div>
@@ -28,25 +28,25 @@
         <div class="case-departments">
             <h4>Department</h4>
             <div class="department-list">
-                <button class="department-item">
+                <button class="department-item @(CaseService.Data.CaseDepartmentId == 1 ? "active" : "")" @onclick="() => SelectDepartment(1)" >
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/code-xml.svg"/>
                     </div>
                     <p class="department-item-title">Software</p>
                 </button>
-                <button class="department-item">
+                <button class="department-item @(CaseService.Data.CaseDepartmentId == 2 ? "active" : "")" @onclick="() => SelectDepartment(2)">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/plug.svg"/>
                     </div>
                     <p class="department-item-title">Electronic</p>
                 </button>
-                <button class="department-item">
+                <button class="department-item @(CaseService.Data.CaseDepartmentId == 3 ? "active" : "")" @onclick="() => SelectDepartment(3)">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/wrench.svg"/>
                     </div>
                     <p class="department-item-title">Mechanic</p>
                 </button>
-                <button class="department-item">
+                <button class="department-item @(CaseService.Data.CaseDepartmentId == 4 ? "active" : "")" @onclick="() => SelectDepartment(4)">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/factory.svg"/>
                     </div>
@@ -54,7 +54,9 @@
                 </button>
             </div>
         </div>
-        <button class="btn-primary" onclick="@Next()">Continue</button>
+        <div class="content-footer">
+            <button class="btn-primary" onclick="@Next()">Continue</button>
+        </div>
     </div>
 </div>
 
@@ -63,12 +65,22 @@
     {
         await CaseService.Load();
     }
-
-    private async Task Select(string selection)
-    {
-        
-    }
     
+    private int SelectedCaseType;
+    private int SelectedDepartment;
+
+    private void SelectCaseType(int value)
+    {
+        CaseService.Data.CaseTypeId = value;
+        Console.WriteLine($"Case Type: {value}");
+    }
+
+    private void SelectDepartment(int value)
+    {
+        CaseService.Data.CaseDepartmentId = value;
+        Console.WriteLine($"Case Department: {value}");
+    }
+
     private async Task Next()
     {
         await CaseService.Save();

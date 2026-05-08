@@ -71,7 +71,7 @@ public class CreateCaseService
     {
         public int OrderId { get; set; }
         public int CaseTypeId { get; set; }
-        public int CaseCategoryId { get; set; }
+        public int CaseDepartmentId { get; set; }
 
         public CaseInfo CaseInfo { get; set; } = new();
         public CaseContact CaseContact { get; set; } = new();
@@ -100,14 +100,13 @@ public class CreateCaseService
     public bool CaseTypeIsValid()
     {
         return (Data.CaseTypeId > 0)
-               && (Data.CaseCategoryId > 0);
+               && (Data.CaseDepartmentId > 0);
     }
     
     public bool CaseInfoIsValid()
     {
         return !string.IsNullOrWhiteSpace(Data.CaseInfo.Title)
-               && !string.IsNullOrWhiteSpace(Data.CaseInfo.Description)
-               && !string.IsNullOrWhiteSpace(Data.CaseInfo.AttachmentUrl);
+               && !string.IsNullOrWhiteSpace(Data.CaseInfo.Description);
     }
     public bool CaseContactIsValid()
     {

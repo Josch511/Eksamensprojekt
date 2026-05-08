@@ -1,19 +1,21 @@
 ﻿@page "/describe-case"
 @using WebApp.Services
 @inject FileService FileService
+@inject CreateCaseService CaseService
+@inject NavigationManager Navigation
 
 <PageTitle>Opret sag</PageTitle>
 <div class="case-parent">
     <div class="case-content">
         <h2>Describe case</h2>
-        <form class="form-default">
+        <form class="form-default" @onsubmit="Next" @onsubmit:preventDefault>
             <div class="input-container">
                 <label for="caseTitle">Title</label>
-                <input type="text" id="caseTitle" class="input-default">
+                <input type="text" @bind="CaseService.Data.CaseInfo.Title" id="caseTitle" class="input-default">
             </div>
             <div class="input-container">
                 <label for="caseDescription">Description</label>
-                <textarea type="text" id="caseDescription" class="input-default" rows="4"></textarea>
+                <textarea type="text" @bind="CaseService.Data.CaseInfo.Description" id="caseDescription" class="input-default" rows="4"></textarea>
             </div>
             
             <div class="image-upload-group">
@@ -44,6 +46,27 @@
             
             <input type="submit" value="Submit" class="btn-primary"/>
         </form>
-    
     </div>
 </div>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        await CaseService.Load();
+    }
+    
+    private async Task Next()
+    {
+        await CaseService.Save();
+
+        if (CaseService.CaseInfoIsValid())
+        {
+            Navigation.NavigateTo("/contact-person");
+        }
+        else
+        {
+            Console.WriteLine("Valideringsfejl");
+        }
+    }
+}

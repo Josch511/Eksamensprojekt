@@ -1,6 +1,7 @@
 using Interface;
 using Repository;
 using DotNetEnv;
+using ServerAPI.Interface;
 
 Env.Load(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".env"));
 
@@ -12,6 +13,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<AuthenticationRepo>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
+builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 
 builder.Services.AddCors(options =>
 {

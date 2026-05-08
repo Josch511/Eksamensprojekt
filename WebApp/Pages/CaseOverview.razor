@@ -1,5 +1,33 @@
-﻿<h3>CaseOverview</h3>
+﻿@page "/case-overview"
+@using Core
+@using WebApp.Service
+@inject ICaseService CaseService
+
+<h3>CaseOverview</h3>
+
+@if (Cases == null || !Cases.Any())
+{
+    <p>No cases found</p>
+}
+else
+{
+    @foreach (var item in Cases)
+    {
+        <div>
+            <p><b>Title:</b> @item.title</p>
+            <p><b>Description:</b> @item.description</p>
+            <p><b>Status:</b> @item.status</p>
+            <p><b>Created:</b> @item.created_at</p>
+            <hr />
+        </div>
+    }
+}
 
 @code {
+    private List<Cases> Cases = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        Cases = await CaseService.GetAllCases();
+    }
 }

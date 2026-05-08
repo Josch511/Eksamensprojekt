@@ -1,6 +1,7 @@
 ﻿@page "/create-case"
+@using WebApp.Services
+@inject CreateCaseService CaseService
 @inject NavigationManager Navigation
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <PageTitle>Create a case</PageTitle>
 <div class="case-parent">
@@ -10,52 +11,74 @@
         <div class="case-type">
             <h4>Case type</h4>
             <div class="case-type_select">
-                <div class="case-type_select-item">
+                <button class="case-type_select-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/bug.svg"/>
                     </div>
-                    <button class="case-type_select-item-text">Problem/Error</button>
-                </div>
-                <div class="case-type_select-item">
+                    <p class="case-type_select-item-text">Problem/Error</p>
+                </button>
+                <button class="case-type_select-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/settings-2.svg"/>
                     </div>
-                    <button class="case-type_select-item-text">Feature request</button>
-                </div>
+                    <p class="case-type_select-item-text">Feature request</p>
+                </button>
             </div>
         </div>
         <div class="case-departments">
             <h4>Department</h4>
             <div class="department-list">
-                <div class="department-item">
+                <button class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/code-xml.svg"/>
                     </div>
-                    <button class="department-item-title">Software</button>
-                </div>
-                <div class="department-item">
+                    <p class="department-item-title">Software</p>
+                </button>
+                <button class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/plug.svg"/>
                     </div>
-                    <button class="department-item-title">Electronic</button>
-                </div>
-                <div class="department-item">
+                    <p class="department-item-title">Electronic</p>
+                </button>
+                <button class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/wrench.svg"/>
                     </div>
-                    <button class="department-item-title">Mechanic</button>
-                </div>
-                <div class="department-item">
+                    <p class="department-item-title">Mechanic</p>
+                </button>
+                <button class="department-item">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/factory.svg"/>
                     </div>
-                    <button class="department-item-title">Production</button>
-                </div>
+                    <p class="department-item-title">Production</p>
+                </button>
             </div>
         </div>
+        <button class="btn-primary" onclick="@Next()">Continue</button>
     </div>
 </div>
 
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await CaseService.Load();
+    }
+
+    private async Task Select(string selection)
+    {
+        
+    }
+    
+    private async Task Next()
+    {
+        await CaseService.Save();
+
+        if (CaseService.CaseTypeIsValid())
+        {
+            Navigation.NavigateTo("/describe-case");
+        }
+    }
+}
 
 
 

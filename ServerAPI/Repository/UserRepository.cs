@@ -37,4 +37,18 @@ public class UserRepository : IUserRepository
     {
         return await _users.Find(u => u.email == email).FirstOrDefaultAsync();
     }
+
+    public async Task<List<User>> GetCustomers()
+    {
+        return await _users
+            .Find(u => u.role == "customer")
+            .ToListAsync();
+    }
+
+    public async Task<List<User>> GetEmployees()
+    {
+        return await _users
+            .Find(u => u.role == "employee")
+            .ToListAsync();
+    }
 }

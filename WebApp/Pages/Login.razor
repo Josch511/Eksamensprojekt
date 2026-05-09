@@ -28,7 +28,15 @@
         {
             var loggedInUser = await response.Content.ReadFromJsonAsync<User>();
             await localStorage.SetItemAsync("userId", loggedInUser._id);
-            Navigation.NavigateTo("/account");
+
+            if (loggedInUser.role == "employee")
+            {
+                Navigation.NavigateTo("/case-overview");
+            }
+            else
+            {
+                Navigation.NavigateTo("/account");
+            }
         }
         else
         {

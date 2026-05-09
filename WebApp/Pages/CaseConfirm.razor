@@ -23,11 +23,11 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Case type</p>
-                <p>@caseTypeLabel</p>
+                <p>@CaseService.Data.CaseType</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Department</p>
-                <p>@departmentLabel</p>
+                <p>@CaseService.Data.CaseDepartment</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Case title</p>
@@ -66,35 +66,13 @@
     protected override async Task OnInitializedAsync()
     {
         await CaseService.Load();
-        IdChange();
     }
 
     private async Task Send()
     {
         await CaseService.Submit();
 
-        Navigation.NavigateTo("/casedetail");
+        Navigation.NavigateTo("/case-detail");
     }
-
-    private void IdChange()
-    {
-        var typeId = CaseService.Data.CaseTypeId;
-        var deptId = CaseService.Data.CaseDepartmentId;
-
-        caseTypeLabel = typeId switch
-        {
-            1 => "Problem / Error",
-            2 => "Feature request",
-            _ => "Other"
-        };
-
-        departmentLabel = deptId switch
-        {
-            1 => "Software",
-            2 => "Mechanic",
-            3 => "Electronic",
-            4 => "Production",
-            _ => "Other"
-        };
     }
 }

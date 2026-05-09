@@ -23,6 +23,11 @@ public class CreateCaseService
     public async Task Load()
     {
         Data = await localStorage.GetItemAsync<CaseDraft>(Key) ?? new CaseDraft();
+
+        if (Data.UserId is null)
+        {
+            Data.UserId = await localStorage.GetItemAsync<int>("userId");
+        }
     }
 
     public async Task Save()
@@ -42,25 +47,18 @@ public class CreateCaseService
         var newCase = new Cases
         {
             title = Data.CaseInfo.Title,
-
             description = Data.CaseInfo.Description,
-
-            media = new List<string>
-        {
-            Data.CaseInfo.AttachmentUrl
-        },
-
+            media = new List<string> { Data.CaseInfo.AttachmentUrl },
             status = "Open",
-
             created_at = DateOnly.FromDateTime(DateTime.Now),
-
             updated_at = DateOnly.FromDateTime(DateTime.Now),
-
-            order_item_id = Data.OrderId
+            order_item_id = Data.OrderId,
+            user_id = Data.UserId,
+            type = Data.CaseType,
+            department_name = Data.CaseDepartment
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
-
         response.EnsureSuccessStatusCode();
 
         await Clear();
@@ -68,8 +66,9 @@ public class CreateCaseService
     public class CaseDraft
     {
         public int OrderId { get; set; }
-        public int CaseTypeId { get; set; }
-        public int CaseDepartmentId { get; set; }
+        public int? UserId { get; set; }
+        public string? CaseType { get; set; }
+        public string? CaseDepartment { get; set; }
         public string Serial { get; set; }
         public string Name { get; set; }
         public CaseInfo CaseInfo { get; set; } = new();
@@ -98,8 +97,8 @@ public class CreateCaseService
 
     public bool CaseTypeIsValid()
     {
-        return (Data.CaseTypeId > 0)
-               && (Data.CaseDepartmentId > 0);
+        return !string.IsNullOrWhiteSpace(Data.CaseType)
+               && !string.IsNullOrWhiteSpace(Data.CaseDepartment);
     }
 
     public bool CaseInfoIsValid()

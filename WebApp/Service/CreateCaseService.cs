@@ -56,6 +56,8 @@ public class CreateCaseService
 
             updated_at = DateOnly.FromDateTime(DateTime.Now),
 
+            user_id = await localStorage.GetItemAsync<int>("userId"),
+
             order_item_id = Data.OrderId
         };
 

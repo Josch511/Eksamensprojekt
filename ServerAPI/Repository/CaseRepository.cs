@@ -33,6 +33,11 @@ public class CaseRepository : ICaseRepository
         await _cases.InsertOneAsync(newcase);
     }
 
+    public async Task<List<Cases>> GetCasesById(int id)
+    {
+        return await _cases.Find(c => c.user_id == id).ToListAsync();
+    }
+
     public async Task<List<Cases>> GetAllCases()
     {
         return await _cases.Find(_ => true).ToListAsync();

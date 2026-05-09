@@ -184,16 +184,21 @@ code {
 
 .order-item {
     display: flex;
-    flex-direction: column;
     padding: 16px;
-    border-radius: 10px;
-    border: var(--border-default);
+    flex-direction: column;
+    align-items: flex-start;
     gap: 16px;
+    flex: 1 0 0;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: #FFF;
 }
 
 .order-item_image {
-    width: 100%;
-    border-radius: 8px;
+    height: 326.5px;
+    align-self: stretch;
+    aspect-ratio: 1/1;
+    border-radius: 6px;
 }
 
 .order-item button {
@@ -375,3 +380,57 @@ code {
 .content-footer .btn-primary {
     width: 100%
 }
+
+.right-container{
+    display: flex;
+    width: 627px;
+    height: 948px;
+    padding: 46px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    flex-shrink: 0;
+    border-left: 1px solid rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.btn-closed-cases{
+    display: flex;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: #FFF;
+    color: #1C3D49;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.header-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+}
+
+.left-container{
+    display: flex;
+    width: 797px;
+    padding: 46px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+.account-layout {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
+

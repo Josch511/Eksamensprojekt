@@ -16,8 +16,7 @@ public class CaseController : ControllerBase
     {
         _caseRepository = caseRepository;
     }
-
-
+    
     [HttpGet]
     public async Task<IActionResult> GetAllCases()
     {
@@ -32,4 +31,12 @@ public class CaseController : ControllerBase
         await _caseRepository.CreateCase(newCase);
         return Ok(newCase);
     }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCasesById(int id)
+    {
+        var currentCases = await _caseRepository.GetCasesById(id);
+        return Ok(currentCases);
+    }
+    
 }

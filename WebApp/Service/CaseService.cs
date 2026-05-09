@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using WebApp.Service;
 
 
-namespace WebApp.Services
+namespace WebApp.Service
 {
     public class CaseService : ICaseService
     {
@@ -20,6 +20,14 @@ namespace WebApp.Services
                 ($"cases");
 
             return cases ?? new List<Cases>();
+        }
+        
+        public async Task<List<Cases>> GetCasesById(int id)
+        {
+            var cases = await _http.GetFromJsonAsync<List<Cases>>
+                ($"cases/{id}");
+
+            return cases ?? new List<Cases>(id);
         }
     }
 }

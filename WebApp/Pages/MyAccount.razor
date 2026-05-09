@@ -1,13 +1,16 @@
 ﻿@page "/account"
 @inject IOrderService OrderService
+@inject ICaseService CaseService
+@inject CreateCaseService CreateCaseService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
-@using Core
+@using WebApp.Service
 @using WebApp.Services
-@inject CreateCaseService CaseService
+
 
 <PageTitle>My account</PageTitle>
-
+<div class="account-layout">
+<div class="left-container">
 <h2>My products</h2>
 
 @if (orders == null)
@@ -37,42 +40,78 @@ else
                         <p>Purchased: @order.purchased_at.ToShortDateString()</p>
                     </div>
 
-                    <button @onclick="() => CreateCase(order)">
+                    <button @onclick="() => CreateCase(order._id)">
                         Create case
                     </button>
 
                 </div>
             </div>
         }
-
     </div>
 }
+
+</div>
+<div class="right-container">
+    <div class="header-container">
+        <h2>My current cases</h2>
+
+
+        <button class="btn-closed-cases">Closed cases</button>
+    </div>
+</div>
+
+@if (currentCases == null)
+{
+<p>Loader...</p>
+}
+else if (!currentCases.Any())
+{
+<p>No cases found.</p>
+}
+else
+{
+    @foreach (var currentCase in currentCases)
+    {
+        <div class="case-item">
+            <img class="case-item_image" src="@(currentCase.media?.FirstOrDefault() ?? "default-image.jpg")" />
+            <div class="case-item_info">
+                <span class="badge-active">@currentCase.status</span>
+                <h4>Case @currentCase.title</h4>
+                <p>Description: <strong>@currentCase.description</strong></p>
+                <p>Created: @currentCase.created_at.ToShortDateString()</p>
+            </div>
+        </div>
+        <hr />
+    }
+}
+
+</div>
 
 @code {
 
     private List<OrderItems> orders = new();
-
+    private List<Cases> currentCases = new();
+    
     protected override async Task OnInitializedAsync()
     {
         var userId = await localStorage.GetItemAsync<int>("userId");
 
         orders = await OrderService.GetCustomerOrders(userId);
+        currentCases = await CaseService.GetCasesById(userId);
     }
 
-
-    private async Task CreateCase(OrderItems order)
+    private async Task CreateCase(int orderItemId)
     {
-        await CaseService.Load();
-
-        CaseService.Data.OrderId = order._id;
-        CaseService.Data.Serial = order.serial;
-        CaseService.Data.Name = order.name;
-
-        await CaseService.Save();
-
-        if (CaseService.CaseOrderIdIsValid())
+        await CreateCaseService.Load();
+        
+        CreateCaseService.Data.OrderId = orderItemId;
+        
+        await CreateCaseService.Save();
+        
+        if (CreateCaseService.CaseOrderIdIsValid())
         {
             Navigation.NavigateTo("/create-case");
         }
     }
+
 }

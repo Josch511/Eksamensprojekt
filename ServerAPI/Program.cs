@@ -14,6 +14,7 @@ builder.Services.AddSingleton<AuthenticationRepo>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
 builder.Services.AddScoped<ICaseRepository, CaseRepository>();
+builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
 
 builder.Services.AddCors(options =>
 {
@@ -32,8 +33,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AllowBlazor");
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 

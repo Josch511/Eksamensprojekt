@@ -7,91 +7,86 @@
 @using WebApp.Service
 @using WebApp.Services
 
-
 <PageTitle>My account</PageTitle>
 <div class="account-layout">
-<div class="left-container">
-<h2>My products</h2>
+    <div class="left-container">
+        <h2>My products</h2>
 
-@if (orders == null)
-{
-    <p>Loader...</p>
-}
-else if (!orders.Any())
-{
-    <p>No products found.</p>
-}
-else
-{
-    <div class="order-list">
-
-        @foreach (var order in orders)
+        @if (orders == null)
         {
-            <div class="order-item">
-
-                <img class="order-item_image" src="@order.image_url">
-
-                <div class="order-item_info">
-
-                    <h3>@order.name</h3>
-
-                    <div class="order-item_info_details">
-                        <p>Serial: @order.serial</p>
-                        <p>Purchased: @order.purchased_at.ToShortDateString()</p>
-                    </div>
-
-                    <button @onclick="() => CreateCase(order)">
-                        Create case
-                    </button>
-
-                </div>
-            </div>
+            <p>Loader...</p>
         }
-    </div>
-}
+        else if (!orders.Any())
+        {
+            <p>No products found.</p>
+        }
+        else
+        {
+            <div class="order-list">
 
-</div>
+                @foreach (var order in orders)
+                {
+                    <div class="order-item">
+
+                        <img class="order-item_image" src="@order.image_url">
+
+                        <div class="order-item_info">
+
+                            <h3>@order.name</h3>
+
+                            <div class="order-item_info_details">
+                                <p>Serial: @order.serial</p>
+                                <p>Purchased: @order.purchased_at.ToShortDateString()</p>
+                            </div>
+
+                            <button @onclick="() => CreateCase(order._id)">
+                                Create case
+                            </button>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        }</div>
+    
 <div class="right-container">
     <div class="header-container">
         <h2>My current cases</h2>
-
-
         <button class="btn-closed-cases">Closed cases</button>
     </div>
-</div>
 
-@if (currentCases == null)
-{
-<p>Loader...</p>
-}
-else if (!currentCases.Any())
-{
-<p>No cases found.</p>
-}
-else
-{
-    @foreach (var currentCase in currentCases)
+    @if (!currentCases.Any())
     {
-        <div class="case-item">
-            <img class="case-item_image" src="@(currentCase.media?.FirstOrDefault() ?? "default-image.jpg")" />
-            <div class="case-item_info">
-                <span class="badge-active">@currentCase.status</span>
-                <h4>Case @currentCase.title</h4>
-                <p>Description: <strong>@currentCase.description</strong></p>
-                <p>Created: @currentCase.created_at.ToShortDateString()</p>
-            </div>
-        </div>
-        <hr />
+        <p>No current cases.</p>
     }
-}
-
+    else
+    {
+        @foreach (var currentCase in currentCases)
+        {
+            <div class="case-item">
+                <img class="currentcase-img" src="@(currentCase.media?.FirstOrDefault() ?? "default-image.jpg")" />
+                <div class="case-item_info">
+                    <div class="status-container">
+                        <span class="status-btn">@currentCase.status</span>
+                    </div>
+                    <div class="currentcase-name">
+                        <h4>Case @currentCase.title</h4>
+                    </div>
+                    <p class="currentcase-information">Created: @currentCase.created_at.ToShortDateString()</p>
+                    <p class="currentcase-information">Case type: @currentCase.type Department: @currentCase.department_name</p>
+                </div>
+            </div>
+            <hr />
+        }
+    }
+</div>
 </div>
 
 @code {
 
     private List<OrderItems> orders = new();
     private List<Cases> currentCases = new();
-    
+
     protected override async Task OnInitializedAsync()
     {
         var userId = await localStorage.GetItemAsync<int>("userId");
@@ -100,13 +95,11 @@ else
         currentCases = await CaseService.GetCasesById(userId);
     }
 
-    private async Task CreateCase(OrderItems order)
+    private async Task CreateCase(int orderItemId)
     {
         await CreateCaseService.Load();
 
-        CreateCaseService.Data.OrderId = order._id;
-        CreateCaseService.Data.Name = order.name;
-        CreateCaseService.Data.Serial = order.serial;
+        CreateCaseService.Data.OrderId = orderItemId;
 
         await CreateCaseService.Save();
 

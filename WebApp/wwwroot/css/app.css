@@ -434,3 +434,49 @@ code {
     min-height: 100vh;
 }
 
+.status-btn{
+    color: #039008;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.status-container{
+    display: flex;
+    padding: 4px 6px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 6px;
+    background: rgba(3, 144, 8, 0.20);
+}
+
+.currentcase-name{
+    color: #1C3D49;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.currentcase-img{
+    width: 167px;
+    height: 167px;
+    aspect-ratio: 1/1;
+    border-radius: 6px;
+}
+
+.currentcase-information{
+    color: rgba(106, 119, 124, 0.7);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+
+

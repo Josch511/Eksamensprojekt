@@ -6,13 +6,13 @@
 
 <h3>Login</h3>
 
-<input placeholder="Email" @bind="email" />
-<br />
-<input placeholder="Password" type="password" @bind="password" />
-<br />
-<button @onclick="LoginUser">Login</button>
-
-
+<EditForm OnValidSubmit="LoginUser">
+    <input placeholder="Email" @bind="email" />
+    <br />
+    <input placeholder="Password" type="password" @bind="password" />
+    <br />
+    <button type="submit">Login</button>
+</EditForm>
 
 <p>@message</p>
 

@@ -69,8 +69,8 @@ public class CreateCaseService
         public int? UserId { get; set; }
         public string? CaseType { get; set; }
         public string? CaseDepartment { get; set; }
-        public string Serial { get; set; }
-        public string Name { get; set; }
+        public string? Serial { get; set; }
+        public string? Name { get; set; }
         public CaseInfo CaseInfo { get; set; } = new();
         public CaseContact CaseContact { get; set; } = new();
     }

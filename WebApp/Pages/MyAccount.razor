@@ -73,7 +73,9 @@
                         <h4>Case @currentCase.title</h4>
                     </div>
                     <p class="currentcase-information">Created: @currentCase.created_at.ToShortDateString()</p>
-                    <p class="currentcase-information">Case type: @currentCase.type Department: @currentCase.department_name</p>
+                    <p class="currentcase-information">
+                        Case type: @TypeName(currentCase.type_id) — Department: @DepName(currentCase.department_id)
+                    </p>
                 </div>
             </div>
             <hr />
@@ -83,7 +85,6 @@
 </div>
 
 @code {
-
     private List<OrderItems> orders = new();
     private List<Cases> currentCases = new();
 
@@ -111,4 +112,19 @@
         }
     }
 
+    private string TypeName(int? id) => id switch
+    {
+        1 => "Problem",
+        2 => "Feature",
+        _ => "Unknown"
+    };
+
+    private string DepName(int? id) => id switch
+    {
+        1 => "Software",
+        2 => "Electronic",
+        3 => "Mechanic",
+        4 => "Production",
+        _ => "Unknown"
+    };
 }

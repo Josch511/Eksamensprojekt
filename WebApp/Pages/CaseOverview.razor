@@ -3,31 +3,53 @@
 @using WebApp.Service
 @inject ICaseService CaseService
 
-<h3>CaseOverview</h3>
+<h3>All Cases</h3>
 
-@if (Cases == null || !Cases.Any())
-{
-    <p>No cases found</p>
-}
-else
-{
-    @foreach (var item in Cases)
+
+<div class="status-box">
+<h3>OPEN</h3>
+<p>cases.open</p>
+</div>
+
+<h3>IN PROGRESS</h3>
+<p>cases.progress</p>
+
+<h3>SOLVED</h3>
+<p>cases.solved</p>
+
+<h3>TOTAL</h3>
+<p>cases.total</p>
+
+
+<table>
+    <tr>
+        <td>ID</td>
+        <td>TITLE</td>
+        <td>TYPE</td>
+        <td>DEPARTMENT</td>
+        <td>STATUS</td>
+        <td>DATE</td>
+    </tr>
+    @foreach (var item in cases)
     {
-        <div>
-            <p><b>Title:</b> @item.title</p>
-            <p><b>Description:</b> @item.description</p>
-            <p><b>Status:</b> @item.status</p>
-            <p><b>Created:</b> @item.created_at</p>
-            <hr />
-        </div>
+        <tr>
+            <td>@item._id</td>
+            <td>@item.title</td>
+            <!--
+            <td>@item.type</td>
+            <td>@item.department_name</td>
+            -->
+            <td>@item.status</td>
+            <td>@item.created_at.ToShortDateString()</td>
+        </tr>
     }
-}
+</table>
 
 @code {
-    private List<Cases> Cases = new();
+    private List<Cases> cases = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Cases = await CaseService.GetAllCases();
+        cases = await CaseService.GetAllCases();
     }
 }

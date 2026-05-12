@@ -16,8 +16,8 @@ namespace Core
         public DateOnly updated_at { get; set; }
         public DateOnly created_at { get; set; }
         public int? user_id { get; set; }
-        public string? department_name { get; set; }
-        public string? type { get; set; }
+        public int? department_id { get; set; }
+        public int? type_id { get; set; }
         public int order_item_id { get; set; }
     }
 }

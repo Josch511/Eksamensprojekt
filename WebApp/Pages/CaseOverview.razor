@@ -2,48 +2,55 @@
 @using Core
 @using WebApp.Service
 @inject ICaseService CaseService
+@layout StaffLayout
 
-<h3>All Cases</h3>
+    <div class="overview-content">
+        <div class="Desc-Header">
+            <h3>All Cases</h3>
+        </div>
 
+        <div class="status-frame">
+            <div class="status-box">
+                <h3 class="status-text">OPEN</h3>
+                <p class="status-num">20</p>
+            </div>
 
-<div class="status-box">
-<h3>OPEN</h3>
-<p>cases.open</p>
-</div>
+            <div class="status-box2">
+                <h3 class="status-text">IN PROGRESS</h3>
+                <p class="status-num">5</p>
+            </div>
 
-<h3>IN PROGRESS</h3>
-<p>cases.progress</p>
+            <div class="status-box2">
+                <h3 class="status-text">SOLVED</h3>
+                <p class="status-num">10</p>
+            </div>
 
-<h3>SOLVED</h3>
-<p>cases.solved</p>
+            <div class="status-box2">
+                <h3 class="status-text">TOTAL</h3>
+                <p class="status-num">35</p>
+            </div>
+        </div>
 
-<h3>TOTAL</h3>
-<p>cases.total</p>
-
-
-<table>
-    <tr>
-        <td>ID</td>
-        <td>TITLE</td>
-        <td>TYPE</td>
-        <td>DEPARTMENT</td>
-        <td>STATUS</td>
-        <td>DATE</td>
-    </tr>
-    @foreach (var item in cases)
-    {
-        <tr>
-            <td>@item._id</td>
-            <td>@item.title</td>
-            <!--
-            <td>@item.type</td>
-            <td>@item.department_name</td>
-            -->
-            <td>@item.status</td>
-            <td>@item.created_at.ToShortDateString()</td>
-        </tr>
-    }
-</table>
+        <table>
+            <tr>
+                <td>ID</td>
+                <td>TITLE</td>
+                <td>TYPE</td>
+                <td>DEPARTMENT</td>
+                <td>STATUS</td>
+                <td>DATE</td>
+            </tr>
+            @foreach (var item in cases)
+            {
+                <tr>
+                    <td>@item._id</td>
+                    <td>@item.title</td>
+                    <td>@item.status</td>
+                    <td>@item.created_at.ToShortDateString()</td>
+                </tr>
+            }
+        </table>
+    </div>
 
 @code {
     private List<Cases> cases = new();

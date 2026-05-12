@@ -1,40 +1,58 @@
-using Microsoft.AspNetCore.Components.Forms;
+using System.Net.Http.Json;
 
-namespace WebApp.Services;
+namespace WebApp.Service;
 
-public class FileService
+public class FileService : IFileService
 {
-    private const long MaxFileSize = 5 * 1024 * 1024;
+    
+    private HttpClient http;
 
-    public IBrowserFile? SelectedFile { get; private set; }
-
-    public string? PreviewUrl { get; private set; }
-
-    public async Task HandleImageSelectedAsync(InputFileChangeEventArgs e)
+    public FileService(HttpClient http)
     {
-        var file = e.File;
+        this.http = http;
+    }
 
-        if (file is null)
+    
+    public async Task<(bool success, string info)> SendFile(string filename, Stream s)
+    {
+        // add the stream to the body of the http request
+        // The DataContent is a kind of envelope for the stream
+        using var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(s), "file", filename);
+
+        var response = await http.PostAsync($"/api/files/add", content);
+        
+        // the response contains the key created by the webservice in case of success.
+        // that key must be used when getting the file from the API.
+        string key = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
         {
-            Clear();
-            return;
+            return (true, key);
         }
+        // else
+        return (false, response.ReasonPhrase);
 
-        SelectedFile = file;
-
-        using var stream = file.OpenReadStream(MaxFileSize);
-        using var memoryStream = new MemoryStream();
-
-        await stream.CopyToAsync(memoryStream);
-
-        var base64 = Convert.ToBase64String(memoryStream.ToArray());
-
-        PreviewUrl = $"data:{file.ContentType};base64,{base64}";
     }
 
-    public void Clear()
+    public async Task<List<string>> GetAllKeys()
     {
-        SelectedFile = null;
-        PreviewUrl = null;
+        var keys = await http.GetFromJsonAsync<List<string>>($"/api/files/getall");
+        return keys;
     }
+
+    public string ConvertToUrl(string key) => $"/api/files/download/{key}";
+    
+    
+    public async Task<(bool success, string info)> DeleteFile(string filename)
+    {
+        var httpResp = await http.DeleteAsync($"/api/files/delete/{filename}");
+        if (httpResp.IsSuccessStatusCode)
+        {
+            return (true, "File deleted");
+        }
+        return (false, httpResp.ReasonPhrase);
+    }
+    
+    
 }

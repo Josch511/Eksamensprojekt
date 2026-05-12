@@ -42,4 +42,9 @@ public class CaseRepository : ICaseRepository
     {
         return await _cases.Find(_ => true).ToListAsync();
     }
+
+    public async Task<List<Cases>> GetCasesByDepartment(int department_id)
+    {
+        return await _cases.Find(c => c.department_id == department_id).ToListAsync();
+    }
 }

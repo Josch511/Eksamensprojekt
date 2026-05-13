@@ -6,5 +6,6 @@ namespace WebApp.Service
     {
         Task<List<Cases>> GetAllCases();
         Task<List<Cases>> GetCasesById(int id);
+        Task<Cases> GetCaseByCaseId(int id);
     }
 }

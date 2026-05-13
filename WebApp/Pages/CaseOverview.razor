@@ -4,61 +4,77 @@
 @inject ICaseService CaseService
 @layout StaffLayout
 
-    <div class="overview-content">
-        <div class="Desc-Header">
-            <h3>All Cases</h3>
+<div class="overview-content">
+    <div class="Desc-Header">
+        <h3>All Cases</h3>
+    </div>
+
+    <div class="status-frame">
+        <div class="status-box">
+            <h3 class="status-text">OPEN</h3>
+            <p class="status-num">20</p>
         </div>
 
-        <div class="status-frame">
-            <div class="status-box">
-                <h3 class="status-text">OPEN</h3>
-                <p class="status-num">20</p>
-            </div>
-
-            <div class="status-box2">
-                <h3 class="status-text">IN PROGRESS</h3>
-                <p class="status-num">5</p>
-            </div>
-
-            <div class="status-box2">
-                <h3 class="status-text">SOLVED</h3>
-                <p class="status-num">10</p>
-            </div>
-
-            <div class="status-box2">
-                <h3 class="status-text">TOTAL</h3>
-                <p class="status-num">35</p>
-            </div>
+        <div class="status-box2">
+            <h3 class="status-text">IN PROGRESS</h3>
+            <p class="status-num">5</p>
         </div>
 
-        <div class="table-box">
+        <div class="status-box2">
+            <h3 class="status-text">SOLVED</h3>
+            <p class="status-num">10</p>
+        </div>
 
-        <select name="Case Type">
-            <option value="">Case Type</option>
-            <option value="Feature">Feature</option>
-            <option value="Problem">Problem</option>
-        </select>
-        
-        <table>
-            <tr class="table-header">
-                <div class="table-text">
-                    <td>ID</td>
-                    <td>TITLE</td>
-                    <td>TYPE</td>
-                    <td>DEPARTMENT</td>
-                    <td>STATUS</td>
-                    <td>DATE</td>
-                </div>
-            </tr>
-            @foreach (var item in cases)
-            {
-                <tr>
-                    <td>@item._id</td>
-                    <td>@item.title</td>
-                    <td>@item.status</td>
-                    <td>@item.created_at.ToShortDateString()</td>
+        <div class="status-box2">
+            <h3 class="status-text">TOTAL</h3>
+            <p class="status-num">35</p>
+        </div>
+    </div>
+
+    <div class="table-box">
+        <div class="table-filters">
+            <div class="table-filters-left">
+                <select class="table-select" name="Case Type">
+                    <option value="">Case Type</option>
+                    <option value="Feature">Feature</option>
+                    <option value="Problem">Problem</option>
+                </select>
+                <select class="table-select" name="Customer">
+                    <option value="">Customer</option>
+                </select>
+                <input class="table-search" placeholder="Search" />
+            </div>
+            <select class="table-select" name="Sort">
+                <option value="">Sort by Date created</option>
+            </select>
+        </div>
+
+        <table class="cases-table">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-id">ID</th>
+                    <th class="table-title">TITLE</th>
+                    <th class="table-dep">CATEGORY</th>
+                    <th class="table-assign">ASSIGNED</th>
+                    <th class="table-row-status">STATUS</th>
+                    <th class="table-date">DATE</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var item in cases)
+                {
+                    <tr class="table-row">
+                        <td>#@item._id</td>
+                        <td>@item.title</td>
+                        <td>@TypeName(item.type_id)</td>
+                        <td>@DepName(item.department_id)</td>
+                        <td>
+                            <span class="table-status @GetStatusClass(item.status)">@item.status</span>
+                        </td>
+                        <td>@item.created_at.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
 </div>
@@ -69,4 +85,30 @@
     {
         cases = await CaseService.GetAllCases();
     }
+
+    private string TypeName(int? id) => id switch
+    {
+        1 => "Problem",
+        2 => "Feature",
+        _ => "Unknown"
+    };
+
+    private string DepName(int? id) => id switch
+    {
+        1 => "Software",
+        2 => "Electronic",
+        3 => "Mechanic",
+        4 => "Production",
+        _ => "Unknown"
+    };
+
+    private string GetStatusClass(string status) => status switch
+    {
+        "Open" => "status-open",
+        "Assigned" => "status-assigned",
+        "In progress" => "status-progress",
+        "Testing" => "status-testing",
+        "Finished" => "status-finished",
+        _ => "status-default"
+    };
 }

@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<div class="overview-layout">
+    <div class="sidebar-overview">
+        <img class="logo" src="https://www.borncut.com/media/aigpqdfi/borncut_logo_white.svg">
+        <div class="sidebar-section">
+            <div class="sidebar-item-row active">
+                <img class="sidebar-icon" src="assets/my_cases.svg" />
+                <p class="sidebar-item">My Cases</p>
+            </div>
+            <div class="sidebar-item-row">
+                <img class="sidebar-icon" src="assets/all_cases.svg" />
+                <p class="sidebar-item" @onclick='() => NavigateToDepartment(null)'>All Cases</p>
+            </div>
+            <div class="sidebar-subitems">
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(1)'>Software</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(2)'>Electronic</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(3)'>Mechanic</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(4)'>Production</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="overview-content">
+        @Body
+    </div>
+</div>
+
+@code{
+    private void NavigateToDepartment(int? departmentId)
+    {
+        if (departmentId == null)
+        {
+            Navigation.NavigateTo("/case-overview");
+        }
+        else
+        {
+            Navigation.NavigateTo($"/case-overview/{departmentId}");
+        }
+    }
+}

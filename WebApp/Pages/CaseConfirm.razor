@@ -1,5 +1,5 @@
 ﻿@page "/case-confirm"
-@using WebApp.Services
+@using WebApp.Service
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
 
@@ -24,11 +24,11 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Case type</p>
-                <p>@CaseService.Data.CaseType</p>
+                <p>@CaseService.CaseTypeName</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Department</p>
-                <p>@CaseService.Data.CaseDepartment</p>
+                <p>@CaseService.DepartmentName</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Case title</p>

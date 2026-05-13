@@ -1,9 +1,10 @@
 using Blazored.LocalStorage;
 using Core;
 using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
 
 
-namespace WebApp.Services;
+namespace WebApp.Service;
 
 public class CreateCaseService
 {
@@ -54,8 +55,8 @@ public class CreateCaseService
             updated_at = DateOnly.FromDateTime(DateTime.Now),
             order_item_id = Data.OrderId,
             user_id = Data.UserId,
-            type = Data.CaseType,
-            department_name = Data.CaseDepartment
+            type_id = Data.CaseTypeId,
+            department_id = Data.CaseDepartmentId
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
@@ -67,8 +68,8 @@ public class CreateCaseService
     {
         public int OrderId { get; set; }
         public int? UserId { get; set; }
-        public string? CaseType { get; set; }
-        public string? CaseDepartment { get; set; }
+        public int CaseTypeId { get; set; }
+        public int CaseDepartmentId { get; set; }
         public string Serial { get; set; }
         public string Name { get; set; }
         public CaseInfo CaseInfo { get; set; } = new();
@@ -97,8 +98,7 @@ public class CreateCaseService
 
     public bool CaseTypeIsValid()
     {
-        return !string.IsNullOrWhiteSpace(Data.CaseType)
-               && !string.IsNullOrWhiteSpace(Data.CaseDepartment);
+        return Data.CaseTypeId > 0 && Data.CaseDepartmentId > 0;
     }
 
     public bool CaseInfoIsValid()
@@ -121,5 +121,20 @@ public class CreateCaseService
                && CaseContactIsValid();
     }
 
+    public string CaseTypeName => Data.CaseTypeId switch
+    {
+        1 => "Problem",
+        2 => "Feature",
+        _ => "Unknown"
+    };
+
+    public string DepartmentName => Data.CaseDepartmentId switch
+    {
+        1 => "Software",
+        2 => "Electronic",
+        3 => "Mechanic",
+        4 => "Production",
+        _ => "Unknown"
+    };
     
 }

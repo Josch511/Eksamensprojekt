@@ -1,33 +1,130 @@
 ﻿@page "/case-overview"
+@page "/case-overview/{DepartmentId:int}"
 @using Core
 @using WebApp.Service
 @inject ICaseService CaseService
+@layout StaffLayout
 
-<h3>CaseOverview</h3>
+<div class="overview-content">
+    <div class="Desc-Header">
+        <h3>All Cases</h3>
+    </div>
 
-@if (Cases == null || !Cases.Any())
-{
-    <p>No cases found</p>
-}
-else
-{
-    @foreach (var item in Cases)
-    {
-        <div>
-            <p><b>Title:</b> @item.title</p>
-            <p><b>Description:</b> @item.description</p>
-            <p><b>Status:</b> @item.status</p>
-            <p><b>Created:</b> @item.created_at</p>
-            <hr />
+    <div class="status-frame">
+        <div class="status-box">
+            <h3 class="status-text">OPEN</h3>
+            <p class="status-num">20</p>
         </div>
-    }
-}
 
+        <div class="status-box2">
+            <h3 class="status-text">IN PROGRESS</h3>
+            <p class="status-num">5</p>
+        </div>
+
+        <div class="status-box2">
+            <h3 class="status-text">SOLVED</h3>
+            <p class="status-num">10</p>
+        </div>
+
+        <div class="status-box2">
+            <h3 class="status-text">TOTAL</h3>
+            <p class="status-num">35</p>
+        </div>
+    </div>
+
+    <div class="table-box">
+        <div class="table-filters">
+            <div class="table-filters-left">
+                <select class="table-select" name="Case Type">
+                    <option value="">Case Type</option>
+                    <option value="Feature">Feature</option>
+                    <option value="Problem">Problem</option>
+                </select>
+                <select class="table-select" name="Customer">
+                    <option value="">Customer</option>
+                </select>
+                <input class="table-search" placeholder="Search" />
+            </div>
+            <select class="table-select" name="Sort">
+                <option value="">Sort by Date created</option>
+            </select>
+        </div>
+
+        <table class="cases-table">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-id">ID</th>
+                    <th class="table-title">TITLE</th>
+                    <th class="table-dep">CATEGORY</th>
+                    <th class="table-dep">TYPE</th>
+                    <th class="table-assign">ASSIGNED</th>
+                    <th class="table-row-status">STATUS</th>
+                    <th class="table-date">DATE</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in cases)
+                {
+                    <tr class="table-row">
+                        <td>#@item._id</td>
+                        <td>@item.title</td>
+                        <td>@DepName(item.department_id)</td>
+                        <td>@TypeName(item.type_id)</td>
+                        <td>ASSIGNED</td>
+                        <td>
+                            <span class="table-status @GetStatusClass(item.status)">@item.status</span>
+                        </td>
+                        <td>@item.created_at.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 @code {
-    private List<Cases> Cases = new();
+    private List<Cases> cases = new();
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (DepartmentId.HasValue)
+        {
+            cases = await CaseService.GetCasesByDepartment(DepartmentId.Value);
+        }
+        else
+        {
+            cases = await CaseService.GetAllCases();
+        }
+    }
+    [Parameter]
+    public int? DepartmentId { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Cases = await CaseService.GetAllCases();
+        cases = await CaseService.GetAllCases();
     }
+
+    private string TypeName(int? id) => id switch
+    {
+        1 => "Problem",
+        2 => "Feature",
+        _ => "Unknown"
+    };
+
+    private string DepName(int? id) => id switch
+    {
+        1 => "Software",
+        2 => "Electronic",
+        3 => "Mechanic",
+        4 => "Production",
+        _ => "Unknown"
+    };
+
+    private string GetStatusClass(string status) => status switch
+    {
+        "Open" => "status-open",
+        "Assigned" => "status-assigned",
+        "In progress" => "status-progress",
+        "Testing" => "status-testing",
+        "Finished" => "status-finished",
+        _ => "status-default"
+    };
 }

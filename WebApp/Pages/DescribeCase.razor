@@ -1,6 +1,6 @@
 ﻿@page "/describe-case"
-@using WebApp.Services
-@inject FileService FileService
+@using WebApp.Service
+@inject IFileService FileService
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
 
@@ -28,9 +28,12 @@
                 </div>
                 
                 <label class="image-upload-box" for="annonce-image-upload">
-                    @if (!string.IsNullOrWhiteSpace(FileService.PreviewUrl))
+                    @if (keys.Any())
                     {
-                        <img src="@FileService.PreviewUrl" alt="Forhåndsvisning af annoncebillede"/>
+                        @foreach (string key in keys)
+                        {
+                            <img src="@FileService.ConvertToUrl(key)" alt="Forhåndsvisning af annoncebillede"/>
+                        }
                     }
                     else
                     {
@@ -39,7 +42,7 @@
 
                     <InputFile id="annonce-image-upload"
                                class="sr-only-file-input"
-                               OnChange="FileService.HandleImageSelectedAsync"
+                               OnChange="@UploadFile"
                                accept="image/*"/>
                 </label>
             </div>
@@ -68,5 +71,23 @@
         {
             Console.WriteLine("Valideringsfejl");
         }
+    }
+    
+    private string statusMessage = "";
+    private List<string> keys = new();
+    
+    private async Task UploadFile(InputFileChangeEventArgs e)
+    {
+        // compute a stream to the file chosen by the user
+        var file = e.File;
+        var stream = file.OpenReadStream(maxAllowedSize: 10_000_000); // fx 10 MB
+        
+        var res = await FileService.SendFile(file.Name, stream);
+        
+        statusMessage = res.success ? 
+            $"Success! Info fra server: <{res.info}>" : 
+            $"Fejl: {res.info}";
+        
+        keys.Add(res.info);
     }
 }

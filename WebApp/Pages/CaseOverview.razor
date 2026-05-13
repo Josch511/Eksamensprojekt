@@ -56,6 +56,7 @@
                     <th class="table-id">ID</th>
                     <th class="table-title">TITLE</th>
                     <th class="table-dep">CATEGORY</th>
+                    <th class="table-dep">TYPE</th>
                     <th class="table-assign">ASSIGNED</th>
                     <th class="table-row-status">STATUS</th>
                     <th class="table-date">DATE</th>
@@ -67,8 +68,9 @@
                     <tr class="table-row">
                         <td>#@item._id</td>
                         <td>@item.title</td>
-                        <td>@TypeName(item.type_id)</td>
                         <td>@DepName(item.department_id)</td>
+                        <td>@TypeName(item.type_id)</td>
+                        <td>ASSIGNED</td>
                         <td>
                             <span class="table-status @GetStatusClass(item.status)">@item.status</span>
                         </td>

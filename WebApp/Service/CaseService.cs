@@ -21,7 +21,15 @@ namespace WebApp.Service
 
             return cases ?? new List<Cases>();
         }
-        
+
+        public async Task<List<Cases>> GetCasesByDepartment(int departmentId)
+        {
+            var cases = await _http.GetFromJsonAsync<List<Cases>>
+                ($"cases/department/{departmentId}");
+
+            return cases ?? new List<Cases>();
+        }
+
         public async Task<List<Cases>> GetCasesById(int id)
         {
             var cases = await _http.GetFromJsonAsync<List<Cases>>($"cases/{id}");

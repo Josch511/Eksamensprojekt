@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
 <div class="overview-layout">
     <div class="sidebar-overview">
@@ -10,13 +11,13 @@
             </div>
             <div class="sidebar-item-row">
                 <img class="sidebar-icon" src="assets/all_cases.svg" />
-                <p class="sidebar-item">All Cases</p>
+                <p class="sidebar-item" @onclick='() => NavigateToDepartment(null)'>All Cases</p>
             </div>
             <div class="sidebar-subitems">
-                <p class="sidebar-subitem">Software</p>
-                <p class="sidebar-subitem">Electronic</p>
-                <p class="sidebar-subitem">Mechanic</p>
-                <p class="sidebar-subitem">Production</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(1)'>Software</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(2)'>Electronic</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(3)'>Mechanic</p>
+                <p class="sidebar-subitem" @onclick='() => NavigateToDepartment(4)'>Production</p>
             </div>
         </div>
     </div>
@@ -25,3 +26,17 @@
         @Body
     </div>
 </div>
+
+@code{
+    private void NavigateToDepartment(int? departmentId)
+    {
+        if (departmentId == null)
+        {
+            Navigation.NavigateTo("/case-overview");
+        }
+        else
+        {
+            Navigation.NavigateTo($"/case-overview/{departmentId}");
+        }
+    }
+}

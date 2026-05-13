@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
 
 
-namespace WebApp.Services;
+namespace WebApp.Service;
 
 public class CreateCaseService
 {

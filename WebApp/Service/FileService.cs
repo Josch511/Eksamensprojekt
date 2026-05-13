@@ -35,12 +35,6 @@ public class FileService : IFileService
 
     }
 
-    public async Task<List<string>> GetAllKeys()
-    {
-        var keys = await http.GetFromJsonAsync<List<string>>($"/api/files/getall");
-        return keys;
-    }
-
     public string ConvertToUrl(string key) => $"/api/files/download/{key}";
     
     

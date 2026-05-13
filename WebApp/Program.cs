@@ -12,7 +12,7 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICaseService, CaseService>();
-builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<CreateCaseService>();
 builder.Services.AddScoped(sp => new HttpClient
 {

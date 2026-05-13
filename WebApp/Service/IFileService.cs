@@ -10,9 +10,6 @@ public interface IFileService
     // is the errormessage.
     Task<(bool success, string info)> SendFile(string filename, Stream s);
     
-    // Get keys for all files 
-    Task<List<string>> GetAllKeys();
-    
     // expand/convert a key for file to an absolute URL for the file
     string ConvertToUrl(string key);
 

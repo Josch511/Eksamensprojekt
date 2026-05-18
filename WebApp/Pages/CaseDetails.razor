@@ -42,6 +42,14 @@
                     <img src="assets/SubmitButtonIcon.svg"/>
                 </button>
             </div>
+            <div class="updates-container"></div>
+            @foreach (var item in currentCase.caseUpdates)
+            {
+                <UpdateComponent Message="@item.message"
+                                 Timestamp="@item.timestamp"
+                                 IsComment="@item.isComment"/>
+                
+            }
         </div>
     </div>
     <div class="column">

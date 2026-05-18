@@ -21,5 +21,6 @@ namespace Core
         public int? typeId { get; set; }
         public int orderItemId { get; set; }
         public int? assignedEmployeeId { get; set; }
+        public List<CaseUpdate> caseUpdates { get; set; }
     }
 }

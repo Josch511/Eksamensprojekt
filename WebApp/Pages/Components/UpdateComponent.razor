@@ -1,0 +1,25 @@
+<div class="update-wrapper">
+    <div class="update-content">
+        <p>@Message</p>
+        @if (IsComment)
+        {
+            <div class="comment-content">
+                <p>@CommentMessage</p>
+            </div>
+        }
+    </div>
+    <p class="comment-date">@Timestamp</p>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public required string Message { get; set; }
+    [Parameter]
+    public required string Timestamp { get; set; }
+    [Parameter]
+    public bool IsComment { get; set; }
+    [Parameter]
+    public string? CommentMessage { get; set; }
+}

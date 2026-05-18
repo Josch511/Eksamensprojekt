@@ -48,15 +48,15 @@ public class CaseRepository : ICaseRepository
         return await _cases.Find(c => c._id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<List<Cases>> GetCasesByDepartment(int department_id)
+    public async Task<List<Cases>> GetCasesByDepartment(int departmentId)
     {
-        return await _cases.Find(c => c.departmentId == department_id).ToListAsync();
+        return await _cases.Find(c => c.departmentId == departmentId).ToListAsync();
     }
 
     public async Task AssignCase(int caseId, int employeeId)
     {
         var update = Builders<Cases>.Update
-       .Set(c => c.assigned_employee_id, employeeId);
+       .Set(c => c.assignedEmployeeId, employeeId);
 
         await _cases.UpdateOneAsync
         (

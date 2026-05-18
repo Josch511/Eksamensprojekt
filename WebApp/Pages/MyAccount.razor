@@ -88,6 +88,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var hasUserId = await localStorage.ContainKeyAsync("userId");
+        if (!hasUserId)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
         var userId = await localStorage.GetItemAsync<int>("userId");
 
         orders = await OrderService.GetCustomerOrders(userId);

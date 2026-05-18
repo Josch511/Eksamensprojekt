@@ -4,8 +4,8 @@
         @foreach (var (label, index) in Steps.Select((s, i) => (s, i + 1)))
         {
             <div class="step-item">
-                <div class="step @(index == CurrentStep ? "active" : "") @(index < CurrentStep ? "completed" : "")">
-                    @if (index < CurrentStep)
+                <div class="step @(index <= CurrentStep ? "completed" : "") @(index == CurrentStep + 1 ? "active" : "")">
+                    @if (index <= CurrentStep)
                     {
                         <p>✔</p>
                     }

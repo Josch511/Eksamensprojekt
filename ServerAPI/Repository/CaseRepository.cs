@@ -52,4 +52,16 @@ public class CaseRepository : ICaseRepository
     {
         return await _cases.Find(c => c.department_id == department_id).ToListAsync();
     }
+
+    public async Task AssignCase(int caseId, int employeeId)
+    {
+        var update = Builders<Cases>.Update
+       .Set(c => c.assigned_employee_id, employeeId);
+
+        await _cases.UpdateOneAsync
+        (
+            c => c._id == caseId,
+            update
+        );
+    }
 }

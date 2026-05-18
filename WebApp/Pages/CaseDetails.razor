@@ -1,7 +1,82 @@
-﻿@page "/case-detail"
+﻿@page "/case/{CaseId:int}"
+@layout StaffLayout
+@using Service
+@inject ICaseService CaseService
 
-<h3>CaseDetails</h3>
+<div class="header">
+    <h2>Sag #@CaseId</h2>
+    <div class="action-items">
+        <div class="action-item">
+            <label for="caseStatus">Status</label>
+            <select name="Status" id="caseStatus" class="input-select">
+                <option value="open">Open</option>
+                <option value="inProgress">In progress</option>
+                <option value="closed">Closed</option>
+            </select>
+        </div>
+        <div class="action-item">
+            <label>Case owner</label>
+            <div class="case-owner">
+                <img src="favicon.png"/>
+                <p>@CaseOwner.name</p>
+                <button class="btn-skeleton">Release</button>
+            </div>
+        </div>
+        <div class="action-item">
+            <label for="caseEta">Est. resolution</label>
+            <input type="date" id="caseEta" class="input-default"/>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="column">
+        <div class="updates-header">
+            <h3>Updates</h3>
+            <hr class="separator">
+        </div>
+        <div class="content-container">
+            <div class="input-container input-comment">
+                <textarea type="text" placeholder="Add a comment" class="input-default" rows="4"></textarea>
+                <button class="btn-floating btn-primary">
+                    <img src="assets/SubmitButtonIcon.svg"/>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="info-card">
+            <h3>Case summary</h3>
+            <div class="issue-summary">
+                <h4>@currentCase.description</h4>
+                <p class="secondary">@currentCase.description</p>
+            </div>
+            <div class="details-container">
+                <div class="detail-item">
+                    <p class="secondary">Last updated</p>
+                    <p>@currentCase.updatedAt</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    [Parameter]
+    public int CaseId { get; set; }
+    private Cases currentCase = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        currentCase = await CaseService.GetCaseByCaseId(CaseId);
+    }
+    
+    public class CaseOwner
+    {
+        public int userId = 0;
+        public static string name = "Søren Nielsen";
+        public string? avatar;
 
+    }
 }

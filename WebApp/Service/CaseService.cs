@@ -39,7 +39,9 @@ namespace WebApp.Service
         
         public async Task<Cases> GetCaseByCaseId(int id)
         {
-            return await _http.GetFromJsonAsync<Cases>($"cases/single/{id}");
+            var cases = await _http.GetFromJsonAsync<Cases>($"cases/single/{id}");
+            
+            return cases ?? new Cases();
         }
     }
 }

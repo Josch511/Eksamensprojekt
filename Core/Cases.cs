@@ -13,13 +13,13 @@ namespace Core
         public string description { get; set; }
         public List<string> media { get; set; }
         public string status { get; set; }
-        public DateOnly updated_at { get; set; }
-        public DateOnly created_at { get; set; }
-        public int? user_id { get; set; }
+        public DateOnly updatedAt { get; set; }
+        public DateOnly createdAt { get; set; }
+        public int? userId { get; set; }
 
-        public int department_id { get; set; }
-        public int? type_id { get; set; }
-        public int order_item_id { get; set; }
-        public int? assigned_employee_id { get; set; }
+        public int departmentId { get; set; }
+        public int? typeId { get; set; }
+        public int orderItemId { get; set; }
+        public int? assignedEmployeeId { get; set; }
     }
 }

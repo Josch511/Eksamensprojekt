@@ -9,7 +9,7 @@ public class FileRepository : IFileRepository
     public FileRepository(IWebHostEnvironment env)
     {
         _env = env;
-        _path = Path.Combine(_env.ContentRootPath, "uploads");
+        _path = Path.Combine(_env.WebRootPath, "uploads");
     }
 
     public string Add(IFormFile file)

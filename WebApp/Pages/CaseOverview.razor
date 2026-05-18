@@ -68,13 +68,13 @@
                     <tr class="table-row">
                         <td>#@item._id</td>
                         <td>@item.title</td>
-                        <td>@DepName(item.department_id)</td>
-                        <td>@TypeName(item.type_id)</td>
+                        <td>@DepName(item.departmentId)</td>
+                        <td>@TypeName(item.typeId)</td>
                         <td>ASSIGNED</td>
                         <td>
                             <span class="table-status @GetStatusClass(item.status)">@item.status</span>
                         </td>
-                        <td>@item.created_at.ToShortDateString()</td>
+                        <td>@item.createdAt.ToShortDateString()</td>
                     </tr>
                 }
             </tbody>

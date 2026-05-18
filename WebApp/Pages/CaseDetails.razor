@@ -2,6 +2,7 @@
 @layout StaffLayout
 @using Service
 @inject ICaseService CaseService
+@using WebApp.Pages.Components
 
 <div class="header">
     <h2>Sag #@CaseId</h2>
@@ -47,7 +48,8 @@
             {
                 <UpdateComponent Message="@item.message"
                                  Timestamp="@item.timestamp"
-                                 IsComment="@item.isComment"/>
+                                 IsComment="@item.isComment"
+                                 CommentMessage = "@item.commentMessage"/>
                 
             }
         </div>

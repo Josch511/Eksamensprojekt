@@ -1,0 +1,30 @@
+<div class="progress-container">
+    <div class="progress-line"></div>
+    <div class="steps-wrapper">
+        @foreach (var (label, index) in Steps.Select((s, i) => (s, i + 1)))
+        {
+            <div class="step-item">
+                <div class="step @(index == CurrentStep ? "active" : "") @(index < CurrentStep ? "completed" : "")">
+                    @if (index < CurrentStep)
+                    {
+                        <p>✔</p>
+                    }
+                </div>
+                <span class="step-label">@label</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public int CurrentStep { get; set; }
+
+    private List<string> Steps = new()
+    {
+        "Case received",
+        "Assigned employee",
+        "In progress",
+        "Testing",
+        "Finished"
+    };
+}

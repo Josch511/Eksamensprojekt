@@ -38,6 +38,14 @@ public class CaseController : ControllerBase
         var currentCases = await _caseRepository.GetCasesById(id);
         return Ok(currentCases);
     }
+    
+    [HttpGet("single/{id}")]
+    public async Task<IActionResult> GetCaseByCaseId(int id)
+    {
+        var currentCase = await _caseRepository.GetCaseByCaseId(id);
+        return Ok(currentCase);
+    }
+    
 
     [HttpGet("department/{department_id}")]
     public async Task<IActionResult> GetCasesByDepartment(int department_id)

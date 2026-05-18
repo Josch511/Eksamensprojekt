@@ -45,4 +45,11 @@ public class CaseController : ControllerBase
         var cases = await _caseRepository.GetCasesByDepartment(department_id);
         return Ok(cases);
     }
+
+    [HttpPut("{caseId}/assign/{employeeId}")]
+    public async Task<IActionResult> AssignCase(int caseId, int employeeId)
+    {
+        await _caseRepository.AssignCase(caseId, employeeId);
+        return Ok();
+    }
 }

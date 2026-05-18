@@ -5,6 +5,7 @@
     --color-secondary: rgba(28, 61, 73, 0.7);
     --color-brand: #5BBEFF;
     --color-brand-hover: #52ABE5;
+    --color-border: rgba(28, 61, 73, 0.15);
     --border-default: solid 1px rgba(28, 61, 73, 0.15);
     --border-hover: solid 1px rgba(28, 61, 73, 0.25);
     --background-hover: rgba(28, 61, 73, 0.05);
@@ -501,7 +502,7 @@ code {
     gap: 10px;
     flex: 1 0 0;
     border-radius: 10px;
-    border: 1px solid var(--Primr, #1C3D49);
+    border: 1px solid var(--color-primary, #1C3D49);
     background: #FFF;
 }
 
@@ -956,7 +957,7 @@ code {
 }
 
 .cases-table tbody td {
-    color: var(--Primr, #1C3D49);
+    color: var(--color-primary, #1C3D49);
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
@@ -999,6 +1000,110 @@ code {
 .status-default {
     background: #EDEDED;
     color: #666;
+}
+
+.action-items {
+    display: flex;
+    align-self: stretch;
+    gap: 46px;
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-select {
+    display: flex;
+    padding: 10px 14px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: var(--border-default);
+    line-height: 24px;
+}
+
+.case-owner {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.case-owner img {
+    width: 40px;
+    height: 40px;
+}
+
+.btn-skeleton {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 5fr 3fr;
+    gap: 16px;
+}
+
+.input-comment {
+    position: relative;
+}
+
+.updates-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.separator {
+    height: 2px;
+    flex: 1 0 0;
+    background-color: var(--color-border);
+}
+
+.btn-floating {
+    padding: 10px;
+    width: 44px;
+    border-radius: 9999px;
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+}
+
+.btn-floating img {
+    width: 20px;
+    height: 20px;
+}
+
+.info-card {
+    padding: 24px;
+    border-radius: 10px;
+    border: var(--border-default);
+}
+
+.issue-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--color-border)
+}
+
+.details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 24px;
+}
+
+.detail-item {
+    display: flex;
+    align-self: stretch;
+    justify-content: space-between;
 }
 
 .sidebar-item-row,

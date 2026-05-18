@@ -49,14 +49,14 @@ public class CreateCaseService
         {
             title = Data.CaseInfo.Title,
             description = Data.CaseInfo.Description,
-            media = new List<string> { Data.CaseInfo.AttachmentUrl },
+            media = Data.CaseInfo.AttachmentUrl,
             status = "Open",
-            created_at = DateOnly.FromDateTime(DateTime.Now),
-            updated_at = DateOnly.FromDateTime(DateTime.Now),
-            order_item_id = Data.OrderId,
-            user_id = Data.UserId,
-            type_id = Data.CaseTypeId,
-            department_id = Data.CaseDepartmentId
+            createdAt = DateOnly.FromDateTime(DateTime.Now),
+            updatedAt = DateOnly.FromDateTime(DateTime.Now),
+            orderItemId = Data.OrderId,
+            userId = Data.UserId,
+            typeId = Data.CaseTypeId,
+            departmentId = Data.CaseDepartmentId
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
@@ -80,7 +80,7 @@ public class CreateCaseService
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public string? AttachmentUrl { get; set; }
+        public List<string>? AttachmentUrl { get; set; }
     }
 
     public class CaseContact

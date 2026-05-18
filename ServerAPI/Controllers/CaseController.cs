@@ -47,7 +47,7 @@ public class CaseController : ControllerBase
     }
     
 
-    [HttpGet("department/{department_id}")]
+    [HttpGet("department/{departmentId}")]
     public async Task<IActionResult> GetCasesByDepartment(int department_id)
     {
         var cases = await _caseRepository.GetCasesByDepartment(department_id);

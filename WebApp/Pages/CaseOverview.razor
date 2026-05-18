@@ -13,22 +13,22 @@
     <div class="status-frame">
         <div class="status-box">
             <h3 class="status-text">OPEN</h3>
-            <p class="status-num">20</p>
+            <p class="status-num">@OpenCount</p>
         </div>
 
         <div class="status-box2">
             <h3 class="status-text">IN PROGRESS</h3>
-            <p class="status-num">5</p>
+            <p class="status-num">@InProgressCount</p>
         </div>
 
         <div class="status-box2">
             <h3 class="status-text">SOLVED</h3>
-            <p class="status-num">10</p>
+            <p class="status-num">@SolvedCount</p>
         </div>
 
         <div class="status-box2">
             <h3 class="status-text">TOTAL</h3>
-            <p class="status-num">35</p>
+            <p class="status-num">@TotalCount</p>
         </div>
     </div>
 
@@ -118,7 +118,7 @@
         _ => "Unknown"
     };
 
-    private string GetStatusClass(string status) => status switch
+    private string GetStatusClass(string status) => status switch   
     {
         "Open" => "status-open",
         "Assigned" => "status-assigned",
@@ -127,4 +127,9 @@
         "Finished" => "status-finished",
         _ => "status-default"
     };
+
+    private int TotalCount => cases.Count;
+    private int OpenCount => cases.Count(c => c.status == "Open" || c.status == "Case received");
+    private int InProgressCount => cases.Count(c => c.status == "In progress" || c.status == "Testing");
+    private int SolvedCount => cases.Count(c => c.status == "Finished");
 }

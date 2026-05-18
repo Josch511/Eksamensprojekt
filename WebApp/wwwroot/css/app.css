@@ -653,6 +653,10 @@ code {
     border-radius: 6px;
 }
 
+.sidebar-item-row:hover {
+    background: rgba(91, 190, 255, 0.2);
+}
+
 .sidebar-item-row.active {
     background: #5BBEFF;
 }
@@ -688,6 +692,15 @@ code {
 .sidebar-subitem {
     color: #CFE3EB;
     margin: 0;
+}
+
+.sidebar-subitem:hover {
+    color: #FFFFFF;
+}
+
+.sidebar-subitem.active {
+    color: #FFFFFF;
+    font-weight: 600;
 }
 
 .status-text {
@@ -986,4 +999,9 @@ code {
 .status-default {
     background: #EDEDED;
     color: #666;
+}
+
+.sidebar-item-row,
+.sidebar-subitem {
+    text-decoration: none;
 }

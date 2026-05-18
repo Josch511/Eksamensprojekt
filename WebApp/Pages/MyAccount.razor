@@ -52,7 +52,7 @@
 <div class="right-container">
     <div class="header-container">
         <h2>My current cases</h2>
-        <button class="btn-closed-cases">Closed cases</button>
+        <button class="btn-closed-cases">Previous cases</button>
     </div>
 
     @if (!currentCases.Any())
@@ -61,25 +61,23 @@
     }
     else
     {
-        @foreach (var currentCase in currentCases)
-        {
-            <div class="case-item">
-                    <img class="currentcase-img" src="@(currentCase.media?.FirstOrDefault() ?? "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80")" />
-                <div class="case-item_info">
-                    <div class="status-container">
-                        <span class="status-btn">@currentCase.status</span>
+        <div class="current-cases">
+            @foreach (var currentCase in currentCases)
+            {
+                <div class="case-card">
+                    <img class="case-image" src="@(currentCase.media?.FirstOrDefault() ?? "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80")" />
+                    <div class="case-details">
+                        <span class="case-status">@currentCase.status</span>
+                        <h4 class="case-title">Case #@currentCase._id</h4>
+                        <h4 class="case-title">Title:@currentCase.title</h4>
+                        <p class="case-meta">Product serial: @currentCase.orderItemId</p>
+                        <p class="case-meta">Case type: @TypeName(currentCase.typeId) &nbsp; Department: @DepName(currentCase.departmentId)</p>
                     </div>
-                    <div class="currentcase-name">
-                        <h4>Case @currentCase.title</h4>
-                    </div>
-                    <p class="currentcase-information">Created: @currentCase.createdAt.ToShortDateString()</p>
-                    <p class="currentcase-information">
-                        Case type: @TypeName(currentCase.typeId) — Department: @DepName(currentCase.departmentId)
-                    </p>
+                    <a class="case-view" href="/case-status/@currentCase._id">View <img class="sidebar-icon" src="assets/arrow-right.svg" /></a>
                 </div>
-            </div>
-            <hr />
-        }
+                <hr class="case-divider" />
+            }
+        </div>
     }
 </div>
 </div>

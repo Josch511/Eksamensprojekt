@@ -20,5 +20,6 @@ namespace Core
         public int departmentId { get; set; }
         public int? typeId { get; set; }
         public int orderItemId { get; set; }
+        public int? assignedEmployeeId { get; set; }
     }
 }

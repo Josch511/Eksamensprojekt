@@ -35,7 +35,7 @@ public class FileService : IFileService
 
     }
 
-    public string ConvertToUrl(string key) => $"/api/files/download/{key}";
+    public string ConvertToUrl(string key) => $"/uploads/{key}";
     
     
     public async Task<(bool success, string info)> DeleteFile(string filename)

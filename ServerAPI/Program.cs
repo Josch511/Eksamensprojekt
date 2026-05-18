@@ -34,9 +34,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseStaticFiles();
+
 app.UseCors("AllowBlazor");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapGet("/debug-path", (IWebHostEnvironment env) => new {
+    WebRootPath = env.WebRootPath,
+    ContentRootPath = env.ContentRootPath,
+    UploadsExists = Directory.Exists(Path.Combine(env.WebRootPath ?? "", "uploads"))
+});
 
 app.Run();

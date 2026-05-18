@@ -72,9 +72,9 @@
                     <div class="currentcase-name">
                         <h4>Case @currentCase.title</h4>
                     </div>
-                    <p class="currentcase-information">Created: @currentCase.created_at.ToShortDateString()</p>
+                    <p class="currentcase-information">Created: @currentCase.createdAt.ToShortDateString()</p>
                     <p class="currentcase-information">
-                        Case type: @TypeName(currentCase.type_id) — Department: @DepName(currentCase.department_id)
+                        Case type: @TypeName(currentCase.typeId) — Department: @DepName(currentCase.departmentId)
                     </p>
                 </div>
             </div>

@@ -35,7 +35,7 @@ public class CaseRepository : ICaseRepository
 
     public async Task<List<Cases>> GetCasesById(int id)
     {
-        return await _cases.Find(c => c.user_id == id).ToListAsync();
+        return await _cases.Find(c => c.userId == id).ToListAsync();
     }
 
     public async Task<List<Cases>> GetAllCases()
@@ -50,6 +50,6 @@ public class CaseRepository : ICaseRepository
 
     public async Task<List<Cases>> GetCasesByDepartment(int department_id)
     {
-        return await _cases.Find(c => c.department_id == department_id).ToListAsync();
+        return await _cases.Find(c => c.departmentId == department_id).ToListAsync();
     }
 }

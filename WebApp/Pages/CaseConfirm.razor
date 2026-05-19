@@ -71,9 +71,7 @@
 
     private async Task Send()
     {
-        await CaseService.Submit();
-
-        Navigation.NavigateTo("/case-detail");
-    }
+        var caseId = await CaseService.Submit();
+        Navigation.NavigateTo($"/case-status/{caseId}");
     }
 }

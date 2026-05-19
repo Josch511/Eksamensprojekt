@@ -43,26 +43,30 @@ public class CreateCaseService
     }
 
 
-    public async Task Submit()
+    public async Task<int> Submit()
     {
         var newCase = new Cases
         {
-            title = Data.CaseInfo.Title,
-            description = Data.CaseInfo.Description,
-            media = Data.CaseInfo.AttachmentUrl,
+            title = Data.CaseInfo.Title ?? string.Empty,
+            description = Data.CaseInfo.Description ?? string.Empty,
+            media = Data.CaseInfo.AttachmentUrl ?? new List<string>(),
             status = "Open",
             createdAt = DateOnly.FromDateTime(DateTime.Now),
             updatedAt = DateOnly.FromDateTime(DateTime.Now),
             orderItemId = Data.OrderId,
             userId = Data.UserId,
             typeId = Data.CaseTypeId,
-            departmentId = Data.CaseDepartmentId
+            departmentId = Data.CaseDepartmentId,
+            caseUpdates = new List<CaseUpdate>()
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
         response.EnsureSuccessStatusCode();
 
+        var created = await response.Content.ReadFromJsonAsync<Cases>();
         await Clear();
+
+        return created?._id ?? 0;
     }
     public class CaseDraft
     {
@@ -70,8 +74,8 @@ public class CreateCaseService
         public int? UserId { get; set; }
         public int CaseTypeId { get; set; }
         public int CaseDepartmentId { get; set; }
-        public string Serial { get; set; }
-        public string Name { get; set; }
+        public string? Serial { get; set; }
+        public string? Name { get; set; }
         public CaseInfo CaseInfo { get; set; } = new();
         public CaseContact CaseContact { get; set; } = new();
     }

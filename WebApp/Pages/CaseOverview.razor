@@ -35,6 +35,13 @@
     <div class="table-box">
         <div class="table-filters">
             <div class="table-filters-left">
+                <select class="table-select" name="Status" @bind="selectedStatus">
+                    <option value="All">Status</option>
+                    <option value="Open">OPEN</option>
+                    <option value="Assigned">ASSIGNED</option>
+                    <option value="InProgress">IN PROGRESS</option>
+                    <option value="Solved">SOLVED</option>
+                </select>
                 <select class="table-select" name="Case Type">
                     <option value="">Case Type</option>
                     <option value="Feature">Feature</option>
@@ -63,7 +70,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in cases)
+                @foreach (var item in FilteredCases)
                 {
                     <tr class="table-row">
                         <td>#@item._id</td>
@@ -83,9 +90,23 @@
 </div>
 @code {
     private List<Cases> cases = new();
+    private string selectedStatus = "All";
+
+    private IEnumerable<Cases> FilteredCases => cases.Where(c => MatchesStatus(c.status));
+
+    private bool MatchesStatus(string status) => selectedStatus switch
+    {
+        "Open" => status == "Open" || status == "Case received",
+        "Assigned" => status == "Assigned employee",
+        "InProgress" => status == "In progress" || status == "Testing",
+        "Solved" => status == "Finished",
+        _ => true
+    };
 
     protected override async Task OnParametersSetAsync()
     {
+        selectedStatus = "All";
+
         if (DepartmentId.HasValue)
         {
             cases = await CaseService.GetCasesByDepartment(DepartmentId.Value);
@@ -118,10 +139,10 @@
         _ => "Unknown"
     };
 
-    private string GetStatusClass(string status) => status switch   
+    private string GetStatusClass(string status) => status switch
     {
-        "Open" => "status-open",
-        "Assigned" => "status-assigned",
+        "Case received" => "status-open",
+        "Assigned employee" => "status-assigned",
         "In progress" => "status-progress",
         "Testing" => "status-testing",
         "Finished" => "status-finished",

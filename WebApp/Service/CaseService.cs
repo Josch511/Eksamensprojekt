@@ -43,5 +43,13 @@ namespace WebApp.Service
             
             return cases ?? new Cases();
         }
+
+        public async Task AssignCase(int caseId, int employeeId)
+        {
+            await _http.PutAsync
+            (
+                $"cases/{caseId}/assign/{employeeId}",null
+            );
+        }
     }
-}
+} 

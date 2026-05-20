@@ -22,5 +22,15 @@ namespace Core
         public int orderItemId { get; set; }
         public int? assignedEmployeeId { get; set; }
         public List<CaseUpdate> caseUpdates { get; set; } = new();
+        
+        [BsonElement("caseContact")]
+        public CaseContact? caseContact { get; set; } 
+    }
+    
+    public class CaseContact
+    {
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Telephone { get; set; }
     }
 }

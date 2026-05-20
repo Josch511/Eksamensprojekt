@@ -57,7 +57,13 @@ public class CreateCaseService
             userId = Data.UserId,
             typeId = Data.CaseTypeId,
             departmentId = Data.CaseDepartmentId,
-            caseUpdates = new List<CaseUpdate>()
+            caseUpdates = new List<CaseUpdate>(),
+            caseContact = new Core.CaseContact
+            {
+            Name = Data.CaseContact.Name,
+            Email = Data.CaseContact.Email,
+            Telephone = Data.CaseContact.Telephone
+        }
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
@@ -78,6 +84,7 @@ public class CreateCaseService
         public string? Name { get; set; }
         public CaseInfo CaseInfo { get; set; } = new();
         public CaseContact CaseContact { get; set; } = new();
+        
     }
 
     public class CaseInfo

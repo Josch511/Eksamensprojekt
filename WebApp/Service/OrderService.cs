@@ -20,5 +20,11 @@ namespace WebApp.Services
 
             return orders ?? new List<OrderItems>();
         }
+        public async Task<OrderItems?> GetOrderById(int id)
+        {
+            var orders = await _http.GetFromJsonAsync<OrderItems>
+                ($"orderItems/{id}");
+            return orders;
+        }
     }
 }

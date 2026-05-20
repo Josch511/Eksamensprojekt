@@ -17,4 +17,8 @@ public class OrderItemsRepository : IOrderItemsRepository
     {
         return await _orderItems.Find(o => o.userId == userId).ToListAsync();
     }
+    public async Task<OrderItems?> GetOrderById(int id)
+    {
+        return await _orderItems.Find(o => o._id == id).FirstOrDefaultAsync();
+    }
 }

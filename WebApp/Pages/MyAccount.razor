@@ -65,12 +65,12 @@
             @foreach (var currentCase in currentCases)
             {
                 <div class="case-card">
-                    <img class="case-image" src="@(currentCase.media?.FirstOrDefault() ?? "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80")" />
+                    <img class="case-image" src="@GetImageForCase(currentCase)" />
                     <div class="case-details">
                         <span class="case-status">@currentCase.status</span>
                         <h4 class="case-title">Case #@currentCase._id</h4>
                         <h4 class="case-title">Title:@currentCase.title</h4>
-                        <p class="case-meta">Product serial: Serial number</p>
+                        <p class="case-meta">Product serial: @GetSerialForCase(currentCase)</p>
                         <p class="case-meta">Case type: @TypeName(currentCase.typeId) &nbsp; Department: @DepName(currentCase.departmentId)</p>
                     </div>
                     <a class="case-view" href="/case-status/@currentCase._id">View <img class="sidebar-icon" src="assets/arrow-right.svg" /></a>
@@ -85,6 +85,7 @@
 @code {
     private List<OrderItems> orders = new();
     private List<Cases> currentCases = new();
+    private Dictionary<int, OrderItems?> orderById = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,13 +100,18 @@
         if (hasCreateCase)
         {
             await localStorage.RemoveItemAsync("createcase");
-            return;
         }
 
         var userId = await localStorage.GetItemAsync<int>("userId");
 
         orders = await OrderService.GetCustomerOrders(userId);
         currentCases = await CaseService.GetCasesById(userId);
+
+        var orderIds = currentCases.Select(c => c.orderItemId).Distinct();
+        foreach (var id in orderIds)
+        {
+            orderById[id] = await OrderService.GetOrderById(id);
+        }
     }
 
     private async Task CreateCase(OrderItems order)
@@ -139,4 +145,14 @@
         4 => "Production",
         _ => "Unknown"
     };
+
+    private string GetSerialForCase(Cases c) =>
+        orderById.TryGetValue(c.orderItemId, out var order) && order is not null
+            ? order.serial
+            : "Unknown";
+
+    private string GetImageForCase(Cases c) =>
+        orderById.TryGetValue(c.orderItemId, out var order) && order is not null
+            ? order.image_url
+            : "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80";
 }

@@ -24,5 +24,12 @@ public class OrderItemsController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetOrderById(int id)
+    {
+        var order = await _orderItemsRepository.GetOrderById(id);
+        if (order is null) return NotFound();
+        return Ok(order);
+    }
 }
 

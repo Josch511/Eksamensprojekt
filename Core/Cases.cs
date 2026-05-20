@@ -16,7 +16,6 @@ namespace Core
         public DateOnly updatedAt { get; set; }
         public DateOnly createdAt { get; set; }
         public int? userId { get; set; }
-        public string? serial { get; set; }
         public int departmentId { get; set; }
         public int? typeId { get; set; }
         public int orderItemId { get; set; }

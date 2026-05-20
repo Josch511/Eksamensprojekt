@@ -10,6 +10,6 @@ namespace ServerAPI.Interface
         Task<Cases> GetCaseByCaseId(int id);
         Task<List<Cases>> GetCasesByDepartment(int department_id);
         Task AssignCase(int caseId, int employeeId);
-
+        Task<List<Cases>> GetMyCasesById(int employeeId);
     }
 }

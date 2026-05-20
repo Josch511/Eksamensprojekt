@@ -60,4 +60,11 @@ public class CaseController : ControllerBase
         await _caseRepository.AssignCase(caseId, employeeId);
         return Ok();
     }
+
+    [HttpGet("my/{employeeId}")]
+    public async Task<IActionResult> GetMyCasesById(int employeeId)
+    {
+        var cases = await _caseRepository.GetMyCasesById(employeeId);
+        return Ok(cases);
+    }
 }

@@ -64,4 +64,9 @@ public class CaseRepository : ICaseRepository
             update
         );
     }
+
+    public async Task<List<Cases>> GetMyCasesById(int employeeId)
+    {
+        return await _cases.Find(c => c.assignedEmployeeId == employeeId).ToListAsync();
+    }
 }

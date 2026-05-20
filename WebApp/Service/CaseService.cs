@@ -51,5 +51,12 @@ namespace WebApp.Service
                 $"cases/{caseId}/assign/{employeeId}",null
             );
         }
+
+        public async Task<List<Cases>> GetCasesByAssignedEmployee(int employeeId)
+        {
+            var cases = await _http.GetFromJsonAsync<List<Cases>>
+                ($"cases/my/{employeeId}");
+            return cases ?? new List<Cases>();
+        }
     }
 } 

@@ -55,20 +55,7 @@
         </div>
     </div>
     <div class="column">
-        <div class="info-card">
-            <h3>Case summary</h3>
-            <div class="issue-summary">
-                <h4>@currentCase.description</h4>
-                <p class="secondary">@currentCase.description</p>
-            </div>
-            <div class="details-container">
-                <div class="detail-item">
-                    <p class="secondary">Last updated</p>
-                    <p>@currentCase.updatedAt</p>
-                </div>
-
-            </div>
-        </div>
+        <CaseSummary Case="@currentCase" />
     </div>
 </div>
 

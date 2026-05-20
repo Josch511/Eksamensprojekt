@@ -104,7 +104,15 @@
         currentCase.caseUpdates = currentCase.caseUpdates
             .OrderByDescending(u => u.createdAt)
             .ToList();
-        
+
+        int loggedInId = await localStorage.GetItemAsync<int>("userId");
+        loggedInUser = await UserService.GetUserById(loggedInId);
+
+        if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+        {
+            assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+        }
+
         CurrentStep = currentCase.status switch
         {
             "Case received"     => 1,

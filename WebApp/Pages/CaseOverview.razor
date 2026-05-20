@@ -118,8 +118,11 @@
         else if (DepartmentId.HasValue)
         {
             cases = await CaseService.GetCasesByDepartment(DepartmentId.Value);
+        }
         else
+        {
             cases = await CaseService.GetAllCases();
+        }
 
         foreach (var c in cases)
         {
@@ -136,6 +139,9 @@
 
     [Parameter]
     public int? DepartmentId { get; set; }
+
+    [Parameter]
+    public int? EmployeeId { get; set; }
     protected override async Task OnInitializedAsync()
     {
         cases = await CaseService.GetAllCases();

@@ -16,11 +16,20 @@ namespace Core
         public DateOnly updatedAt { get; set; }
         public DateOnly createdAt { get; set; }
         public int? userId { get; set; }
-        public string? serial { get; set; }
         public int departmentId { get; set; }
         public int? typeId { get; set; }
         public int orderItemId { get; set; }
         public int? assignedEmployeeId { get; set; }
         public List<CaseUpdate> caseUpdates { get; set; } = new();
+        
+        [BsonElement("caseContact")]
+        public CaseContact? caseContact { get; set; } 
+    }
+    
+    public class CaseContact
+    {
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Telephone { get; set; }
     }
 }

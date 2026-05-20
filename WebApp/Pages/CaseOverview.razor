@@ -1,5 +1,6 @@
 ﻿@page "/case-overview"
 @page "/case-overview/{DepartmentId:int}"
+@page "/case-overview/my/{employeeId:int}"
 @using Core
 @using WebApp.Service
 @inject ICaseService CaseService
@@ -9,7 +10,7 @@
 
 <div class="overview-content">
     <div class="Desc-Header">
-        <h3>All Cases</h3>
+        <h3>@(EmployeeId.HasValue ? "My Cases" : "All Cases")</h3>
     </div>
 
     <div class="status-frame">
@@ -110,7 +111,12 @@
     {
         selectedStatus = "All";
 
-        if (DepartmentId.HasValue)
+        if (EmployeeId.HasValue)
+        {
+            cases = await CaseService.GetCasesByAssignedEmployee(EmployeeId.Value);
+        }
+        else if (DepartmentId.HasValue)
+        {
             cases = await CaseService.GetCasesByDepartment(DepartmentId.Value);
         else
             cases = await CaseService.GetAllCases();

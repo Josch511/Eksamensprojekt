@@ -1,0 +1,36 @@
+@using Core
+
+<div class="info-card">
+    <h3>Case summary</h3>
+    <div class="issue-summary">
+        <h4>@Case.title</h4>
+        <p class="secondary">@Case.description</p>
+    </div>
+    <hr class="separator" />
+    <div class="details-container">
+        <div class="detail-item">
+            <p class="secondary">Created at</p>
+            <p>@Case.createdAt</p>
+        </div>
+        @if (Case.caseContact != null)
+        {
+            <div class="detail-item">
+                <p class="secondary">Customer</p>
+                <p><strong>@Case.caseContact.Name</strong></p>
+            </div>
+            <div class="detail-item">
+                <p class="secondary">Contact email</p>
+                <p>@Case.caseContact.Email</p>
+            </div>
+            <div class="detail-item">
+                <p class="secondary">Contact tel</p>
+                <p>@Case.caseContact.Telephone</p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Cases Case { get; set; } = default!;
+}

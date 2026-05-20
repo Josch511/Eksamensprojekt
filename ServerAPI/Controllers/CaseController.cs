@@ -74,4 +74,11 @@ public class CaseController : ControllerBase
         if (!success) return BadRequest("Could not release case");
         return Ok();
     }
+
+    [HttpGet("my/{employeeId}")]
+    public async Task<IActionResult> GetMyCasesById(int employeeId)
+    {
+        var cases = await _caseRepository.GetMyCasesById(employeeId);
+        return Ok(cases);
+    }
 }

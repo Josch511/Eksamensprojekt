@@ -78,4 +78,9 @@ public class CaseRepository : ICaseRepository
         var result = await _cases.UpdateOneAsync(filter, update);
         return result.ModifiedCount > 0;
     }
+
+    public async Task<List<Cases>> GetMyCasesById(int employeeId)
+    {
+        return await _cases.Find(c => c.assignedEmployeeId == employeeId).ToListAsync();
+    }
 }

@@ -1,15 +1,17 @@
 ﻿@inherits LayoutComponentBase
+@using Blazored.LocalStorage
+@inject ILocalStorageService localStorage
 
 <div class="overview-layout">
     <div class="sidebar-overview">
         <img class="logo" src="https://www.borncut.com/media/aigpqdfi/borncut_logo_white.svg">
         <div class="sidebar-section">
-            <NavLink class="sidebar-item-row" ActiveClass="active" href="/case-overview">
+            <NavLink class="sidebar-item-row" ActiveClass="active" href="@MyCasesUrl" Match="NavLinkMatch.All">
                 <img class="sidebar-icon" src="assets/my_cases.svg" />
                 <p class="sidebar-item">My Cases</p>
             </NavLink>
 
-            <NavLink class="sidebar-item-row" ActiveClass="active" href="/case-overview">
+            <NavLink class="sidebar-item-row" ActiveClass="active" href="/case-overview" Match="NavLinkMatch.All">
                 <img class="sidebar-icon" src="assets/all_cases.svg" />
                 <p class="sidebar-item">All Cases</p>
             </NavLink>
@@ -27,3 +29,13 @@
         @Body
     </div>
 </div>
+
+@code {
+    private int? userId;
+    private string MyCasesUrl => userId.HasValue ? $"/case-overview/my/{userId}" : "/case-overview";
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = await localStorage.GetItemAsync<int>("userId");
+    }
+}

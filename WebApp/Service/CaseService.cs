@@ -51,5 +51,11 @@ namespace WebApp.Service
                 $"cases/{caseId}/assign/{employeeId}",null
             );
         }
+
+        public async Task<bool> ReleaseCase(int caseId)
+        {
+            var response = await _http.PutAsJsonAsync($"cases/{caseId}/release", new { });
+            return response.IsSuccessStatusCode;
+        }
     }
 } 

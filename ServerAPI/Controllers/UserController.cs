@@ -22,4 +22,11 @@ public class UserController : ControllerBase
         var existingUser = await _userRepository.LoginUser(user);
         return Ok(existingUser);
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUserById(int id)
+    {
+        var user = await _userRepository.GetUserById(id);
+        return Ok(user);
+    }
 }

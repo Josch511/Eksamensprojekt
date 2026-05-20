@@ -2,6 +2,8 @@
 @layout StaffLayout
 @using Service
 @inject ICaseService CaseService
+@inject IUserService UserService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @using WebApp.Pages.Components
 
 <div class="header">
@@ -17,11 +19,32 @@
         </div>
         <div class="action-item">
             <label>Case owner</label>
-            <div class="case-owner">
-                <img src="favicon.png"/>
-                <p>@CaseOwner.name</p>
-                <button class="btn-skeleton">Release</button>
-            </div>
+
+            @if (currentCase.assignedEmployeeId == null || currentCase.assignedEmployeeId == 0)
+            {
+                <div>
+                    <p>Case not assigned</p>
+                    @if (loggedInUser.role == "employee")
+                    {
+                        <button class="btn-primary" @onclick="ClaimCase">
+                            Claim case
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="case-owner">
+                    <img src="favicon.png" />
+                    <p>@assignedUser.name</p>
+                    @if (loggedInUser.role == "employee")
+                    {
+                        <button class="btn-skeleton" @onclick="ReleaseCase">
+                            Release
+                        </button>
+                    }
+                </div>
+            }
         </div>
         <div class="action-item">
             <label for="caseEta">Est. resolution</label>
@@ -75,18 +98,40 @@
 @code {
     [Parameter]
     public int CaseId { get; set; }
+
     private Cases currentCase = new();
-    
+    private User assignedUser = new();
+    private User loggedInUser = new();
+
     protected override async Task OnInitializedAsync()
     {
         currentCase = await CaseService.GetCaseByCaseId(CaseId);
+
+        int loggedInId = await localStorage.GetItemAsync<int>("userId");
+        loggedInUser = await UserService.GetUserById(loggedInId);
+
+        if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+        {
+            assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+        }
     }
     
+    private async Task ClaimCase()
+    {
+        await CaseService.AssignCase(currentCase._id, loggedInUser._id.Value);
+        currentCase.assignedEmployeeId = loggedInUser._id.Value;
+        assignedUser = loggedInUser;
+    }
+    private async Task ReleaseCase()
+    {
+        await CaseService.ReleaseCase(currentCase._id);
+        currentCase.assignedEmployeeId = null;
+        assignedUser = new User();
+    }
     public class CaseOwner
     {
         public int userId = 0;
         public static string name = "Søren Nielsen";
         public string? avatar;
-
     }
 }

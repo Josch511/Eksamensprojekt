@@ -51,4 +51,9 @@ public class UserRepository : IUserRepository
             .Find(u => u.role == "employee")
             .ToListAsync();
     }
+
+    public async Task<User> GetUserById(int id)
+    {
+        return await _users.Find(u => u._id == id).FirstOrDefaultAsync();
+    }
 }

@@ -11,10 +11,12 @@ namespace ServerAPI.Controllers;
 public class CaseController : ControllerBase
 {
     private readonly ICaseRepository _caseRepository;
+    private readonly  ICaseUpdateService _caseUpdateService;
 
-    public CaseController(ICaseRepository caseRepository)
+    public CaseController(ICaseRepository caseRepository, ICaseUpdateService caseUpdateService)
     {
         _caseRepository = caseRepository;
+        _caseUpdateService = caseUpdateService;
     }
     
     [HttpGet]
@@ -30,6 +32,13 @@ public class CaseController : ControllerBase
     {
         await _caseRepository.CreateCase(newCase);
         return Ok(newCase);
+    }
+
+    [HttpPost("{caseId}/updates")]
+    public async Task<IActionResult> AddCaseComment(int caseId, [FromBody] string commentMessage)
+    {
+        await _caseUpdateService.Build(caseId, "A comment has been added by staff", true, commentMessage);
+        return Ok();
     }
     
     [HttpGet("{id}")]

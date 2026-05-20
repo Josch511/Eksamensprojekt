@@ -64,5 +64,10 @@ namespace WebApp.Service
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/release", new { });
             return response.IsSuccessStatusCode;
         }
+
+        public async Task CreateCaseComment(int caseId, string message)
+        {
+            await _http.PostAsJsonAsync($"cases/{caseId}/updates", message);
+        }
     }
 } 

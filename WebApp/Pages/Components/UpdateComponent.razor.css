@@ -30,6 +30,9 @@
     background: #FFF;
 }
 
+.comment-content p {
+    flex: 1 0 0;
+}
 .comment-date {
     font-size: 12px;
     font-weight: 400;

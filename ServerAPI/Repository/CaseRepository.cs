@@ -33,6 +33,18 @@ public class CaseRepository : ICaseRepository
         await _cases.InsertOneAsync(newcase);
     }
 
+    public async Task AddCaseUpdate(int caseId, CaseUpdate caseUpdate)
+    {
+        var update = Builders<Cases>.Update
+            .Push(c => c.caseUpdates, caseUpdate)
+            .Set(c => c.updatedAt, DateOnly.FromDateTime(DateTime.UtcNow));
+
+        var result = await _cases.UpdateOneAsync(c => c._id == caseId, update);
+
+        if (result.MatchedCount == 0)
+            throw new KeyNotFoundException($"Case {caseId} not found.");
+    }
+
     public async Task<List<Cases>> GetCasesById(int id)
     {
         return await _cases.Find(c => c.userId == id).ToListAsync();

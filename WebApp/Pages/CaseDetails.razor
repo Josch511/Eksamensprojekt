@@ -51,6 +51,7 @@
             <input type="date" id="caseEta" class="input-default"/>
         </div>
     </div>
+    <Stepper CurrentStep="@CurrentStep" />
 </div>
 
 <div class="row">
@@ -61,8 +62,8 @@
         </div>
         <div class="content-container">
             <div class="input-container input-comment">
-                <textarea type="text" placeholder="Add a comment" class="input-default" rows="4"></textarea>
-                <button class="btn-floating btn-primary">
+                <textarea type="text" @bind="@commentInput" placeholder="Add a comment" class="input-default" rows="4"></textarea>
+                <button class="btn-floating btn-primary" @onclick="SubmitComment">
                     <img src="assets/SubmitButtonIcon.svg"/>
                 </button>
             </div>
@@ -70,7 +71,7 @@
             @foreach (var item in currentCase.caseUpdates)
             {
                 <UpdateComponent Message="@item.message"
-                                 Timestamp="@item.timestamp"
+                                 Timestamp="@item.createdAt"
                                  IsComment="@item.isComment"
                                  CommentMessage = "@item.commentMessage"/>
                 
@@ -87,12 +88,49 @@
     public int CaseId { get; set; }
 
     private Cases currentCase = new();
+    private string commentInput = "";
+    private int CurrentStep = 1;
+    
     private User assignedUser = new();
     private User loggedInUser = new();
 
     protected override async Task OnInitializedAsync()
     {
         currentCase = await CaseService.GetCaseByCaseId(CaseId);
+        currentCase.caseUpdates = currentCase.caseUpdates
+            .OrderByDescending(u => u.createdAt)
+            .ToList();
+        
+        CurrentStep = currentCase.status switch
+        {
+            "Case received"     => 1,
+            "Assigned employee" => 2,
+            "In progress"       => 3,
+            "Testing"           => 4,
+            "Finished"          => 5,
+            _                   => 1
+        };
+    }
+
+    private async Task SubmitComment()
+    {
+        if (string.IsNullOrWhiteSpace(commentInput))
+        {
+            return;
+        }
+        var update = new CaseUpdate()
+        {
+            message = "A staff member has added a comment",
+            isComment = true,
+            createdAt = DateTime.Now,
+            commentMessage = commentInput
+
+        };
+        
+        await CaseService.CreateCaseComment(CaseId, update.commentMessage);
+
+        currentCase.caseUpdates.Insert(0, update);
+        commentInput = string.Empty;
 
         int loggedInId = await localStorage.GetItemAsync<int>("userId");
         loggedInUser = await UserService.GetUserById(loggedInId);

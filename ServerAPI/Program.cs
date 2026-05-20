@@ -2,6 +2,7 @@ using Interface;
 using Repository;
 using DotNetEnv;
 using ServerAPI.Interface;
+using ServerAPI.Service;
 
 Env.Load(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".env"));
 
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
 builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<ICaseUpdateService, CaseUpdateService>();
 
 builder.Services.AddCors(options =>
 {

@@ -57,7 +57,21 @@ public class CaseController : ControllerBase
     [HttpPut("{caseId}/assign/{employeeId}")]
     public async Task<IActionResult> AssignCase(int caseId, int employeeId)
     {
-        await _caseRepository.AssignCase(caseId, employeeId);
+        var success = await _caseRepository.AssignCase(caseId, employeeId);
+
+        if (!success)
+        {
+            return BadRequest("Case already assigned");
+        }
+
+        return Ok();
+    }
+
+    [HttpPut("{caseId}/release")]
+    public async Task<IActionResult> ReleaseCase(int caseId)
+    {
+        var success = await _caseRepository.ReleaseCase(caseId);
+        if (!success) return BadRequest("Could not release case");
         return Ok();
     }
 

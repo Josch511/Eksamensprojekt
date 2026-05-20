@@ -53,16 +53,30 @@ public class CaseRepository : ICaseRepository
         return await _cases.Find(c => c.departmentId == departmentId).ToListAsync();
     }
 
-    public async Task AssignCase(int caseId, int employeeId)
+    public async Task<bool> AssignCase(int caseId, int employeeId)
     {
-        var update = Builders<Cases>.Update
-       .Set(c => c.assignedEmployeeId, employeeId);
-
-        await _cases.UpdateOneAsync
-        (
-            c => c._id == caseId,
-            update
+        var filter = Builders<Cases>.Filter.And(
+            Builders<Cases>.Filter.Eq(c => c._id, caseId),
+            Builders<Cases>.Filter.Or(
+                Builders<Cases>.Filter.Eq(c => c.assignedEmployeeId, null),
+                Builders<Cases>.Filter.Eq(c => c.assignedEmployeeId, 0)
+            )
         );
+
+        var update = Builders<Cases>.Update
+            .Set(c => c.assignedEmployeeId, employeeId);
+
+        var result = await _cases.UpdateOneAsync(filter, update);
+
+        return result.ModifiedCount > 0;
+    }
+
+    public async Task<bool> ReleaseCase(int caseId)
+    {
+        var filter = Builders<Cases>.Filter.Eq(c => c._id, caseId);
+        var update = Builders<Cases>.Update.Set(c => c.assignedEmployeeId, null);
+        var result = await _cases.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
     }
 
     public async Task<List<Cases>> GetMyCasesById(int employeeId)

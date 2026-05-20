@@ -8,5 +8,6 @@ namespace Interface
         Task<User?> GetByEmailAsync(string email);
         Task<List<User>> GetCustomers();
         Task<List<User>> GetEmployees();
+        Task<User> GetUserById(int id);
     }
 }

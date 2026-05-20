@@ -10,5 +10,6 @@ namespace WebApp.Service
         Task<Cases> GetCaseByCaseId(int id);
         Task AssignCase(int caseId, int employeeId);
         Task<List<Cases>> GetCasesByAssignedEmployee(int employeeId);
+        Task<bool> ReleaseCase(int caseId);
     }
 }

@@ -2,7 +2,9 @@
 @layout StaffLayout
 @using Service
 @inject ICaseService CaseService
+@inject IOrderService OrderService 
 @using WebApp.Pages.Components
+@using WebApp.Services
 
 <div class="header">
     <h2>Sag #@CaseId</h2>
@@ -55,7 +57,7 @@
         </div>
     </div>
     <div class="column">
-        <CaseSummary Case="@currentCase" />
+        <CaseSummary Case="@currentCase" OrderItem="@orderItem" />
     </div>
 </div>
 
@@ -63,10 +65,12 @@
     [Parameter]
     public int CaseId { get; set; }
     private Cases currentCase = new();
+    private OrderItems? orderItem;
     
     protected override async Task OnInitializedAsync()
     {
         currentCase = await CaseService.GetCaseByCaseId(CaseId);
+        orderItem = await OrderService.GetOrderById(currentCase.orderItemId);
     }
     
     public class CaseOwner

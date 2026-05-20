@@ -23,7 +23,7 @@ namespace Core
         public List<CaseUpdate> caseUpdates { get; set; } = new();
         
         [BsonElement("caseContact")]
-        public CaseContact? caseContact { get; set; } 
+        public CaseContact? caseContact { get; set; }
     }
     
     public class CaseContact

@@ -3,7 +3,9 @@
 <div class="info-card">
     <h3>Case summary</h3>
     <div class="issue-summary">
-        <h4>@Case.title</h4>
+        <h6>Case title</h6>
+        <p class="secondary">@Case.title</p>
+        <h6>Case description</h6>
         <p class="secondary">@Case.description</p>
     </div>
     <hr class="separator" />
@@ -28,9 +30,24 @@
             </div>
         }
     </div>
+    @if (OrderItem != null)
+    {
+        <hr class="separator" />
+        <h3>Product</h3>
+        <div class="product-item">
+            <img class="product-item_image" src="@OrderItem.image_url" alt="@OrderItem.name" />
+            <div class="product-item_info">
+                <p>@OrderItem.name</p>
+                <p class="secondary">Serial: @OrderItem.serial</p>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
     [Parameter, EditorRequired]
     public Cases Case { get; set; } = default!;
+
+    [Parameter]
+    public OrderItems? OrderItem { get; set; }
 }

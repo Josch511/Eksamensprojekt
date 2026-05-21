@@ -107,6 +107,7 @@
     private User loggedInUser = new();
 
     private string selectedStatus = "Case received";
+    private DateTime timeEstInput;
     
     protected override async Task OnInitializedAsync()
     {
@@ -124,6 +125,11 @@
         }
         selectedStatus = currentCase.status;
         CurrentStep = StatusToStep(currentCase.status);
+
+        if (currentCase.eta.HasValue)
+        {
+            timeEstInput = currentCase.eta.Value;
+        }
     }
 
     private async Task OnStatusChanged()
@@ -138,16 +144,6 @@
             currentCase.status = selectedStatus;
             CurrentStep = StatusToStep(currentCase.status);
         }
-            "Case received"     => 1,
-            "Assigned employee" => 2,
-            "In progress"       => 3,
-            "Testing"           => 4,
-            "Finished"          => 5,
-            _                   => 1
-        };
-
-        if (currentCase.eta.HasValue)
-            timeEstInput = currentCase.eta.Value;
     }
     private async Task SubmitComment()
     {
@@ -226,8 +222,6 @@
         public string? avatar;
 
     }
-
-    private DateTime timeEstInput;
 
     private async Task SaveTimeEst()
     {

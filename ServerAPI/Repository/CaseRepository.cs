@@ -8,10 +8,12 @@ using ServerAPI.Interface;
 public class CaseRepository : ICaseRepository
 {
     private readonly IMongoCollection<Cases> _cases;
+    private readonly IOrderItemsRepository _orderItemsRepository;
 
-    public CaseRepository(AuthenticationRepo authRepo)
+    public CaseRepository(AuthenticationRepo authRepo, IOrderItemsRepository orderItemsRepository)
     {
         _cases = authRepo.db.GetCollection<Cases>("cases");
+        _orderItemsRepository = orderItemsRepository;
     }
 
     public async Task CreateCase(Cases newcase)
@@ -51,7 +53,11 @@ public class CaseRepository : ICaseRepository
 
     public async Task<Cases> GetCaseByCaseId(int id)
     {
-        return await _cases.Find(c => c._id == id).FirstOrDefaultAsync();
+        var currentCase = await _cases.Find(c => c._id == id).FirstOrDefaultAsync(); 
+        
+        currentCase.orderItem = await _orderItemsRepository.GetOrderById(currentCase.orderItemId);
+
+        return currentCase;
     }
 
     public async Task<bool> AssignCase(int caseId, int employeeId)

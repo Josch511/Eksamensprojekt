@@ -24,6 +24,9 @@ namespace Core
         
         [BsonElement("caseContact")]
         public CaseContact? caseContact { get; set; }
+        
+        [BsonIgnore]
+        public OrderItems? orderItem { get; set; }
     }
     
     public class CaseContact

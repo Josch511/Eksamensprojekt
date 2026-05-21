@@ -79,6 +79,8 @@ public class CaseController : ControllerBase
     {
         var success = await _caseRepository.UpdateStatus(caseId, status);
         if (!success) return BadRequest("Could not update case status");
+
+        await _caseUpdateService.Build(caseId, $"Status updated to {status}", false, null);
         return Ok();
     }
 

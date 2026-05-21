@@ -19,14 +19,7 @@ public class CaseController : ControllerBase
         _caseUpdateService = caseUpdateService;
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetAllCases()
-    {
-        var cases = await _caseRepository.GetAllCases();
-        return Ok(cases);
-    }
-
-
+    
     [HttpPost]
     public async Task<IActionResult> CreateCase([FromBody] Cases newCase)
     {
@@ -55,13 +48,6 @@ public class CaseController : ControllerBase
         return Ok(currentCase);
     }
     
-
-    [HttpGet("department/{departmentId}")]
-    public async Task<IActionResult> GetCasesByDepartment(int departmentId)
-    {
-        var cases = await _caseRepository.GetCasesByDepartment(departmentId);
-        return Ok(cases);
-    }
 
     [HttpPut("{caseId}/assign/{employeeId}")]
     public async Task<IActionResult> AssignCase(int caseId, int employeeId)
@@ -103,5 +89,16 @@ public class CaseController : ControllerBase
         await _caseUpdateService.Build(caseId, $"Est. resolution updated to {timeEst.ToShortDateString()}", false, null);
         return Ok();
 
+    }
+
+    [HttpGet("filter")]
+    public async Task<IActionResult> GetFilteredCases(
+    [FromQuery] int? departmentId,
+    [FromQuery] int? employeeId,
+    [FromQuery] int? typeId,
+    [FromQuery] string? status)
+    {
+        var cases = await _caseRepository.GetFilteredCases(departmentId, employeeId, typeId, status);
+        return Ok(cases);
     }
 }

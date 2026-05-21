@@ -49,19 +49,9 @@ public class CaseRepository : ICaseRepository
         return await _cases.Find(c => c.userId == id).ToListAsync();
     }
 
-    public async Task<List<Cases>> GetAllCases()
-    {
-        return await _cases.Find(_ => true).ToListAsync();
-    }
-    
     public async Task<Cases> GetCaseByCaseId(int id)
     {
         return await _cases.Find(c => c._id == id).FirstOrDefaultAsync();
-    }
-
-    public async Task<List<Cases>> GetCasesByDepartment(int departmentId)
-    {
-        return await _cases.Find(c => c.departmentId == departmentId).ToListAsync();
     }
 
     public async Task<bool> AssignCase(int caseId, int employeeId)
@@ -109,5 +99,24 @@ public class CaseRepository : ICaseRepository
         var filter = Builders<Cases>.Filter.Eq(c => c._id, caseId);
         var update = Builders<Cases>.Update.Set(c => c.eta, timeEst);
         await _cases.UpdateOneAsync(filter, update);
+    }
+
+    public async Task<List<Cases>> GetFilteredCases(int? departmentId, int? employeeId, int? typeId, string? status)
+    {
+        var filter = Builders<Cases>.Filter.Empty;
+
+        if (departmentId.HasValue)
+            filter &= Builders<Cases>.Filter.Eq(c => c.departmentId, departmentId.Value);
+
+        if (employeeId.HasValue)
+            filter &= Builders<Cases>.Filter.Eq(c => c.assignedEmployeeId, employeeId.Value);
+
+        if (typeId.HasValue)
+            filter &= Builders<Cases>.Filter.Eq(c => c.typeId, typeId.Value);
+
+        if (!string.IsNullOrEmpty(status))
+            filter &= Builders<Cases>.Filter.Eq(c => c.status, status);
+
+        return await _cases.Find(filter).ToListAsync();
     }
 }

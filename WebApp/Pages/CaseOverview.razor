@@ -45,19 +45,15 @@
                     <option value="InProgress">IN PROGRESS</option>
                     <option value="Solved">SOLVED</option>
                 </select>
-                <select class="table-select" name="Case Type">
+                <select class="table-select" name="Case Type" @bind="selectedType" @bind:after="ApplyFilters">
                     <option value="">Case Type</option>
-                    <option value="Feature">Feature</option>
-                    <option value="Problem">Problem</option>
+                    <option value="1">Problem</option>
+                    <option value="2">Feature</option>
                 </select>
-                <select class="table-select" name="Customer">
-                    <option value="">Customer</option>
-                </select>
-                <input class="table-search" placeholder="Search" />
+               
+                
             </div>
-            <select class="table-select" name="Sort">
-                <option value="">Sort by Date created</option>
-            </select>
+            
         </div>
 
         <table class="cases-table">
@@ -92,6 +88,7 @@
     </div>
 </div>
 @code {
+    private string selectedType = "";
     private List<Cases> cases = new();
     private List<User> employees = new();
     private string selectedStatus = "All";
@@ -111,19 +108,28 @@
     {
         selectedStatus = "All";
 
-        if (EmployeeId.HasValue)
-        {
-            cases = await CaseService.GetCasesByAssignedEmployee(EmployeeId.Value);
-        }
-        else if (DepartmentId.HasValue)
-        {
-            cases = await CaseService.GetCasesByDepartment(DepartmentId.Value);
-        }
-        else
-        {
-            cases = await CaseService.GetAllCases();
-        }
+        cases = await CaseService.GetFilteredCases(DepartmentId, EmployeeId, null, null);
 
+        foreach (var c in cases)
+        {
+            if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
+            {
+                var user = await UserService.GetUserById(c.assignedEmployeeId.Value);
+                if (user != null && !employees.Any(e => e._id == user._id))
+                {
+                    employees.Add(user);
+                }
+            }
+        }
+    }
+
+    private async Task ApplyFilters()
+    {
+        int? typeId = string.IsNullOrEmpty(selectedType) ? null : int.Parse(selectedType);
+
+        cases = await CaseService.GetFilteredCases(DepartmentId, EmployeeId, typeId, null);
+
+        employees = new List<User>();
         foreach (var c in cases)
         {
             if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
@@ -142,22 +148,7 @@
 
     [Parameter]
     public int? EmployeeId { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-        cases = await CaseService.GetAllCases();
-
-        foreach (var c in cases)
-        {
-            if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
-            {
-                var user = await UserService.GetUserById(c.assignedEmployeeId.Value);
-                if (user != null && !employees.Any(e => e._id == user._id))
-                {
-                    employees.Add(user);
-                }
-            }
-        }
-    }
+    
 
     private string GetEmployeeName(int? employeeId)
     {

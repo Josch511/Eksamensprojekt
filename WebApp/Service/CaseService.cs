@@ -14,21 +14,6 @@ namespace WebApp.Service
             _http = http;
         }
 
-        public async Task<List<Cases>> GetAllCases()
-        {
-            var cases = await _http.GetFromJsonAsync<List<Cases>>
-                ($"cases");
-
-            return cases ?? new List<Cases>();
-        }
-
-        public async Task<List<Cases>> GetCasesByDepartment(int departmentId)
-        {
-            var cases = await _http.GetFromJsonAsync<List<Cases>>
-                ($"cases/department/{departmentId}");
-
-            return cases ?? new List<Cases>();
-        }
 
         public async Task<List<Cases>> GetCasesById(int id)
         {
@@ -52,13 +37,6 @@ namespace WebApp.Service
             );
         }
 
-        public async Task<List<Cases>> GetCasesByAssignedEmployee(int employeeId)
-        {
-            var cases = await _http.GetFromJsonAsync<List<Cases>>
-                ($"cases/my/{employeeId}");
-            return cases ?? new List<Cases>();
-        }
-
         public async Task<bool> ReleaseCase(int caseId)
         {
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/release", new { });
@@ -79,6 +57,18 @@ namespace WebApp.Service
         public async Task UpdateTime(int caseId, DateTime timeEst)
         {
             await _http.PutAsJsonAsync($"cases/{caseId}/time", timeEst);
+        }
+
+        public async Task<List<Cases>> GetFilteredCases(int? departmentId, int? employeeId, int? typeId, string? status)
+        {
+            var query = "cases/filter?";
+            if (departmentId.HasValue) query += $"departmentId={departmentId}&";
+            if (employeeId.HasValue) query += $"employeeId={employeeId}&";
+            if (typeId.HasValue) query += $"typeId={typeId}&";
+            if (!string.IsNullOrEmpty(status)) query += $"status={status}";
+
+            var cases = await _http.GetFromJsonAsync<List<Cases>>(query);
+            return cases ?? new List<Cases>();
         }
     }
 } 

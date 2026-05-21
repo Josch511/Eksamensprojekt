@@ -89,7 +89,8 @@
         </div>
     </div>
     <div class="column">
-        <CaseSummary Case="@currentCase" />
+        <CaseSummary 
+            Case="@currentCase"/>
     </div>
 </div>
 
@@ -100,8 +101,6 @@
     private Cases currentCase = new();
     private string commentInput = "";
     private int CurrentStep = 1;
-    
-    private OrderItems? orderItem;
     
     private User assignedUser = new();
     private User loggedInUser = new();
@@ -164,15 +163,6 @@
 
         currentCase.caseUpdates.Insert(0, update);
         commentInput = string.Empty;
-        orderItem = await OrderService.GetOrderById(currentCase.orderItemId);
-
-        int loggedInId = await localStorage.GetItemAsync<int>("userId");
-        loggedInUser = await UserService.GetUserById(loggedInId);
-
-        if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
-        {
-            assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
-        }
     }
     
     private async Task ClaimCase()

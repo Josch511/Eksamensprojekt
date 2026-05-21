@@ -1,32 +1,67 @@
-@page "/case-status/{id:int}"
+@page "/case-status/{CaseId:int}"
 @using Blazored.LocalStorage
 @using WebApp.Pages.Components
 @using WebApp.Service
 @inject ILocalStorageService LocalStorage
 @inject ICaseService CaseService
 @inject IOrderService OrderService
+@inject IUserService UserService;
 
-@if (currentCase == null)
-{
-    <p>Ingen sag fundet</p>
-}
-else
-{
+
+<div class="header">
+    <h2>Sag #@CaseId</h2>
     <Stepper CurrentStep="@CurrentStep" />
-}
+</div>
+<div class="row">
+    <div class="column">
+        <div class="updates-header">
+            <h3>Updates</h3>
+            <hr class="separator">
+        </div>
+        <div class="content-container">
+            <div class="input-container input-comment">
+                <textarea type="text" @bind="@commentInput" placeholder="Add a comment" class="input-default" rows="4"></textarea>
+                <button class="btn-floating btn-primary" @onclick="SubmitComment">
+                    <img src="assets/SubmitButtonIcon.svg"/>
+                </button>
+            </div>
+            <div class="updates-container"></div>
+            @foreach (var item in currentCase.caseUpdates)
+            {
+                <UpdateComponent Message="@item.message"
+                                 Timestamp="@item.createdAt"
+                                 IsComment="@item.isComment"
+                                 CommentMessage = "@item.commentMessage"/>
+                
+            }
+        </div>
+    </div>
+    <div class="column">
+        <CaseSummary 
+            Case="@currentCase" 
+            assignedUser="@assignedUser.name"/>
+    </div>
+</div>
+
 
 @code {
-    [Parameter] public int id { get; set; }
+    [Parameter] 
+    public int CaseId { get; set; }
 
-    private Cases? currentCase;
+    private Cases currentCase = new();
     private int CurrentStep = 1;
+    private string commentInput = "";
     private int userId;
+    private User assignedUser = new();
 
     protected override async Task OnInitializedAsync()
     {
         userId = await LocalStorage.GetItemAsync<int>("userId");
 
-        currentCase = await CaseService.GetCaseByCaseId(id);
+        currentCase = await CaseService.GetCaseByCaseId(CaseId);
+        currentCase.caseUpdates = currentCase.caseUpdates
+            .OrderByDescending(u => u.createdAt)
+            .ToList();
 
         if (currentCase != null)
         {
@@ -40,5 +75,29 @@ else
                 _                   => 1
             };
         }
+
+        assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
     }
+    private async Task SubmitComment()
+    {
+        if (string.IsNullOrWhiteSpace(commentInput))
+        {
+            return;
+        }
+        var update = new CaseUpdate()
+        {
+            message = "A staff member has added a comment",
+            isComment = true,
+            createdAt = DateTime.Now,
+            commentMessage = commentInput
+        };
+        
+        await CaseService.CreateCaseComment(CaseId, update.commentMessage);
+
+        currentCase.caseUpdates.Insert(0, update);
+        commentInput = string.Empty;
+        
+    }
+    
+    
 }

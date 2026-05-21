@@ -1,3 +1,4 @@
+@using Bunit.Extensions
 @using Core
 @using Service
 @inject IFileService FileService
@@ -47,7 +48,18 @@
     </div>
 </div>
 
-    @if (Case.orderItem != null)
+@if (!assignedUser.IsNullOrEmpty())
+{
+    <div class="info-card">
+        <h3>Assigned user</h3>
+        <div class="case-owner">
+            <img src="favicon.png" />
+            <p>@assignedUser</p>
+        </div>
+    </div>   
+}
+
+@if (Case.orderItem != null)
     {
         <div class="info-card">
             <h3>Product</h3>
@@ -67,4 +79,7 @@
 
     [Parameter]
     public OrderItems? OrderItem { get; set; }
+
+    [Parameter] 
+    public string? assignedUser { get; set; }
 }

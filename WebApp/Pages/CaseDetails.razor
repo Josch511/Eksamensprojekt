@@ -135,14 +135,21 @@
     private async Task OnStatusChanged()
     {
         if (string.IsNullOrWhiteSpace(selectedStatus) || selectedStatus == currentCase.status)
-        {
             return;
-        }
+
         var success = await CaseService.UpdateStatus(currentCase._id, selectedStatus);
         if (success)
         {
             currentCase.status = selectedStatus;
             CurrentStep = StatusToStep(currentCase.status);
+
+            var update = new CaseUpdate()
+            {
+                message = $"Status updated to {selectedStatus}",
+                isComment = false,
+                createdAt = DateTime.Now
+            };
+            currentCase.caseUpdates.Insert(0, update);
         }
     }
     private async Task SubmitComment()

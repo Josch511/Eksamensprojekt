@@ -12,5 +12,6 @@ namespace WebApp.Service
         Task<List<Cases>> GetCasesByAssignedEmployee(int employeeId);
         Task<bool> ReleaseCase(int caseId);
         Task CreateCaseComment(int caseId, string message);
+        Task UpdateTime(int caseId, DateTime timeEst);
     }
 }

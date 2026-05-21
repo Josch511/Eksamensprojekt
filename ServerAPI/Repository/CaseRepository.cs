@@ -95,4 +95,11 @@ public class CaseRepository : ICaseRepository
     {
         return await _cases.Find(c => c.assignedEmployeeId == employeeId).ToListAsync();
     }
+
+    public async Task UpdateTime(int caseId, DateTime timeEst)
+    {
+        var filter = Builders<Cases>.Filter.Eq(c => c._id, caseId);
+        var update = Builders<Cases>.Update.Set(c => c.eta, timeEst);
+        await _cases.UpdateOneAsync(filter, update);
+    }
 }

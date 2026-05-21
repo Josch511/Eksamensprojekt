@@ -19,6 +19,7 @@ namespace Core
         public int? typeId { get; set; }
         public int orderItemId { get; set; }
         public int? assignedEmployeeId { get; set; }
+        public DateTime? eta { get; set; }
         public List<CaseUpdate> caseUpdates { get; set; } = new();
         
         [BsonElement("caseContact")]

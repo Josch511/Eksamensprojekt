@@ -13,5 +13,6 @@ namespace WebApp.Service
         Task<bool> ReleaseCase(int caseId);
         Task CreateCaseComment(int caseId, string message);
         Task<bool> UpdateStatus(int caseId, string status);
+        Task UpdateTime(int caseId, DateTime timeEst);
     }
 }

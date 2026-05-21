@@ -67,12 +67,9 @@ public class CaseController : ControllerBase
     public async Task<IActionResult> AssignCase(int caseId, int employeeId)
     {
         var success = await _caseRepository.AssignCase(caseId, employeeId);
+        if (!success) return BadRequest("Case already assigned");
 
-        if (!success)
-        {
-            return BadRequest("Case already assigned");
-        }
-
+        await _caseUpdateService.Build(caseId, "Employee has been assigned to the case", false, null);
         return Ok();
     }
 
@@ -97,5 +94,14 @@ public class CaseController : ControllerBase
         var success = await _caseRepository.UpdateStatus(caseId, status);
         if (!success) return BadRequest("Could not update case status");
         return Ok();
+    }
+
+    [HttpPut("{caseId}/time")]
+    public async Task<IActionResult> UpdateTime(int caseId, [FromBody] DateTime timeEst)
+    {
+        await _caseRepository.UpdateTime(caseId, timeEst);
+        await _caseUpdateService.Build(caseId, $"Est. resolution updated to {timeEst.ToShortDateString()}", false, null);
+        return Ok();
+
     }
 }

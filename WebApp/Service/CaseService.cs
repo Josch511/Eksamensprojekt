@@ -75,5 +75,10 @@ namespace WebApp.Service
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/status", status);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task UpdateTime(int caseId, DateTime timeEst)
+        {
+            await _http.PutAsJsonAsync($"cases/{caseId}/time", timeEst);
+        }
     }
 } 

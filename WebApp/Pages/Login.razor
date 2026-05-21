@@ -4,13 +4,17 @@
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
+<div class="login-container">
+<div class="login-form">
 <h3>Login</h3>
+<div class="login-fields">
+<input class="input-default" placeholder="Email" @bind="email" />
+<input class="input-default" placeholder="Password" type="password" @bind="password" />
+</div>
 
-<input placeholder="Email" @bind="email" />
-<br />
-<input placeholder="Password" type="password" @bind="password" />
-<br />
-<button @onclick="LoginUser">Login</button>
+<button class="btn-primary"@onclick="LoginUser">Login</button>
+</div>
+</div>
 
 
 

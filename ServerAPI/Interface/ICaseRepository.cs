@@ -14,5 +14,6 @@ namespace ServerAPI.Interface
         Task<bool> AssignCase(int caseId, int employeeId);
         Task<bool> ReleaseCase(int caseId);
         Task<bool> UpdateStatus(int caseId, string status);
+        Task UpdateTime(int caseId, DateTime update);
     }
 }

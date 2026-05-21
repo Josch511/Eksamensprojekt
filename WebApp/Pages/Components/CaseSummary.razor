@@ -1,4 +1,6 @@
 @using Core
+@using Service
+@inject IFileService FileService
 
 <div class="info-card">
     <h3>Case summary</h3>
@@ -8,7 +10,6 @@
         <h6>Case description</h6>
         <p class="secondary">@Case.description</p>
     </div>
-    <hr class="separator" />
     <div class="details-container">
         <div class="detail-item">
             <p class="secondary">Created at</p>
@@ -30,19 +31,37 @@
             </div>
         }
     </div>
+    <div class="files-container">
+        <h6>Attached files</h6>
+        <div class="file-list">
+            @if (Case.media != null && Case.media.Count > 0)
+            {
+                @foreach (string file in Case.media)
+                {
+                    <img src="@FileService.ConvertToUrl(file)" class="attached-image" />
+                }
+            }
+            else
+            {
+                <p class="small secondary">No media attached.</p>
+            }
+        </div>
+    </div>
+</div>
+
     @if (OrderItem != null)
     {
-        <hr class="separator" />
-        <h3>Product</h3>
-        <div class="product-item">
-            <img class="product-item_image" src="@OrderItem.image_url" alt="@OrderItem.name" />
-            <div class="product-item_info">
-                <p>@OrderItem.name</p>
-                <p class="secondary">Serial: @OrderItem.serial</p>
+        <div class="info-card">
+            <h3>Product</h3>
+            <div class="product-item">
+                <img class="product-item_image" src="@OrderItem.image_url" alt="@OrderItem.name"/>
+                <div class="product-item_info">
+                    <p>@OrderItem.name</p>
+                    <p class="secondary">Serial: @OrderItem.serial</p>
+                </div>
             </div>
         </div>
     }
-</div>
 
 @code {
     [Parameter, EditorRequired]

@@ -4,6 +4,7 @@
     justify-content: space-between;
     align-items: flex-start;
     z-index: 2;
+    padding-bottom: 60px;
 }
 
 .step-item {
@@ -30,7 +31,7 @@
 }
 
 .step.active {
-    background: rgba(146, 157, 161, 0.7);
+    background: #E8ECED;
     border-color: #1c3d49;
 }
 

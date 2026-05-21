@@ -19,3 +19,16 @@
     flex-direction: column;
     gap: 4px;
 }
+
+.files-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+}
+
+.attached-image {
+    width: 100%;
+    border-radius: 8px;
+}

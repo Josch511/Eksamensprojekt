@@ -20,12 +20,15 @@
             </select>
         </div>
         <div class="action-item">
-            <label>Case owner</label>
+            <label>
+                @(currentCase.assignedEmployeeId == null || currentCase.assignedEmployeeId == 0
+                    ? "Case not assigned"
+                    : "Assign to")
+            </label>
 
             @if (currentCase.assignedEmployeeId == null || currentCase.assignedEmployeeId == 0)
             {
                 <div>
-                    <p>Case not assigned</p>
                     @if (loggedInUser.role == "employee")
                     {
                         <button class="btn-primary" @onclick="ClaimCase">
@@ -165,12 +168,5 @@
         await CaseService.ReleaseCase(currentCase._id);
         currentCase.assignedEmployeeId = null;
         assignedUser = new User();
-    }
-    public class CaseOwner
-    {
-        public int userId = 0;
-        public static string name = "Søren Nielsen";
-        public string? avatar;
-
     }
 }

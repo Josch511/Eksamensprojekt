@@ -13,5 +13,6 @@ namespace ServerAPI.Interface
         Task<List<Cases>> GetMyCasesById(int employeeId);
         Task<bool> AssignCase(int caseId, int employeeId);
         Task<bool> ReleaseCase(int caseId);
+        Task<bool> UpdateStatus(int caseId, string status);
     }
 }

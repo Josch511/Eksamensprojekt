@@ -13,7 +13,6 @@ namespace Core
         public string description { get; set; } = string.Empty;
         public List<string> media { get; set; } = new();
         public string status { get; set; } = string.Empty;
-        public DateOnly updatedAt { get; set; }
         public DateOnly createdAt { get; set; }
         public int? userId { get; set; }
         public int departmentId { get; set; }

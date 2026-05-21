@@ -90,4 +90,12 @@ public class CaseController : ControllerBase
         var cases = await _caseRepository.GetMyCasesById(employeeId);
         return Ok(cases);
     }
+
+    [HttpPut("{caseId}/status")]
+    public async Task<IActionResult> UpdateStatus(int caseId, [FromBody] string status)
+    {
+        var success = await _caseRepository.UpdateStatus(caseId, status);
+        if (!success) return BadRequest("Could not update case status");
+        return Ok();
+    }
 }

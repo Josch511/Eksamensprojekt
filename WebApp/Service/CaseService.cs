@@ -69,5 +69,11 @@ namespace WebApp.Service
         {
             await _http.PostAsJsonAsync($"cases/{caseId}/updates", message);
         }
+
+        public async Task<bool> UpdateStatus(int caseId, string status)
+        {
+            var response = await _http.PutAsJsonAsync($"cases/{caseId}/status", status);
+            return response.IsSuccessStatusCode;
+        }
     }
 } 

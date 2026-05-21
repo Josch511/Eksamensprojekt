@@ -36,8 +36,7 @@ public class CaseRepository : ICaseRepository
     public async Task AddCaseUpdate(int caseId, CaseUpdate caseUpdate)
     {
         var update = Builders<Cases>.Update
-            .Push(c => c.caseUpdates, caseUpdate)
-            .Set(c => c.updatedAt, DateOnly.FromDateTime(DateTime.UtcNow));
+            .Push(c => c.caseUpdates, caseUpdate);
 
         var result = await _cases.UpdateOneAsync(c => c._id == caseId, update);
 
@@ -91,8 +90,17 @@ public class CaseRepository : ICaseRepository
         return result.ModifiedCount > 0;
     }
 
+
     public async Task<List<Cases>> GetMyCasesById(int employeeId)
     {
         return await _cases.Find(c => c.assignedEmployeeId == employeeId).ToListAsync();
     }
+    public async Task<bool> UpdateStatus(int caseId, string status)
+    {
+        var filter = Builders<Cases>.Filter.Eq(c => c._id, caseId);
+        var update = Builders<Cases>.Update.Set(c => c.status, status);
+        var result = await _cases.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
+    }
+    
 }

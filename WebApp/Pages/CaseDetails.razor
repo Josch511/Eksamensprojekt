@@ -13,10 +13,13 @@
     <div class="action-items">
         <div class="action-item">
             <label for="caseStatus">Status</label>
-            <select name="Status" id="caseStatus" class="input-select">
-                <option value="open">Open</option>
-                <option value="inProgress">In progress</option>
-                <option value="closed">Closed</option>
+            <select name="Status" id="caseStatus" class="input-select"
+                    @bind="selectedStatus" @bind:after="OnStatusChanged">
+                <option value="Case received">Case received</option>
+                <option value="Assigned employee">Assigned employee</option>
+                <option value="In progress">In progress</option>
+                <option value="Testing">Testing</option>
+                <option value="Finished">Finished</option>
             </select>
         </div>
         <div class="action-item">
@@ -98,6 +101,8 @@
     private User assignedUser = new();
     private User loggedInUser = new();
 
+    private string selectedStatus = "Case received";
+    
     protected override async Task OnInitializedAsync()
     {
         currentCase = await CaseService.GetCaseByCaseId(CaseId);
@@ -112,18 +117,23 @@
         {
             assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
         }
-
-        CurrentStep = currentCase.status switch
-        {
-            "Case received"     => 1,
-            "Assigned employee" => 2,
-            "In progress"       => 3,
-            "Testing"           => 4,
-            "Finished"          => 5,
-            _                   => 1
-        };
+        selectedStatus = currentCase.status;
+        CurrentStep = StatusToStep(currentCase.status);
     }
 
+    private async Task OnStatusChanged()
+    {
+        if (string.IsNullOrWhiteSpace(selectedStatus) || selectedStatus == currentCase.status)
+        {
+            return;
+        }
+        var success = await CaseService.UpdateStatus(currentCase._id, selectedStatus);
+        if (success)
+        {
+            currentCase.status = selectedStatus;
+            CurrentStep = StatusToStep(currentCase.status);
+        }
+    }
     private async Task SubmitComment()
     {
         if (string.IsNullOrWhiteSpace(commentInput))
@@ -159,13 +169,32 @@
         await CaseService.AssignCase(currentCase._id, loggedInUser._id.Value);
         currentCase.assignedEmployeeId = loggedInUser._id.Value;
         assignedUser = loggedInUser;
+        await SetStatusAsync("Assigned employee");
     }
     private async Task ReleaseCase()
     {
         await CaseService.ReleaseCase(currentCase._id);
         currentCase.assignedEmployeeId = null;
         assignedUser = new User();
+
+        await SetStatusAsync("Case received");
     }
+
+    private async Task SetStatusAsync(string status)
+    {
+        if (status == currentCase.status)
+        {
+            return;
+        }
+        var success = await CaseService.UpdateStatus(currentCase._id, status);
+        if (success)
+        {
+            currentCase.status = status;
+            selectedStatus = status;
+            CurrentStep = StatusToStep(status);
+        }
+    }
+    
     public class CaseOwner
     {
         public int userId = 0;
@@ -173,4 +202,15 @@
         public string? avatar;
 
     }
+
+    private static int StatusToStep(string status) => status switch
+    {
+        "Case received"     => 1,
+        "Assigned employee" => 2,
+        "In progress"       => 3,
+        "Testing"           => 4,
+        "Finished"          => 5,
+        _                   => 1
+    };
+
 }

@@ -69,5 +69,10 @@ namespace WebApp.Service
         {
             await _http.PostAsJsonAsync($"cases/{caseId}/updates", message);
         }
+
+        public async Task UpdateTime(int caseId, DateTime timeEst)
+        {
+            await _http.PutAsJsonAsync($"cases/{caseId}/time", timeEst);
+        }
     }
 } 

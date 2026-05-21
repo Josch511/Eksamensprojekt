@@ -50,7 +50,9 @@
         </div>
         <div class="action-item">
             <label for="caseEta">Est. resolution</label>
-            <input type="date" id="caseEta" class="input-default"/>
+            <input type="date" id="caseEta" class="input-default"
+                   @bind="timeEstInput" />
+            <button class="btn-primary" @onclick="SaveTimeEst">Confirm</button>
         </div>
     </div>
     <Stepper CurrentStep="@CurrentStep" />
@@ -122,6 +124,9 @@
             "Finished"          => 5,
             _                   => 1
         };
+
+        if (currentCase.eta.HasValue)
+            timeEstInput = currentCase.eta.Value;
     }
 
     private async Task SubmitComment()
@@ -159,6 +164,15 @@
         await CaseService.AssignCase(currentCase._id, loggedInUser._id.Value);
         currentCase.assignedEmployeeId = loggedInUser._id.Value;
         assignedUser = loggedInUser;
+
+        var update = new CaseUpdate()
+        {
+            message = "Employee has been assigned to the case",
+            isComment = false,
+            createdAt = DateTime.Now
+        };
+
+        currentCase.caseUpdates.Insert(0, update);
     }
     private async Task ReleaseCase()
     {
@@ -172,5 +186,21 @@
         public static string name = "Søren Nielsen";
         public string? avatar;
 
+    }
+
+    private DateTime timeEstInput;
+
+    private async Task SaveTimeEst()
+    {
+        await CaseService.UpdateTime(currentCase._id, timeEstInput);
+
+        var update = new CaseUpdate()
+        {
+            message = $"Est. resolution updated to {timeEstInput.ToShortDateString()}",
+            isComment = false,
+            createdAt = DateTime.Now
+        };
+
+        currentCase.caseUpdates.Insert(0, update);
     }
 }

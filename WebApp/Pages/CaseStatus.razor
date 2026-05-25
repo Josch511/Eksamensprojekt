@@ -76,7 +76,10 @@
             };
         }
 
-        assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+        if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+        {
+            assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+        }
     }
     private async Task SubmitComment()
     {

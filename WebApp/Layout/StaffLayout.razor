@@ -1,11 +1,24 @@
 ﻿@inherits LayoutComponentBase
 @using Blazored.LocalStorage
+@using System.Net.Http.Json
 @inject ILocalStorageService localStorage
+@inject WebApp.Service.IUserService UserService
+@inject HttpClient Http
 
 <div class="overview-layout">
     <div class="sidebar-overview">
         <img class="logo" src="https://www.borncut.com/media/aigpqdfi/borncut_logo_white.svg">
         <div class="sidebar-section">
+            <div class="sidebar-item staff-user-info">
+                <div class="staff-user-line">
+                    <span class="staff-user-label">Name:</span>
+                    <span class="staff-user-value">@(currentUser?.name ?? "—")</span>
+                </div>
+                <div class="staff-user-line">
+                    <span class="staff-user-label">Department:</span>
+                    <span class="staff-user-value">@(departmentName ?? "—")</span>
+                </div>
+            </div>
             <NavLink class="sidebar-item-row" ActiveClass="active" href="@MyCasesUrl" Match="NavLinkMatch.All">
                 <img class="sidebar-icon" src="assets/my_cases.svg" />
                 <p class="sidebar-item">My Cases</p>
@@ -32,10 +45,24 @@
 
 @code {
     private int? userId;
+    private User? currentUser;
+    private string? departmentName;
+
     private string MyCasesUrl => userId.HasValue ? $"/case-overview/my/{userId}" : "/case-overview";
 
     protected override async Task OnInitializedAsync()
     {
         userId = await localStorage.GetItemAsync<int>("userId");
+
+        if (userId.HasValue)
+        {
+            currentUser = await UserService.GetUserById(userId.Value);
+
+            if (currentUser?.departmentId is int deptId)
+            {
+                var dept = await Http.GetFromJsonAsync<Departments>($"departments/getById/{deptId}");
+                departmentName = dept?.name;
+            }
+        }
     }
 }

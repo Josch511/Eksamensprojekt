@@ -1206,3 +1206,30 @@ code {
     flex-direction: column;
     gap: 16px;
 }
+
+.staff-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.staff-user-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.staff-user-label {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.staff-user-value {
+    color: #FFF;
+    font-size: 13px;
+    font-weight: 600;
+}

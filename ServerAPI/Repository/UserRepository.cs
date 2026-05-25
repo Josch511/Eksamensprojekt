@@ -57,10 +57,5 @@ public class UserRepository : IUserRepository
         return await _users.Find(u => u._id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<List<User>> GetEmployeesByDepartment(int departmentId)
-    {
-        return await _users
-            .Find(u => u.role == "employee" && u.departmentId == departmentId)
-            .ToListAsync();
-    }
+   
 }

@@ -9,6 +9,5 @@ namespace Interface
         Task<List<User>> GetCustomers();
         Task<List<User>> GetEmployees();
         Task<User> GetUserById(int id);
-        Task<List<User>> GetEmployeesByDepartment(int departmentId);
     }
 }

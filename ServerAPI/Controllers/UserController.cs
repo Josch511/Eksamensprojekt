@@ -30,10 +30,4 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet("department/{departmentId}")]
-    public async Task<IActionResult> GetEmployeesByDepartment(int departmentId)
-    {
-        var employees = await _userRepository.GetEmployeesByDepartment(departmentId);
-        return Ok(employees);
-    }
 }

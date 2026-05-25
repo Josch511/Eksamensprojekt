@@ -18,11 +18,5 @@ namespace WebApp.Services
         {
             return await _http.GetFromJsonAsync<User>($"user/{id}");
         }
-
-        public async Task<List<User>> GetEmployeesByDepartment(int departmentId)
-        {
-            var employees = await _http.GetFromJsonAsync<List<User>>($"user/department/{departmentId}");
-            return employees ?? new List<User>();
-        }
     }
 }

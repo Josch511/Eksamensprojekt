@@ -4,8 +4,6 @@ using DotNetEnv;
 using ServerAPI.Interface;
 using ServerAPI.Service;
 
-Env.Load(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".env"));
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -38,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
+    Env.Load(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".env"));
 }
 
 app.UseStaticFiles();

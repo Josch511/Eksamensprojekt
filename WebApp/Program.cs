@@ -15,9 +15,13 @@ builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<CreateCaseService>();
+var apiBaseUrl = builder.HostEnvironment.IsDevelopment()
+    ? "https://localhost:7023/"
+    : "https://gruppe3-api.azurewebsites.net/";
+
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7023/")
+    BaseAddress = new Uri(apiBaseUrl)
 });
 
 await builder.Build().RunAsync();

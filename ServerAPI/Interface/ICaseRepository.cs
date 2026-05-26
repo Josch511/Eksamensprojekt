@@ -4,7 +4,7 @@ namespace ServerAPI.Interface
 {
     public interface ICaseRepository
     {
-        Task CreateCase(Cases newcase);
+        Task SaveCase(Cases newcase);
         Task AddCaseUpdate(int caseId, CaseUpdate caseUpdate);
         Task<List<Cases>> GetCasesById(int id);
         Task<Cases> GetCaseByCaseId(int id);

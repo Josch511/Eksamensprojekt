@@ -8,8 +8,7 @@
 @inject NavigationManager Nav
 @layout StaffLayout
 
-<div class="overview-content">
-    <div class="Desc-Header">
+    <div class="desc-header">
         <h3>@(EmployeeId.HasValue ? "My Cases" : "All Cases")</h3>
     </div>
 
@@ -86,7 +85,7 @@
             </tbody>
         </table>
     </div>
-</div>
+
 @code {
     private string selectedType = "";
     private List<Cases> cases = new();

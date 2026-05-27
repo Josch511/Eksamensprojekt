@@ -21,7 +21,7 @@ public class CaseController : ControllerBase
     
     
     [HttpPost]
-    public async Task<IActionResult> CreateCase([FromBody] Cases newCase)
+    public async Task<IActionResult> SendCase([FromBody] Cases newCase)
     {
         await _caseRepository.CreateCase(newCase);
         return Ok(newCase);

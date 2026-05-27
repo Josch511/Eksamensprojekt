@@ -5,6 +5,7 @@
 @inject ILocalStorageService localStorage
 @inject WebApp.Service.IUserService UserService
 @inject HttpClient Http
+@inject NavigationManager Navigation
 
 <div class="overview-layout">
     <div class="sidebar-overview">
@@ -37,12 +38,14 @@
                 <NavLink class="sidebar-subitem" ActiveClass="active" href="/case-overview/4">Production</NavLink>
             </div>
         </div>
+
+        <button class="btn-sidebar-logout" @onclick="Logout">Log out</button>
     </div>
 
     <div class="overview-content">
         @Body
     </div>
-    <NotificationToast/>
+    <NotificationToast />
 </div>
 
 @code {
@@ -66,5 +69,11 @@
                 departmentName = dept?.name;
             }
         }
+    }
+
+    private async Task Logout()
+    {
+        await localStorage.RemoveItemAsync("userId");
+        Navigation.NavigateTo("/");
     }
 }

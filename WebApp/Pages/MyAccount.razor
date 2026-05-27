@@ -8,6 +8,7 @@
 @using WebApp.Services
 
 <PageTitle>My account</PageTitle>
+
 <div class="account-layout">
     @if (currentCases.Any())
     {
@@ -75,12 +76,14 @@
             </div>
         }
     </div>
+   
 </div>
 
 @code {
     private List<OrderItems> orders = new();
     private List<Cases> currentCases = new();
     private Dictionary<int, OrderItems?> orderById = new();
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,6 +101,7 @@
         }
 
         var userId = await localStorage.GetItemAsync<int>("userId");
+       
 
         orders = await OrderService.GetCustomerOrders(userId);
         currentCases = await CaseService.GetCasesById(userId);
@@ -150,4 +154,7 @@
         orderById.TryGetValue(c.orderItemId, out var order) && order is not null
             ? order.image_url
             : "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80";
+
+
+    
 }

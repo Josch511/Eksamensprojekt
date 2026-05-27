@@ -1,17 +1,26 @@
 ﻿@using WebApp.Pages.Components
 @inherits LayoutComponentBase
 @inject NavigationManager Navigation
-<div class="page">
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
+<div class="page">
     <main class="main">
         <div class="header">
-            @if (!IsLoginPage)
-            {
-                <a class="header-icon-link" href="/account">
-                    <img class="header-icon" src="assets/house.svg" />
-                </a>
-            }
+            <div class="header-left">
+                @if (!IsLoginPage)
+                {
+                    <a class="header-icon-link" href="/account">
+                        <img class="header-icon" src="assets/house.svg" />
+                    </a>
+                }
+            </div>
             <img class="logo" src="https://www.borncut.com/media/aigpqdfi/borncut_logo_white.svg">
+            <div class="header-right">
+                @if (!IsLoginPage)
+                {
+                    <button class="btn-logout" @onclick="Logout">Log out</button>
+                }
+            </div>
         </div>
         <div class="main-layout">
             <article class="main-content">
@@ -24,4 +33,10 @@
 
 @code {
     private bool IsLoginPage => new Uri(Navigation.Uri).AbsolutePath == "/";
+
+    private async Task Logout()
+    {
+        await localStorage.RemoveItemAsync("userId");
+        Navigation.NavigateTo("/");
+    }
 }

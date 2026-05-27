@@ -16,7 +16,7 @@ public class CaseRepository : ICaseRepository
         _orderItemsRepository = orderItemsRepository;
     }
 
-    public async Task CreateCase(Cases newcase)
+    public async Task SaveCase(Cases newcase)
     {
         var highestCase = await _cases
             .Find(_ => true)

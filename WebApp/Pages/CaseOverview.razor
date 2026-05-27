@@ -55,35 +55,42 @@
             
         </div>
 
-        <table class="cases-table">
-            <thead>
-                <tr class="table-header">
-                    <th class="table-id">ID</th>
-                    <th class="table-title">TITLE</th>
-                    <th class="table-dep">CATEGORY</th>
-                    <th class="table-dep">TYPE</th>
-                    <th class="table-assign">ASSIGNED</th>
-                    <th class="table-row-status">STATUS</th>
-                    <th class="table-date">DATE</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in FilteredCases)
-                {
-                    <tr class="table-row" style="cursor:pointer" @onclick='() => Nav.NavigateTo($"/case/{item._id}")'>
-                        <td>#@item._id</td>
-                        <td>@item.title</td>
-                        <td>@DepName(item.departmentId)</td>
-                        <td>@TypeName(item.typeId)</td>
-                        <td>@GetEmployeeName(item.assignedEmployeeId)</td>
-                        <td>
-                            <span class="table-status @GetStatusClass(item.status)">@item.status</span>
-                        </td>
-                        <td>@item.createdAt.ToShortDateString()</td>
+        @if (HasFilteredCases)
+        {
+            <table class="cases-table">
+                <thead>
+                    <tr class="table-header">
+                        <th class="table-id">ID</th>
+                        <th class="table-title">TITLE</th>
+                        <th class="table-dep">CATEGORY</th>
+                        <th class="table-dep">TYPE</th>
+                        <th class="table-assign">ASSIGNED</th>
+                        <th class="table-row-status">STATUS</th>
+                        <th class="table-date">DATE</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in FilteredCases)
+                    {
+                        <tr class="table-row" style="cursor:pointer" @onclick='() => Nav.NavigateTo($"/case/{item._id}")'>
+                            <td>#@item._id</td>
+                            <td>@item.title</td>
+                            <td>@DepName(item.departmentId)</td>
+                            <td>@TypeName(item.typeId)</td>
+                            <td>@GetEmployeeName(item.assignedEmployeeId)</td>
+                            <td>
+                                <span class="table-status @GetStatusClass(item.status)">@item.status</span>
+                            </td>
+                            <td>@item.createdAt.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div>No cases found</div>
+        }
     </div>
 
 @code {
@@ -93,6 +100,7 @@
     private string selectedStatus = "All";
 
     private IEnumerable<Cases> FilteredCases => cases.Where(c => MatchesStatus(c.status));
+    private bool HasFilteredCases => FilteredCases.Any();
 
     private bool MatchesStatus(string status) => selectedStatus switch
     {
@@ -147,7 +155,7 @@
 
     [Parameter]
     public int? EmployeeId { get; set; }
-    
+
 
     private string GetEmployeeName(int? employeeId)
     {

@@ -23,7 +23,7 @@ public class CaseController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SendCase([FromBody] Cases newCase)
     {
-        await _caseRepository.CreateCase(newCase);
+        await _caseRepository.SaveCase(newCase);
         return Ok(newCase);
     }
 

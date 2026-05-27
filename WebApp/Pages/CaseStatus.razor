@@ -9,7 +9,7 @@
 
 
 <div class="header">
-    <h2>Sag #@CaseId</h2>
+    <h2>Case #@CaseId</h2>
     <Stepper CurrentStep="@CurrentStep" />
 </div>
 <div class="row">
@@ -89,7 +89,7 @@
         }
         var update = new CaseUpdate()
         {
-            message = "A staff member has added a comment",
+            message = "A customer has added a comment",
             isComment = true,
             createdAt = DateTime.Now,
             commentMessage = commentInput

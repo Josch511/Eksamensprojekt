@@ -8,6 +8,7 @@ namespace Core
     [BsonIgnoreExtraElements]
     public class Cases
     {
+        [BsonId]
         public int _id { get; set; }
         public string title { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;

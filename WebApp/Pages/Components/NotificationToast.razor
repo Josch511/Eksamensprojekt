@@ -1,0 +1,40 @@
+@using Service
+@implements IDisposable
+@inject NotificationService Notify
+
+<div class="toast @_type @(_visible ? "show" : "")">
+    @_message
+</div>
+
+@code {
+    private string _message = "";
+    private string _type = "";
+    private bool _visible;
+
+    protected override void OnInitialized()
+    {
+        Notify.OnNotify += ShowToast;
+    }
+
+    // void (not async void) — all async work is handed off to InvokeAsync
+    private void ShowToast(Notification n)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            _message = n.Message;
+            _type = n.Type == NotificationType.Success ? "success" : "error";
+            _visible = true;
+            StateHasChanged();        // we're inside InvokeAsync, so this is safe
+
+            await Task.Delay(3000);
+
+            _visible = false;
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        Notify.OnNotify -= ShowToast;
+    }
+}

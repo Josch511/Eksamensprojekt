@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using WebApp.Pages.Components
+@inherits LayoutComponentBase
 @inject NavigationManager Navigation
 <div class="page">
 
@@ -10,9 +11,10 @@
             <img class="logo" src="https://www.borncut.com/media/aigpqdfi/borncut_logo_white.svg">
         </div>
         <div class="main-layout">
-        <article class="main-content">
-            @Body
-        </article>
+            <article class="main-content">
+                @Body
+            </article>
         </div>
     </main>
+    <NotificationToast/>
 </div>

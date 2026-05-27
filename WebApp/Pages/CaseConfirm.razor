@@ -2,6 +2,7 @@
 @using WebApp.Service
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
+@inject NotificationService Notify
 
 
 <div class="case-parent">
@@ -72,6 +73,14 @@
     private async Task Send()
     {
         var caseId = await CaseService.Submit();
-        Navigation.NavigateTo($"/case-status/{caseId}");
+
+        if (caseId != 0)
+        {
+            Navigation.NavigateTo($"/case-status/{caseId}");   
+        }
+        else
+        {
+            Notify.Error("Error creating case, try again");
+        }
     }
 }

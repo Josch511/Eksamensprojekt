@@ -66,7 +66,10 @@ public class CreateCaseService
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            return 0;
+        }
 
         var created = await response.Content.ReadFromJsonAsync<Cases>();
         await Clear();

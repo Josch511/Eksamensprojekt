@@ -2,6 +2,7 @@
 @using WebApp.Service
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
+@inject NotificationService Notify
 
 <PageTitle>Contact Person</PageTitle>
 <div class="case-parent">
@@ -40,6 +41,10 @@
         if (CaseService.CaseContactIsValid())
         {
             Navigation.NavigateTo("/case-confirm");
+        }
+        else
+        {
+            Notify.Error("Fill in all required fields to continue");
         }
     }
 }

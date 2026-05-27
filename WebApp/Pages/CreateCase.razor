@@ -2,6 +2,7 @@
 @using WebApp.Service
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
+@inject NotificationService Notify
 
 <PageTitle>Create a case</PageTitle>
 <div class="case-parent">
@@ -83,6 +84,10 @@
         if (CaseService.CaseTypeIsValid())
         {
             Navigation.NavigateTo("/describe-case");
+        }
+        else
+        {
+            Notify.Error("Fill in all required fields to continue");
         }
     }
 }

@@ -1,28 +1,26 @@
 ﻿@page "/"
 @using Core
+@using Service
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NotificationService Notify
 
 <div class="login-container">
 <div class="login-form">
 <h3>Login</h3>
 <div class="login-fields">
-<input class="input-default" placeholder="Email" @bind="email" />
-<input class="input-default" placeholder="Password" type="password" @bind="password" />
+<input class="input-default" placeholder="Email" @bind="email" required/>
+<input class="input-default" placeholder="Password" type="password" @bind="password" required/>
 </div>
 
 <button class="btn-primary"@onclick="LoginUser">Login</button>
 </div>
 </div>
 
-
-
-<p>@message</p>
-
 @code {
     string email, password, message;
-
+    
     async Task LoginUser()
     {
         var user = new { email, password };
@@ -44,8 +42,7 @@
         }
         else
         {
-            message = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("Login failed");
+            Notify.Error("Email or password is incorrect");
         }
     }
 }

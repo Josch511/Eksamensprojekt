@@ -3,6 +3,7 @@
 @inject IFileService FileService
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
+@inject NotificationService Notify
 
 <PageTitle>Opret sag</PageTitle>
 <div class="case-parent">
@@ -69,7 +70,7 @@
         }
         else
         {
-            Console.WriteLine("Valideringsfejl");
+            Notify.Error("Fill in all required fields to continue");
         }
     }
     

@@ -9,6 +9,32 @@
 
 <PageTitle>My account</PageTitle>
 <div class="account-layout">
+    @if (currentCases.Any())
+    {
+        <div class="right-container">
+            <div class="header-container">
+                <h2>My current cases</h2>
+            </div>
+
+            <div class="current-cases">
+                @foreach (var currentCase in currentCases)
+                {
+                    <div class="case-card">
+                        <img class="case-image" src="@GetImageForCase(currentCase)"/>
+                        <div class="case-details">
+                            <span class="case-status">@currentCase.status</span>
+                            <p class="case-meta">Case #@currentCase._id</p>
+                            <h5>Title:@currentCase.title</h5>
+                            <p class="case-meta">Product serial: @GetSerialForCase(currentCase)</p>
+                            <p class="case-meta">Case type: @TypeName(currentCase.typeId) &nbsp; Department: @DepName(currentCase.departmentId)</p>
+                        </div>
+                        <a class="case-view" href="/case-status/@currentCase._id">View <img class="sidebar-icon" src="assets/arrow-right.svg"/></a>
+                    </div>
+                    <hr class="case-divider"/>
+                }
+            </div>
+        </div>   
+    }
     <div class="left-container">
         <h2>My products</h2>
 
@@ -47,38 +73,8 @@
                     </div>
                 }
             </div>
-        }</div>
-    
-<div class="right-container">
-    <div class="header-container">
-        <h2>My current cases</h2>
+        }
     </div>
-
-    @if (!currentCases.Any())
-    {
-        <p>No current cases.</p>
-    }
-    else
-    {
-        <div class="current-cases">
-            @foreach (var currentCase in currentCases)
-            {
-                <div class="case-card">
-                    <img class="case-image" src="@GetImageForCase(currentCase)" />
-                    <div class="case-details">
-                        <span class="case-status">@currentCase.status</span>
-                        <h4 class="case-title">Case #@currentCase._id</h4>
-                        <h4 class="case-title">Title:@currentCase.title</h4>
-                        <p class="case-meta">Product serial: @GetSerialForCase(currentCase)</p>
-                        <p class="case-meta">Case type: @TypeName(currentCase.typeId) &nbsp; Department: @DepName(currentCase.departmentId)</p>
-                    </div>
-                    <a class="case-view" href="/case-status/@currentCase._id">View <img class="sidebar-icon" src="assets/arrow-right.svg" /></a>
-                </div>
-                <hr class="case-divider" />
-            }
-        </div>
-    }
-</div>
 </div>
 
 @code {

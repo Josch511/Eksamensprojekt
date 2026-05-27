@@ -388,22 +388,20 @@ code {
 
 .right-container{
     display: flex;
-    width: 627px;
-    height: 948px;
-    padding: 46px 32px;
+    width: 100%;
+    padding: 0 0 42px 0;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
     flex-shrink: 0;
-    border-left: 1px solid rgba(0, 0, 0, 0.15);
-    background: rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .current-cases {
     display: flex;
-    flex-direction: column;
     width: 100%;
     gap: 16px;
+    overflow: auto;
 }
 
 .case-card {
@@ -411,6 +409,7 @@ code {
     align-items: center;
     gap: 18px;
     width: 100%;
+    min-width: 520px;
 }
 
 .case-image {
@@ -507,8 +506,7 @@ code {
 
 .left-container{
     display: flex;
-    width: 797px;
-    padding: 46px 32px;
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
@@ -517,7 +515,8 @@ code {
 
 .account-layout {
     display: flex;
-    flex-direction: row;
+    gap: 42px;
+    flex-direction: column;
     min-height: 100vh;
 }
 

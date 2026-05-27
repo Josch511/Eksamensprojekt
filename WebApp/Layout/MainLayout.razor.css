@@ -85,3 +85,10 @@
     .btn-logout:hover {
         background: rgba(255, 255, 255, 0.15);
     }
+
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 32px 24px;
+    }
+}

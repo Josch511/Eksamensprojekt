@@ -23,11 +23,25 @@
                     <div class="case-card">
                         <img class="case-image" src="@GetImageForCase(currentCase)"/>
                         <div class="case-details">
-                            <span class="case-status">@currentCase.status</span>
-                            <p class="case-meta">Case #@currentCase._id</p>
-                            <h5>Title:@currentCase.title</h5>
-                            <p class="case-meta">Product serial: @GetSerialForCase(currentCase)</p>
-                            <p class="case-meta">Case type: @TypeName(currentCase.typeId) &nbsp; Department: @DepName(currentCase.departmentId)</p>
+                            <div>
+                                <span class="case-status">@currentCase.status</span>
+                                <p class="case-meta_value">Case #@currentCase._id</p>
+                            </div>
+                            <h5>@currentCase.title</h5>
+                            <div class="case-meta_list">
+                                <div class="case-meta">
+                                    <p class="case-meta_label">Product serial:</p>
+                                    <p class="case-meta_value">@GetSerialForCase(currentCase)</p>
+                                </div>
+                                <div class="case-meta">
+                                    <p class="case-meta_label">Case type:</p>
+                                    <p class="case-meta_value">@TypeName(currentCase.typeId)</p>
+                                </div>
+                                <div class="case-meta">
+                                    <p class="case-meta_label">Department:</p>
+                                    <p class="case-meta_value">@DepName(currentCase.departmentId)</p>
+                                </div>
+                            </div>
                         </div>
                         <a class="case-view" href="/case-status/@currentCase._id">View <img class="sidebar-icon" src="assets/arrow-right.svg"/></a>
                     </div>

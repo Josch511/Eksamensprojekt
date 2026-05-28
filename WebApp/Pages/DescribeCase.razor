@@ -1,7 +1,7 @@
 ﻿@page "/describe-case"
 @using WebApp.Service
 @inject IFileService FileService
-@inject ICreateCaseService CaseService
+@inject ICreateCaseService CreateCaseService
 @inject NavigationManager Navigation
 @inject NotificationService Notify
 
@@ -12,11 +12,11 @@
         <form class="form-default" @onsubmit="Next" @onsubmit:preventDefault>
             <div class="input-container">
                 <label for="caseTitle">Title</label>
-                <input type="text" @bind="CaseService.Data.CaseInfo.Title" id="caseTitle" class="input-default">
+                <input type="text" @bind="CreateCaseService.Data.CaseInfo.Title" id="caseTitle" class="input-default">
             </div>
             <div class="input-container">
                 <label for="caseDescription">Description</label>
-                <textarea type="text" @bind="CaseService.Data.CaseInfo.Description" id="caseDescription" class="input-default" rows="4"></textarea>
+                <textarea type="text" @bind="CreateCaseService.Data.CaseInfo.Description" id="caseDescription" class="input-default" rows="4"></textarea>
             </div>
             
             <div class="image-upload-group">
@@ -57,14 +57,14 @@
 {
     protected override async Task OnInitializedAsync()
     {
-        await CaseService.Load();
+        await CreateCaseService.Load();
     }
     
     private async Task Next()
     {
-        await CaseService.Save();
+        await CreateCaseService.Save();
 
-        if (CaseService.CaseInfoIsValid())
+        if (CreateCaseService.CaseInfoIsValid())
         {
             Navigation.NavigateTo("/contact-person");
         }
@@ -91,6 +91,6 @@
             Notify.Error(res.info);
         
         keys.Add(res.info);
-        CaseService.Data.CaseInfo.AttachmentUrl = keys;
+        CreateCaseService.Data.CaseInfo.AttachmentUrl = keys;
     }
 }

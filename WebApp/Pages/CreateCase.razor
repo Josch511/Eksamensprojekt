@@ -1,6 +1,6 @@
 ﻿@page "/create-case"
 @using WebApp.Service
-@inject ICreateCaseService CaseService
+@inject ICreateCaseService CreateCaseService
 @inject NavigationManager Navigation
 @inject NotificationService Notify
 @inject WebApp.Service.IDepartmentService DepartmentService
@@ -13,14 +13,14 @@
         <div class="case-type">
             <h4>Case type</h4>
             <div class="case-type_select">
-                <button class="case-type_select-item @(CaseService.Data.CaseTypeId == 1 ? "active" : "")"
+                <button class="case-type_select-item @(CreateCaseService.Data.CaseTypeId == 1 ? "active" : "")"
                         @onclick="@(() => SelectCaseType(1))">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/bug.svg" />
                     </div>
                     <p class="case-type_select-item-text">Problem/Error</p>
                 </button>
-                <button class="case-type_select-item @(CaseService.Data.CaseTypeId == 2 ? "active" : "")"
+                <button class="case-type_select-item @(CreateCaseService.Data.CaseTypeId == 2 ? "active" : "")"
                         @onclick="@(() => SelectCaseType(2))">
                     <div class="case_icon-wrapper">
                         <img class="case_icon" src="assets/settings-2.svg" />
@@ -43,7 +43,7 @@
                         4 => "assets/factory.svg",
                         _ => "assets/department.svg"
                     };
-                    var isActive = CaseService.Data.CaseDepartmentId == dept._id ? "active" : "";
+                    var isActive = CreateCaseService.Data.CaseDepartmentId == dept._id ? "active" : "";
                     <button class="department-item @isActive"
                             @onclick="@(() => SelectDepartment(dept._id))">
                         <div class="case_icon-wrapper">
@@ -65,7 +65,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await CaseService.Load();
+        await CreateCaseService.Load();
 
         try
         {
@@ -77,13 +77,13 @@
         }
     }
 
-    private void SelectCaseType(int value) => CaseService.Data.CaseTypeId = value;
-    private void SelectDepartment(int value) => CaseService.Data.CaseDepartmentId = value;
+    private void SelectCaseType(int value) => CreateCaseService.Data.CaseTypeId = value;
+    private void SelectDepartment(int value) => CreateCaseService.Data.CaseDepartmentId = value;
 
     private async Task Next()
     {
-        await CaseService.Save();
-        if (CaseService.CaseTypeIsValid())
+        await CreateCaseService.Save();
+        if (CreateCaseService.CaseTypeIsValid())
         {
             Navigation.NavigateTo("/describe-case");
         }

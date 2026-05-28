@@ -1,6 +1,6 @@
 ﻿@page "/case-confirm"
 @using WebApp.Service
-@inject ICreateCaseService CaseService
+@inject ICreateCaseService CreateCaseService
 @inject NavigationManager Navigation
 @inject NotificationService Notify
 @inject WebApp.Service.IDepartmentService DepartmentService
@@ -14,11 +14,11 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Product</p>
-                <p>@CaseService.Data.Name</p>
+                <p>@CreateCaseService.Data.Name</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Serial number</p>
-                <p>@CaseService.Data.Serial</p>
+                <p>@CreateCaseService.Data.Serial</p>
             </div>
         </div>
 
@@ -26,7 +26,7 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Case type</p>
-                <p>@CaseService.CaseTypeName</p>
+                <p>@CreateCaseService.CaseTypeName</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Department</p>
@@ -34,11 +34,11 @@
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Case title</p>
-                <p>@CaseService.Data.CaseInfo.Title</p>
+                <p>@CreateCaseService.Data.CaseInfo.Title</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Description</p>
-                <p>@CaseService.Data.CaseInfo.Description</p>
+                <p>@CreateCaseService.Data.CaseInfo.Description</p>
             </div>
         </div>
 
@@ -46,15 +46,15 @@
         <div class="order-item">
             <div class="input-container">
                 <p class="secondary text-s">Name</p>
-                <p>@CaseService.Data.CaseContact.Name</p>
+                <p>@CreateCaseService.Data.CaseContact.Name</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Telephone number</p>
-                <p>@CaseService.Data.CaseContact.Telephone</p>
+                <p>@CreateCaseService.Data.CaseContact.Telephone</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Email</p>
-                <p>@CaseService.Data.CaseContact.Email</p>
+                <p>@CreateCaseService.Data.CaseContact.Email</p>
             </div>
         </div>
 
@@ -70,11 +70,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await CaseService.Load();
+        await CreateCaseService.Load();
 
         try
         {
-            var department = await DepartmentService.GetDepartmentById(CaseService.Data.CaseDepartmentId);
+            var department = await DepartmentService.GetDepartmentById(CreateCaseService.Data.CaseDepartmentId);
             departmentName = department?.name ?? "Unknown";
         }
         catch (Exception ex)
@@ -86,7 +86,7 @@
     {
         try
         {
-            var result = await CaseService.Submit();
+            var result = await CreateCaseService.Submit();
 
             if (result.success)
             {

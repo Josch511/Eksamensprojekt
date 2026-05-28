@@ -4,7 +4,7 @@
 @using WebApp.Pages.Components
 @inject ILocalStorageService localStorage
 @inject WebApp.Service.IUserService UserService
-@inject HttpClient Http
+@inject WebApp.Service.IDepartmentService DepartmentService
 @inject NavigationManager Navigation
 
 <div class="overview-layout">
@@ -32,10 +32,13 @@
             </NavLink>
 
             <div class="sidebar-subitems">
-                <NavLink class="sidebar-subitem" ActiveClass="active" href="/case-overview/1">Software</NavLink>
-                <NavLink class="sidebar-subitem" ActiveClass="active" href="/case-overview/2">Electronic</NavLink>
-                <NavLink class="sidebar-subitem" ActiveClass="active" href="/case-overview/3">Mechanic</NavLink>
-                <NavLink class="sidebar-subitem" ActiveClass="active" href="/case-overview/4">Production</NavLink>
+                @foreach (var dept in departments)
+                {
+                    var url = $"/case-overview/{dept._id}";
+                    <NavLink class="sidebar-subitem" ActiveClass="active" href="@url">
+                        @dept.name
+                    </NavLink>
+                }
             </div>
         </div>
 
@@ -52,6 +55,7 @@
     private int? userId;
     private User? currentUser;
     private string? departmentName;
+    private List<Departments> departments = new();
 
     private string MyCasesUrl => userId.HasValue ? $"/case-overview/my/{userId}" : "/case-overview";
 
@@ -63,10 +67,19 @@
         {
             currentUser = await UserService.GetUserById(userId.Value);
 
-            if (currentUser?.departmentId is int deptId)
+            try
             {
-                var dept = await Http.GetFromJsonAsync<Departments>($"departments/getById/{deptId}");
-                departmentName = dept?.name;
+                departments = await DepartmentService.GetAllDepartments();
+
+                if (currentUser?.departmentId is int deptId)
+                {
+                    var dept = departments.FirstOrDefault(d => d._id == deptId);
+                    departmentName = dept?.name;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                departmentName = "Ukendt afdeling";
             }
         }
     }

@@ -3,6 +3,7 @@
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
 @inject NotificationService Notify
+@inject WebApp.Service.IDepartmentService DepartmentService
 
 
 <div class="case-parent">
@@ -29,7 +30,7 @@
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Department</p>
-                <p>@CaseService.DepartmentName</p>
+                <p>@departmentName</p>
             </div>
             <div class="input-container">
                 <p class="secondary text-s">Case title</p>
@@ -64,12 +65,23 @@
 @code {
     private string caseTypeLabel = string.Empty;
     private string departmentLabel = string.Empty;
+    private string departmentName = "Unknown";
+    
 
     protected override async Task OnInitializedAsync()
     {
         await CaseService.Load();
-    }
 
+        try
+        {
+            var department = await DepartmentService.GetDepartmentById(CaseService.Data.CaseDepartmentId);
+            departmentName = department?.name ?? "Unknown";
+        }
+        catch (HttpRequestException)
+        {
+            
+        }
+    }
     private async Task Send()
     {
         var result = await CaseService.Submit();

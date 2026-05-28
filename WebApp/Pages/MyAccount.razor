@@ -7,6 +7,7 @@
 @using WebApp.Service
 @using WebApp.Services
 @inject NotificationService Notify
+@inject WebApp.Service.IDepartmentService DepartmentService
 
 <PageTitle>My account</PageTitle>
 
@@ -98,8 +99,8 @@
     private List<OrderItems> orders = new();
     private List<Cases> currentCases = new();
     private Dictionary<int, OrderItems?> orderById = new();
-    private string? errorMessage;
-    
+    private List<Departments> departments = new();
+
     protected override async Task OnInitializedAsync()
     {
         var hasUserId = await localStorage.ContainKeyAsync("userId");
@@ -123,13 +124,12 @@
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            Notify.Error("Case not found.");
+            Notify.Error("Ingen produkter fundet.");
         }
         catch (Exception)
         {
-            Notify.Error("Case not found.");
+            Notify.Error("Noget gik galt ved hentning af produkter.");
         }
-
         try
         {
             currentCases = await CaseService.GetCasesById(userId);
@@ -146,7 +146,16 @@
         }
         catch (Exception)
         {
-            errorMessage = "Noget gik galt ved hentning af sager.";
+            Notify.Error("Noget gik galt ved hentning af sager.");
+        }
+
+        try
+        {
+            departments = await DepartmentService.GetAllDepartments();
+        }
+        catch (HttpRequestException)
+        {
+            
         }
     }
 
@@ -173,14 +182,15 @@
         _ => "Unknown"
     };
 
-    private string DepName(int? id) => id switch
+    private string DepName(int? id)
     {
-        1 => "Software",
-        2 => "Electronic",
-        3 => "Mechanic",
-        4 => "Production",
-        _ => "Unknown"
-    };
+        var department = departments.FirstOrDefault(d => d._id == id);
+        if (department != null)
+        {
+            return department.name;
+        }
+        return "Unknown";
+    }
 
     private string GetSerialForCase(Cases c) =>
         orderById.TryGetValue(c.orderItemId, out var order) && order is not null

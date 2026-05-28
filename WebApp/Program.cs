@@ -16,6 +16,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<CreateCaseService>();
 builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 var apiBaseUrl = builder.HostEnvironment.IsDevelopment()
     ? "https://localhost:7023/"
     : "https://gruppe3-api.azurewebsites.net/";

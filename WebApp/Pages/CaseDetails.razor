@@ -6,6 +6,8 @@
 @inject IUserService UserService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NotificationService Notify
+@inject NavigationManager Navigation
+
 @using WebApp.Pages.Components
 @using WebApp.Services
 
@@ -108,7 +110,7 @@
 
     private string selectedStatus = "Case received";
     private DateTime timeEstInput;
-    private string? errorMessage;
+   
 
     protected override async Task OnInitializedAsync()
     {

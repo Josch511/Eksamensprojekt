@@ -151,14 +151,5 @@ public class CreateCaseService
         2 => "Feature",
         _ => "Unknown"
     };
-
-    public string DepartmentName => Data.CaseDepartmentId switch
-    {
-        1 => "Software",
-        2 => "Electronic",
-        3 => "Mechanic",
-        4 => "Production",
-        _ => "Unknown"
-    };
     
 }

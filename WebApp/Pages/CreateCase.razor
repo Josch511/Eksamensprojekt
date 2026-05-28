@@ -3,6 +3,7 @@
 @inject CreateCaseService CaseService
 @inject NavigationManager Navigation
 @inject NotificationService Notify
+@inject WebApp.Service.IDepartmentService DepartmentService
 
 <PageTitle>Create a case</PageTitle>
 <div class="case-parent">
@@ -32,37 +33,27 @@
         <div class="case-departments">
             <h4>Department</h4>
             <div class="department-list">
-                <button class="department-item @(CaseService.Data.CaseDepartmentId == 1 ? "active" : "")"
-                        @onclick="@(() => SelectDepartment(1))">
-                    <div class="case_icon-wrapper">
-                        <img class="case_icon" src="assets/code-xml.svg" />
-                    </div>
-                    <p class="department-item-title">Software</p>
-                </button>
-                <button class="department-item @(CaseService.Data.CaseDepartmentId == 2 ? "active" : "")"
-                        @onclick="@(() => SelectDepartment(2))">
-                    <div class="case_icon-wrapper">
-                        <img class="case_icon" src="assets/plug.svg" />
-                    </div>
-                    <p class="department-item-title">Electronic</p>
-                </button>
-                <button class="department-item @(CaseService.Data.CaseDepartmentId == 3 ? "active" : "")"
-                        @onclick="@(() => SelectDepartment(3))">
-                    <div class="case_icon-wrapper">
-                        <img class="case_icon" src="assets/wrench.svg" />
-                    </div>
-                    <p class="department-item-title">Mechanic</p>
-                </button>
-                <button class="department-item @(CaseService.Data.CaseDepartmentId == 4 ? "active" : "")"
-                        @onclick="@(() => SelectDepartment(4))">
-                    <div class="case_icon-wrapper">
-                        <img class="case_icon" src="assets/factory.svg" />
-                    </div>
-                    <p class="department-item-title">Production</p>
-                </button>
+                @foreach (var dept in departments)
+                {
+                    var icon = dept._id switch
+                    {
+                        1 => "assets/code-xml.svg",
+                        2 => "assets/plug.svg",
+                        3 => "assets/wrench.svg",
+                        4 => "assets/factory.svg",
+                        _ => "assets/department.svg"
+                    };
+                    var isActive = CaseService.Data.CaseDepartmentId == dept._id ? "active" : "";
+                    <button class="department-item @isActive"
+                            @onclick="@(() => SelectDepartment(dept._id))">
+                        <div class="case_icon-wrapper">
+                            <img class="case_icon" src="@icon" />
+                        </div>
+                        <p class="department-item-title">@dept.name</p>
+                    </button>
+                }
             </div>
         </div>
-
         <div class="content-footer">
             <button class="btn-primary" @onclick="Next">Continue</button>
         </div>
@@ -70,9 +61,20 @@
 </div>
 
 @code {
+    private List<Departments> departments = new();
+
     protected override async Task OnInitializedAsync()
     {
         await CaseService.Load();
+
+        try
+        {
+            departments = await DepartmentService.GetAllDepartments();
+        }
+        catch (HttpRequestException)
+        {
+            
+        }
     }
 
     private void SelectCaseType(int value) => CaseService.Data.CaseTypeId = value;

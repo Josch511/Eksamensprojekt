@@ -8,6 +8,7 @@
 @inject NavigationManager Nav
 @layout StaffLayout
 @inject NotificationService Notify
+@inject WebApp.Service.IDepartmentService DepartmentService
 
     <div class="desc-header">
         <h3>@(EmployeeId.HasValue ? "My Cases" : "All Cases")</h3>
@@ -95,11 +96,11 @@
     </div>
 
 @code {
-    private string? errorMessage;
     private string selectedType = "";
     private List<Cases> cases = new();
     private List<User> employees = new();
     private string selectedStatus = "All";
+    private List<Departments> departments = new();
 
     private IEnumerable<Cases> FilteredCases => cases.Where(c => MatchesStatus(c.status));
     private bool HasFilteredCases => FilteredCases.Any();
@@ -112,6 +113,19 @@
         "Solved" => status == "Finished",
         _ => true
     };
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            departments = await DepartmentService.GetAllDepartments();
+        }
+        catch (HttpRequestException)
+        {
+           
+        }
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -133,13 +147,11 @@
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            Notify.Error("Case not found.");
-            Navigation.NavigateTo("/case-overview");
+            cases = new List<Cases>();
         }
         catch (Exception)
         {
-            Notify.Error("Case not found.");
-            Navigation.NavigateTo("/case-overview");
+            Notify.Error("Noget gik galt. Prøv igen senere.");
         }
     }
 
@@ -184,15 +196,16 @@
         _ => "Unknown"
     };
 
-    private string DepName(int? id) => id switch
+    private string DepName(int? id)
     {
-        1 => "Software",
-        2 => "Electronic",
-        3 => "Mechanic",
-        4 => "Production",
-        _ => "Unknown"
-    };
-
+        var department = departments.FirstOrDefault(d => d._id == id);
+        if (department != null)
+        {
+            return department.name;
+        }
+        return "Unknown";
+    }
+   
     private string GetStatusClass(string status) => status switch
     {
         "Case received" => "status-open",

@@ -84,14 +84,9 @@
                 assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
             }
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        catch (Exception ex)
         {
-            Notify.Error("Case not found.");
-            Navigation.NavigateTo("/áccount");
-        }
-        catch (Exception)
-        {
-            Notify.Error("Case not found.");
+            Notify.Error(ex.Message);
             Navigation.NavigateTo("/account");
         }
     }
@@ -108,13 +103,17 @@
             createdAt = DateTime.Now,
             commentMessage = commentInput
         };
-        
-        await CaseService.CreateCaseComment(CaseId, update.commentMessage);
 
-        currentCase.caseUpdates.Insert(0, update);
-        commentInput = string.Empty;
-        
+        try
+        {
+            await CaseService.CreateCaseComment(CaseId, update.commentMessage);
+
+            currentCase.caseUpdates.Insert(0, update);
+            commentInput = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            Notify.Error(ex.Message);
+        }
     }
-    
-    
 }

@@ -1,6 +1,6 @@
 ﻿@page "/case-confirm"
 @using WebApp.Service
-@inject CreateCaseService CaseService
+@inject ICreateCaseService CaseService
 @inject NavigationManager Navigation
 @inject NotificationService Notify
 @inject WebApp.Service.IDepartmentService DepartmentService
@@ -77,22 +77,29 @@
             var department = await DepartmentService.GetDepartmentById(CaseService.Data.CaseDepartmentId);
             departmentName = department?.name ?? "Unknown";
         }
-        catch (HttpRequestException)
+        catch (Exception ex)
         {
-            
+            Notify.Error(ex.Message);
         }
     }
     private async Task Send()
     {
-        var result = await CaseService.Submit();
+        try
+        {
+            var result = await CaseService.Submit();
 
-        if (result.success)
-        {
-            Navigation.NavigateTo($"/case-status/{result.caseId}");   
+            if (result.success)
+            {
+                Navigation.NavigateTo($"/case-status/{result.caseId}");
+            }
+            else
+            {
+                Notify.Error(result.error ?? "Error creating case, try again");
+            }
         }
-        else
+        catch(Exception ex)
         {
-            Notify.Error(result.error ?? "Error creating case, try again");
+            Notify.Error(ex.Message);
         }
     }
 }

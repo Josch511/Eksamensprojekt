@@ -121,9 +121,9 @@
         {
             departments = await DepartmentService.GetAllDepartments();
         }
-        catch (HttpRequestException)
+        catch (Exception ex)
         {
-           
+           Notify.Error(ex.Message);
         }
     }
 
@@ -159,19 +159,26 @@
     {
         int? typeId = string.IsNullOrEmpty(selectedType) ? null : int.Parse(selectedType);
 
-        cases = await CaseService.GetFilteredCases(DepartmentId, EmployeeId, typeId, null);
-
-        employees = new List<User>();
-        foreach (var c in cases)
+        try
         {
-            if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
+            cases = await CaseService.GetFilteredCases(DepartmentId, EmployeeId, typeId, null);
+
+            employees = new List<User>();
+            foreach (var c in cases)
             {
-                var user = await UserService.GetUserById(c.assignedEmployeeId.Value);
-                if (user != null && !employees.Any(e => e._id == user._id))
+                if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
                 {
-                    employees.Add(user);
+                    var user = await UserService.GetUserById(c.assignedEmployeeId.Value);
+                    if (user != null && !employees.Any(e => e._id == user._id))
+                    {
+                        employees.Add(user);
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            Notify.Error(ex.Message);
         }
     }
 

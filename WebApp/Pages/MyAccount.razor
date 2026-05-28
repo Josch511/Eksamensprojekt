@@ -1,7 +1,7 @@
 ﻿@page "/account"
 @inject IOrderService OrderService
 @inject ICaseService CaseService
-@inject CreateCaseService CreateCaseService
+@inject ICreateCaseService CreateCaseService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject NavigationManager Navigation
 @using WebApp.Service
@@ -122,14 +122,11 @@
         {
             orders = await OrderService.GetCustomerOrders(userId);
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        catch (Exception ex)
         {
-            Notify.Error("Ingen produkter fundet.");
+            Notify.Error(ex.Message);
         }
-        catch (Exception)
-        {
-            Notify.Error("Noget gik galt ved hentning af produkter.");
-        }
+        
         try
         {
             currentCases = await CaseService.GetCasesById(userId);
@@ -141,18 +138,18 @@
             }
         }
         
-        catch (Exception)
+        catch (Exception ex)
         {
-            Notify.Error("Noget gik galt ved hentning af sager.");
+            Notify.Error(ex.Message);
         }
 
         try
         {
             departments = await DepartmentService.GetAllDepartments();
         }
-        catch (HttpRequestException)
+        catch (Exception ex)
         {
-            
+            Notify.Error(ex.Message);
         }
     }
 
@@ -198,7 +195,4 @@
         orderById.TryGetValue(c.orderItemId, out var order) && order is not null
             ? order.image_url
             : "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80";
-
-
-    
 }

@@ -54,10 +54,15 @@ namespace WebApp.Service
             }
         }
 
-        public async Task<bool> ReleaseCase(int caseId)
+        public async Task ReleaseCase(int caseId)
         {
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/release", new { });
-            return response.IsSuccessStatusCode;
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
         }
 
         public async Task CreateCaseComment(int caseId, string message)
@@ -71,7 +76,7 @@ namespace WebApp.Service
             }
         }
 
-        public async Task<bool> UpdateStatus(int caseId, string status)
+        public async Task UpdateStatus(int caseId, string status)
         {
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/status", status);
             if (!response.IsSuccessStatusCode)
@@ -79,7 +84,6 @@ namespace WebApp.Service
                 var error = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException(error, null, response.StatusCode);
             }
-            return true;
         }
 
         public async Task UpdateTime(int caseId, DateTime timeEst)

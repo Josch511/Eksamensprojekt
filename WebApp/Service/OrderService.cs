@@ -18,7 +18,10 @@ namespace WebApp.Services
             var response = await _http.GetAsync($"orderItems/customer/{userId}");
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Ingen ordrer fundet for bruger {userId}", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
 
             return await response.Content.ReadFromJsonAsync<List<OrderItems>>() ?? new List<OrderItems>();
         }
@@ -28,7 +31,10 @@ namespace WebApp.Services
             var response = await _http.GetAsync($"orderItems/{id}");
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Ordre med id {id} blev ikke fundet", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
 
             return await response.Content.ReadFromJsonAsync<OrderItems>();
         }

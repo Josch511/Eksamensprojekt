@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace WebApp.Service;
 
-public class CreateCaseService
+public class CreateCaseService : ICreateCaseService
 {
     private const string Key = "createcase";
 
@@ -66,15 +66,11 @@ public class CreateCaseService
         };
 
         var response = await http.PostAsJsonAsync("cases", newCase);
+        
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();
-            if (string.IsNullOrWhiteSpace(error))
-            {
-                error = response.ReasonPhrase ?? "Request failed.";
-            }
-
-            return (false, 0, error);
+            throw new HttpRequestException(error, null, response.StatusCode);
         }
 
         var created = await response.Content.ReadFromJsonAsync<Cases>();

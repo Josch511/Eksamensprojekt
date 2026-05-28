@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Core
 @using Service
+@inject IUserService UserService
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -28,14 +29,12 @@
             Notify.Error("Please fill out email & password to continue");
             return;
         }
-        var user = new { email, password };
-        var response = await Http.PostAsJsonAsync("/user/login", user);
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var loggedInUser = await response.Content.ReadFromJsonAsync<User>();
+            var loggedInUser = await UserService.LoginUser(email, password);
+
             await localStorage.SetItemAsync("userId", loggedInUser._id);
-            
 
             if (loggedInUser.role == "employee")
             {
@@ -46,10 +45,9 @@
                 Navigation.NavigateTo("/account");
             }
         }
-        else
+        catch (Exception ex)
         {
-            var errorMessage = await response.Content.ReadAsStringAsync();
-            Notify.Error(errorMessage);
+            Notify.Error(ex.Message);
         }
     }
 }

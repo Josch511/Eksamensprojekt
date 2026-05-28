@@ -138,11 +138,6 @@
             if (currentCase.eta.HasValue)
                 timeEstInput = currentCase.eta.Value;
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-        {
-            Notify.Error(ex.Message);
-            Navigation.NavigateTo("/case-overview");
-        }
         catch (Exception ex)
         {
             Notify.Error(ex.Message);
@@ -154,10 +149,9 @@
     {
         if (string.IsNullOrWhiteSpace(selectedStatus) || selectedStatus == currentCase.status)
             return;
-
-        var success = await CaseService.UpdateStatus(currentCase._id, selectedStatus);
-        if (success)
+        try
         {
+            await CaseService.UpdateStatus(currentCase._id, selectedStatus);
             currentCase.status = selectedStatus;
             CurrentStep = StatusToStep(currentCase.status);
 
@@ -171,6 +165,11 @@
             };
             currentCase.caseUpdates.Insert(0, update);
         }
+        catch(Exception ex)
+        {
+           Notify.Error(ex.Message); 
+        }
+
     }
     private async Task SubmitComment()
     {
@@ -186,36 +185,62 @@
             commentMessage = commentInput
 
         };
-        
-        await CaseService.CreateCaseComment(CaseId, update.commentMessage);
 
-        currentCase.caseUpdates.Insert(0, update);
-        commentInput = string.Empty;
+        try
+        {
+            await CaseService.CreateCaseComment(CaseId, update.commentMessage);
+
+            currentCase.caseUpdates.Insert(0, update);
+            commentInput = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            Notify.Error(ex.Message);
+        }
+        
     }
+    
     
     private async Task ClaimCase()
     {
-        await CaseService.AssignCase(currentCase._id, loggedInUser._id.Value);
-        currentCase.assignedEmployeeId = loggedInUser._id.Value;
-        assignedUser = loggedInUser;
-
-        var update = new CaseUpdate()
+        try
         {
-            message = "Employee has been assigned to the case",
-            isComment = false,
-            createdAt = DateTime.Now
-        };
+            await CaseService.AssignCase(currentCase._id, loggedInUser._id.Value);
+            currentCase.assignedEmployeeId = loggedInUser._id.Value;
+            assignedUser = loggedInUser;
 
-        currentCase.caseUpdates.Insert(0, update);
-        await SetStatusAsync("Assigned employee");
+            var update = new CaseUpdate()
+            {
+                message = "Employee has been assigned to the case",
+                isComment = false,
+                createdAt = DateTime.Now
+            };
+
+            currentCase.caseUpdates.Insert(0, update);
+            await SetStatusAsync("Assigned employee");
+        }
+        catch(Exception ex)
+        {
+            Notify.Error(ex.Message);
+        }
     }
+    
+    
     private async Task ReleaseCase()
     {
-        await CaseService.ReleaseCase(currentCase._id);
-        currentCase.assignedEmployeeId = null;
-        assignedUser = new User();
+        try
+        {
+            await CaseService.ReleaseCase(currentCase._id);
+            currentCase.assignedEmployeeId = null;
+            assignedUser = new User();
 
-        await SetStatusAsync("Case received");
+            await SetStatusAsync("Case received");
+        }
+        catch(Exception ex)
+        {
+            Notify.Error(ex.Message);
+        }
+        
     }
 
     private async Task SetStatusAsync(string status)
@@ -224,37 +249,41 @@
         {
             return;
         }
-        var success = await CaseService.UpdateStatus(currentCase._id, status);
-        if (success)
+
+        try
         {
+            await CaseService.UpdateStatus(currentCase._id, status);
             currentCase.status = status;
             selectedStatus = status;
             CurrentStep = StatusToStep(status);
         }
-    }
-    
-    public class CaseOwner
-    {
-        public int userId = 0;
-        public static string name = "Søren Nielsen";
-        public string? avatar;
-
+        catch (Exception ex)
+        {
+            Notify.Error(ex.Message);
+        }
     }
 
     private async Task SaveTimeEst()
     {
-        await CaseService.UpdateTime(currentCase._id, timeEstInput);
-
-        currentCase.eta = timeEstInput;
-
-        var update = new CaseUpdate()
+        try
         {
-            message = $"Est. resolution updated to {timeEstInput.ToShortDateString()}",
-            isComment = false,
-            createdAt = DateTime.Now
-        };
+            await CaseService.UpdateTime(currentCase._id, timeEstInput);
 
-        currentCase.caseUpdates.Insert(0, update);
+            currentCase.eta = timeEstInput;
+
+            var update = new CaseUpdate()
+            {
+                message = $"Est. resolution updated to {timeEstInput.ToShortDateString()}",
+                isComment = false,
+                createdAt = DateTime.Now
+            };
+
+            currentCase.caseUpdates.Insert(0, update);
+        }
+        catch(Exception ex)
+        {
+            Notify.Error(ex.Message);
+        }
     }
 
     private static int StatusToStep(string status) => status switch

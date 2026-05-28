@@ -19,15 +19,40 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] User user)
     {
-        var existingUser = await _userRepository.LoginUser(user);
-        return Ok(existingUser);
+        if (string.IsNullOrWhiteSpace(user.email) || string.IsNullOrWhiteSpace(user.password))
+        {
+            return BadRequest("Email and password must be filled");
+        }
+        
+        try
+        {
+            var existingUser = await _userRepository.LoginUser(user);
+
+            if (existingUser == null)
+            {
+                return Unauthorized("Email or password is incorrect");
+            }
+
+            return Ok(existingUser);
+        }
+        catch
+        {
+            return StatusCode(500, "Something went wrong on the server");
+        }
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id)
     {
-        var user = await _userRepository.GetUserById(id);
-        return Ok(user);
-    }
+        try
+        {
+            var user = await _userRepository.GetUserById(id);
 
+            return Ok(user);
+        }
+        catch
+        {
+            return StatusCode(500, "Something went wrong on the server");
+        }
+    }
 }

@@ -23,6 +23,11 @@
     
     async Task LoginUser()
     {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            Notify.Error("Please fill out email & password to continue");
+            return;
+        }
         var user = new { email, password };
         var response = await Http.PostAsJsonAsync("/user/login", user);
 
@@ -43,7 +48,8 @@
         }
         else
         {
-            Notify.Error("Email or password is incorrect");
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            Notify.Error(errorMessage);
         }
     }
 }

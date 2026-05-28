@@ -15,22 +15,19 @@ public class UserRepository : IUserRepository
 
     public async Task<User> LoginUser(User user)
     {
-        try
-        {
-            var existingUser = await GetByEmailAsync(user.email);
-            if (existingUser == null)
-                throw new UnauthorizedAccessException("Email eller password forkert");
+        var existingUser = await GetByEmailAsync(user.email);
 
-            return existingUser;
-        }
-        catch (UnauthorizedAccessException)
+        if (existingUser == null)
         {
-            throw;
+            return null;
         }
-        catch (Exception ex)
+        
+        if (user.password != existingUser.password)
         {
-            throw new Exception("Noget gik galt på serveren", ex);
+            return null;
         }
+
+        return existingUser;
     }
 
     public async Task<User?> GetByEmailAsync(string email)
@@ -56,6 +53,4 @@ public class UserRepository : IUserRepository
     {
         return await _users.Find(u => u._id == id).FirstOrDefaultAsync();
     }
-
-   
 }

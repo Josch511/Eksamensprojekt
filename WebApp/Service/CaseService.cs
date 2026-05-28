@@ -62,7 +62,10 @@ namespace WebApp.Service
         public async Task<bool> UpdateStatus(int caseId, string status)
         {
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/status", status);
-            return response.IsSuccessStatusCode;
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException("Could not update case status", null, response.StatusCode);
+
+            return true;
         }
 
         public async Task UpdateTime(int caseId, DateTime timeEst)

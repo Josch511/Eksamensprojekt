@@ -21,13 +21,21 @@ public class DepartmentsController : ControllerBase
     public async Task<IActionResult> GetAllDepartments()
     {
         var departments = await _departmentsRepository.GetAllDepartments();
+
+        if (departments == null || departments.Count == 0)
+            return NotFound("Ingen afdelinger fundet");
+
         return Ok(departments);
     }
 
     [HttpGet("getById/{id}")]
     public async Task<IActionResult> GetDepartmentById(int id)
     {
-        var departments = await _departmentsRepository.GetDepartmentById(id);
-        return Ok(departments);
+        var department = await _departmentsRepository.GetDepartmentById(id);
+
+        if (department is null)
+            return NotFound($"Afdeling med id {id} blev ikke fundet");
+
+        return Ok(department);
     }
 }

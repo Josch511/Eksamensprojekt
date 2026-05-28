@@ -9,6 +9,11 @@
 @using WebApp.Pages.Components
 @using WebApp.Services
 
+@if (errorMessage != null)
+{
+    <p style="color: red;">@errorMessage</p>
+}
+
 <div class="header">
     <h2>Case #@CaseId</h2>
     <div class="action-items">
@@ -108,27 +113,36 @@
 
     private string selectedStatus = "Case received";
     private DateTime timeEstInput;
+    private string? errorMessage;
     
     protected override async Task OnInitializedAsync()
     {
-        currentCase = await CaseService.GetCaseByCaseId(CaseId);
-        currentCase.caseUpdates = currentCase.caseUpdates
-            .OrderByDescending(u => u.createdAt)
-            .ToList();
-
-        int loggedInId = await localStorage.GetItemAsync<int>("userId");
-        loggedInUser = await UserService.GetUserById(loggedInId);
-
-        if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+        try
         {
-            assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+            currentCase = await CaseService.GetCaseByCaseId(CaseId);
+            currentCase.caseUpdates = currentCase.caseUpdates
+                .OrderByDescending(u => u.createdAt)
+                .ToList();
+
+            int loggedInId = await localStorage.GetItemAsync<int>("userId");
+            loggedInUser = await UserService.GetUserById(loggedInId);
+
+            if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+                assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+
+            selectedStatus = currentCase.status;
+            CurrentStep = StatusToStep(currentCase.status);
+
+            if (currentCase.eta.HasValue)
+                timeEstInput = currentCase.eta.Value;
         }
-        selectedStatus = currentCase.status;
-        CurrentStep = StatusToStep(currentCase.status);
-
-        if (currentCase.eta.HasValue)
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            timeEstInput = currentCase.eta.Value;
+            errorMessage = "Sagen blev ikke fundet";
+        }
+        catch (Exception)
+        {
+            errorMessage = "Noget gik galt. Prøv igen senere.";
         }
     }
 

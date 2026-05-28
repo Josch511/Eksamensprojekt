@@ -17,16 +17,22 @@ namespace WebApp.Service
 
         public async Task<List<Cases>> GetCasesById(int id)
         {
-            var cases = await _http.GetFromJsonAsync<List<Cases>>($"cases/{id}");
+            var response = await _http.GetAsync($"cases/{id}");
 
-            return cases ?? new List<Cases>();
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException("Ingen sager fundet", null, response.StatusCode);
+
+            return await response.Content.ReadFromJsonAsync<List<Cases>>() ?? new List<Cases>();
         }
-        
+
         public async Task<Cases> GetCaseByCaseId(int id)
         {
-            var cases = await _http.GetFromJsonAsync<Cases>($"cases/single/{id}");
-            
-            return cases ?? new Cases();
+            var response = await _http.GetAsync($"cases/single/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException($"Sag med id {id} blev ikke fundet", null, response.StatusCode);
+
+            return await response.Content.ReadFromJsonAsync<Cases>() ?? new Cases();
         }
 
         public async Task AssignCase(int caseId, int employeeId)

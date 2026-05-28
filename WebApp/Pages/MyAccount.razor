@@ -9,6 +9,11 @@
 
 <PageTitle>My account</PageTitle>
 
+@if (errorMessage != null)
+{
+    <p style="color: red;">@errorMessage</p>
+}
+
 <div class="account-layout">
     @if (currentCases.Any())
     {
@@ -97,8 +102,8 @@
     private List<OrderItems> orders = new();
     private List<Cases> currentCases = new();
     private Dictionary<int, OrderItems?> orderById = new();
+    private string? errorMessage;
     
-
     protected override async Task OnInitializedAsync()
     {
         var hasUserId = await localStorage.ContainKeyAsync("userId");
@@ -115,15 +120,37 @@
         }
 
         var userId = await localStorage.GetItemAsync<int>("userId");
-       
 
-        orders = await OrderService.GetCustomerOrders(userId);
-        currentCases = await CaseService.GetCasesById(userId);
-
-        var orderIds = currentCases.Select(c => c.orderItemId).Distinct();
-        foreach (var id in orderIds)
+        try
         {
-            orderById[id] = await OrderService.GetOrderById(id);
+            orders = await OrderService.GetCustomerOrders(userId);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            errorMessage = "Du har ingen produkter endnu";
+        }
+        catch (Exception)
+        {
+            errorMessage = "Noget gik galt. Prøv igen senere.";
+        }
+
+        try
+        {
+            currentCases = await CaseService.GetCasesById(userId);
+
+            var orderIds = currentCases.Select(c => c.orderItemId).Distinct();
+            foreach (var id in orderIds)
+            {
+                orderById[id] = await OrderService.GetOrderById(id);
+            }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            
+        }
+        catch (Exception)
+        {
+            errorMessage = "Noget gik galt ved hentning af sager.";
         }
     }
 

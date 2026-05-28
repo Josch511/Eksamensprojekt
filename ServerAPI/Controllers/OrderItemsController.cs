@@ -21,6 +21,9 @@ public class OrderItemsController : ControllerBase
     public async Task<IActionResult> GetByCustomerId(int userId)
     {
         var orders = await _orderItemsRepository.GetOrdersByCustomerId(userId);
+        if (orders == null || orders.Count == 0)
+            return NotFound("Ingen ordrer fundet for denne bruger");
+
         return Ok(orders);
     }
 
@@ -28,7 +31,9 @@ public class OrderItemsController : ControllerBase
     public async Task<IActionResult> GetOrderById(int id)
     {
         var order = await _orderItemsRepository.GetOrderById(id);
-        if (order is null) return NotFound();
+        if (order is null)
+            return NotFound("Ordre ikke fundet");
+
         return Ok(order);
     }
 }

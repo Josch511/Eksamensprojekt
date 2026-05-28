@@ -15,16 +15,22 @@ namespace WebApp.Services
 
         public async Task<List<OrderItems>> GetCustomerOrders(int userId)
         {
-            var orders = await _http.GetFromJsonAsync<List<OrderItems>>
-                ($"orderItems/customer/{userId}");
+            var response = await _http.GetAsync($"orderItems/customer/{userId}");
 
-            return orders ?? new List<OrderItems>();
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException($"Ingen ordrer fundet for bruger {userId}", null, response.StatusCode);
+
+            return await response.Content.ReadFromJsonAsync<List<OrderItems>>() ?? new List<OrderItems>();
         }
+
         public async Task<OrderItems?> GetOrderById(int id)
         {
-            var orders = await _http.GetFromJsonAsync<OrderItems>
-                ($"orderItems/{id}");
-            return orders;
+            var response = await _http.GetAsync($"orderItems/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException($"Ordre med id {id} blev ikke fundet", null, response.StatusCode);
+
+            return await response.Content.ReadFromJsonAsync<OrderItems>();
         }
     }
 }

@@ -7,6 +7,10 @@
 @inject IOrderService OrderService
 @inject IUserService UserService;
 
+@if (errorMessage != null)
+{
+    <p style="color: red;">@errorMessage</p>
+}
 
 <div class="header">
     <h2>Case #@CaseId</h2>
@@ -53,32 +57,44 @@
     private string commentInput = "";
     private int userId;
     private User assignedUser = new();
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        userId = await LocalStorage.GetItemAsync<int>("userId");
-
-        currentCase = await CaseService.GetCaseByCaseId(CaseId);
-        currentCase.caseUpdates = currentCase.caseUpdates
-            .OrderByDescending(u => u.createdAt)
-            .ToList();
-
-        if (currentCase != null)
+        try
         {
-            CurrentStep = currentCase.status switch
+            userId = await LocalStorage.GetItemAsync<int>("userId");
+
+            currentCase = await CaseService.GetCaseByCaseId(CaseId);
+            currentCase.caseUpdates = currentCase.caseUpdates
+                .OrderByDescending(u => u.createdAt)
+                .ToList();
+
+            if (currentCase != null)
             {
-                "Case received"     => 1,
-                "Assigned employee" => 2,
-                "In progress"       => 3,
-                "Testing"           => 4,
-                "Finished"          => 5,
-                _                   => 1
-            };
-        }
+                CurrentStep = currentCase.status switch
+                {
+                    "Case received" => 1,
+                    "Assigned employee" => 2,
+                    "In progress" => 3,
+                    "Testing" => 4,
+                    "Finished" => 5,
+                    _ => 1
+                };
+            }
 
-        if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+            if (currentCase.assignedEmployeeId.HasValue && currentCase.assignedEmployeeId.Value != 0)
+            {
+                assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+            }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            assignedUser = await UserService.GetUserById(currentCase.assignedEmployeeId.Value);
+            errorMessage = "Sagen blev ikke fundet";
+        }
+        catch (Exception)
+        {
+            errorMessage = "Noget gik galt. Prøv igen senere.";
         }
     }
     private async Task SubmitComment()

@@ -8,6 +8,11 @@
 @inject NavigationManager Nav
 @layout StaffLayout
 
+
+    @if (errorMessage != null)
+    {
+        <p style="color: red;">@errorMessage</p>
+    }
     <div class="desc-header">
         <h3>@(EmployeeId.HasValue ? "My Cases" : "All Cases")</h3>
     </div>
@@ -94,6 +99,7 @@
     </div>
 
 @code {
+    private string? errorMessage;
     private string selectedType = "";
     private List<Cases> cases = new();
     private List<User> employees = new();
@@ -115,18 +121,27 @@
     {
         selectedStatus = "All";
 
-        cases = await CaseService.GetFilteredCases(DepartmentId, EmployeeId, null, null);
-
-        foreach (var c in cases)
+        try
         {
-            if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
+            cases = await CaseService.GetFilteredCases(DepartmentId, EmployeeId, null, null);
+
+            foreach (var c in cases)
             {
-                var user = await UserService.GetUserById(c.assignedEmployeeId.Value);
-                if (user != null && !employees.Any(e => e._id == user._id))
+                if (c.assignedEmployeeId.HasValue && c.assignedEmployeeId.Value != 0)
                 {
-                    employees.Add(user);
+                    var user = await UserService.GetUserById(c.assignedEmployeeId.Value);
+                    if (user != null && !employees.Any(e => e._id == user._id))
+                        employees.Add(user);
                 }
             }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            errorMessage = "Ingen sager fundet";
+        }
+        catch (Exception)
+        {
+            errorMessage = "Noget gik galt. Prøv igen senere.";
         }
     }
 

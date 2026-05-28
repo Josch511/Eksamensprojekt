@@ -54,7 +54,11 @@ public class CaseRepository : ICaseRepository
     public async Task<Cases> GetCaseByCaseId(int id)
     {
         var currentCase = await _cases.Find(c => c._id == id).FirstOrDefaultAsync(); 
-        
+        if (currentCase is null)
+        {
+            throw new KeyNotFoundException($"Case {id} not found.");
+        }
+
         currentCase.orderItem = await _orderItemsRepository.GetOrderById(currentCase.orderItemId);
 
         return currentCase;

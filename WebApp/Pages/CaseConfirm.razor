@@ -72,15 +72,15 @@
 
     private async Task Send()
     {
-        var caseId = await CaseService.Submit();
+        var result = await CaseService.Submit();
 
-        if (caseId != 0)
+        if (result.success)
         {
-            Navigation.NavigateTo($"/case-status/{caseId}");   
+            Navigation.NavigateTo($"/case-status/{result.caseId}");   
         }
         else
         {
-            Notify.Error("Error creating case, try again");
+            Notify.Error(result.error ?? "Error creating case, try again");
         }
     }
 }

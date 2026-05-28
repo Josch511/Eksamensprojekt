@@ -43,7 +43,7 @@ public class CreateCaseService
     }
 
 
-    public async Task<int> Submit()
+    public async Task<(bool success, int caseId, string? error)> Submit()
     {
         var newCase = new Cases
         {
@@ -68,13 +68,24 @@ public class CreateCaseService
         var response = await http.PostAsJsonAsync("cases", newCase);
         if (!response.IsSuccessStatusCode)
         {
-            return 0;
+            var error = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(error))
+            {
+                error = response.ReasonPhrase ?? "Request failed.";
+            }
+
+            return (false, 0, error);
         }
 
         var created = await response.Content.ReadFromJsonAsync<Cases>();
         await Clear();
 
-        return created?._id ?? 0;
+        if (created is null)
+        {
+            return (false, 0, "Case response missing.");
+        }
+
+        return (true, created._id, null);
     }
     public class CaseDraft
     {

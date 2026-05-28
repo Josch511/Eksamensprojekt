@@ -6,11 +6,7 @@
 @inject ICaseService CaseService
 @inject IOrderService OrderService
 @inject IUserService UserService;
-
-@if (errorMessage != null)
-{
-    <p style="color: red;">@errorMessage</p>
-}
+@inject NotificationService Notify
 
 <div class="header">
     <h2>Case #@CaseId</h2>
@@ -90,11 +86,13 @@
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            errorMessage = "Sagen blev ikke fundet";
+            Notify.Error("Case not found.");
+            Navigation.NavigateTo("/áccount");
         }
         catch (Exception)
         {
-            errorMessage = "Noget gik galt. Prøv igen senere.";
+            Notify.Error("Case not found.");
+            Navigation.NavigateTo("/account");
         }
     }
     private async Task SubmitComment()

@@ -6,13 +6,9 @@
 @inject NavigationManager Navigation
 @using WebApp.Service
 @using WebApp.Services
+@inject NotificationService Notify
 
 <PageTitle>My account</PageTitle>
-
-@if (errorMessage != null)
-{
-    <p style="color: red;">@errorMessage</p>
-}
 
 <div class="account-layout">
     @if (currentCases.Any())
@@ -127,11 +123,11 @@
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            errorMessage = "Du har ingen produkter endnu";
+            Notify.Error("Case not found.");
         }
         catch (Exception)
         {
-            errorMessage = "Noget gik galt. Prøv igen senere.";
+            Notify.Error("Case not found.");
         }
 
         try

@@ -9,11 +9,6 @@
 @using WebApp.Pages.Components
 @using WebApp.Services
 
-@if (errorMessage != null)
-{
-    <p style="color: red;">@errorMessage</p>
-}
-
 <div class="header">
     <h2>Case #@CaseId</h2>
     <div class="action-items">
@@ -107,14 +102,14 @@
     private Cases currentCase = new();
     private string commentInput = "";
     private int CurrentStep = 1;
-    
+
     private User assignedUser = new();
     private User loggedInUser = new();
 
     private string selectedStatus = "Case received";
     private DateTime timeEstInput;
     private string? errorMessage;
-    
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -138,11 +133,13 @@
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            errorMessage = "Sagen blev ikke fundet";
+            Notify.Error("Case not found.");
+            Navigation.NavigateTo("/case-overview");
         }
         catch (Exception)
         {
-            errorMessage = "Noget gik galt. Prøv igen senere.";
+            Notify.Error("Case not found.");
+            Navigation.NavigateTo("/case-overview");
         }
     }
 

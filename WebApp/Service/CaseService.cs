@@ -37,10 +37,12 @@ namespace WebApp.Service
 
         public async Task AssignCase(int caseId, int employeeId)
         {
-            await _http.PutAsync
-            (
-                $"cases/{caseId}/assign/{employeeId}",null
+            var response = await _http.PutAsync(
+                $"cases/{caseId}/assign/{employeeId}", null
             );
+
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException("Could not assign case", null, response.StatusCode);
         }
 
         public async Task<bool> ReleaseCase(int caseId)
@@ -51,7 +53,10 @@ namespace WebApp.Service
 
         public async Task CreateCaseComment(int caseId, string message)
         {
-            await _http.PostAsJsonAsync($"cases/{caseId}/updates", message);
+            var response = await _http.PostAsJsonAsync($"cases/{caseId}/updates", message);
+
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException("Could not add comment", null, response.StatusCode);
         }
 
         public async Task<bool> UpdateStatus(int caseId, string status)
@@ -62,7 +67,10 @@ namespace WebApp.Service
 
         public async Task UpdateTime(int caseId, DateTime timeEst)
         {
-            await _http.PutAsJsonAsync($"cases/{caseId}/time", timeEst);
+            var response = await _http.PutAsJsonAsync($"cases/{caseId}/time", timeEst);
+
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException("Could not update estimated time", null, response.StatusCode);
         }
 
         public async Task<List<Cases>> GetFilteredCases(int? departmentId, int? employeeId, int? typeId, string? status)
@@ -73,7 +81,12 @@ namespace WebApp.Service
             if (typeId.HasValue) query += $"typeId={typeId}&";
             if (!string.IsNullOrEmpty(status)) query += $"status={status}";
 
-            var cases = await _http.GetFromJsonAsync<List<Cases>>(query);
+            var response = await _http.GetAsync(query);
+
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException("Could not fetch filtered cases", null, response.StatusCode);
+
+            var cases = await response.Content.ReadFromJsonAsync<List<Cases>>();
             return cases ?? new List<Cases>();
         }
     }

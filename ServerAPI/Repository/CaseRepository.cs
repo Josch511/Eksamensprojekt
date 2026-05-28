@@ -49,7 +49,7 @@ public class CaseRepository : ICaseRepository
         return await _cases.Find(c => c.userId == id).ToListAsync();
     }
 
-    public async Task<Cases> GetCaseByCaseId(int id)
+    public async Task<Cases?> GetCaseByCaseId(int id)
     {
         var currentCase = await _cases.Find(c => c._id == id).FirstOrDefaultAsync();
         if (currentCase is null)

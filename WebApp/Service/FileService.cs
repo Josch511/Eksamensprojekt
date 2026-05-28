@@ -36,17 +36,4 @@ public class FileService : IFileService
     }
 
     public string ConvertToUrl(string key) => $"{http.BaseAddress}/uploads/{key}";
-    
-    
-    public async Task<(bool success, string info)> DeleteFile(string filename)
-    {
-        var httpResp = await http.DeleteAsync($"/api/files/delete/{filename}");
-        if (httpResp.IsSuccessStatusCode)
-        {
-            return (true, "File deleted");
-        }
-        return (false, httpResp.ReasonPhrase);
-    }
-    
-    
 }

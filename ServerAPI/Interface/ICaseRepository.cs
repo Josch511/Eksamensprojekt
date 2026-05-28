@@ -7,7 +7,7 @@ namespace ServerAPI.Interface
         Task SaveCase(Cases newcase);
         Task<bool> AddCaseUpdate(int caseId, CaseUpdate caseUpdate);
         Task<List<Cases>> GetCasesById(int id);
-        Task<Cases> GetCaseByCaseId(int id);
+        Task<Cases?> GetCaseByCaseId(int id);
         Task<List<Cases>> GetMyCasesById(int employeeId);
         Task<bool> AssignCase(int caseId, int employeeId);
         Task<bool> ReleaseCase(int caseId);

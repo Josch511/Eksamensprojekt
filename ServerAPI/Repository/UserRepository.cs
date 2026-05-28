@@ -13,7 +13,7 @@ public class UserRepository : IUserRepository
         _users = authRepo.db.GetCollection<User>("user");
     }
 
-    public async Task<User> LoginUser(User user)
+    public async Task<User?> LoginUser(User user)
     {
         var existingUser = await GetByEmailAsync(user.email);
 

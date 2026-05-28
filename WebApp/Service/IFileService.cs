@@ -12,6 +12,4 @@ public interface IFileService
     
     // expand/convert a key for file to an absolute URL for the file
     string ConvertToUrl(string key);
-
-    Task<(bool success, string info)> DeleteFile(string filename);
 }

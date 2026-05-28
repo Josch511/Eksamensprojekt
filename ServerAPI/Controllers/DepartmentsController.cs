@@ -23,7 +23,7 @@ public class DepartmentsController : ControllerBase
         var departments = await _departmentsRepository.GetAllDepartments();
 
         if (departments == null || departments.Count == 0)
-            return NotFound("Ingen afdelinger fundet");
+            return NotFound("No deparments found");
 
         return Ok(departments);
     }
@@ -34,7 +34,7 @@ public class DepartmentsController : ControllerBase
         var department = await _departmentsRepository.GetDepartmentById(id);
 
         if (department is null)
-            return NotFound($"Afdeling med id {id} blev ikke fundet");
+            return NotFound($"Deparment with id {id} not found");
 
         return Ok(department);
     }

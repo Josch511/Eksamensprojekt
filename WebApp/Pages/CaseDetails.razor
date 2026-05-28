@@ -59,9 +59,14 @@
         </div>
         <div class="action-item">
             <label for="caseEta">Est. resolution</label>
-            <input type="date" id="caseEta" class="input-default"
-                   @bind="timeEstInput" />
-            <button class="btn-primary" @onclick="SaveTimeEst">Confirm</button>
+            <div class="inline">
+                <input type="date" id="caseEta" class="input-default"
+                       @bind="timeEstInput" />
+                @if (currentCase.eta != timeEstInput)
+                {
+                    <button class="btn-primary" @onclick="SaveTimeEst">Confirm</button>   
+                }
+            </div>
         </div>
     </div>
     <Stepper CurrentStep="@CurrentStep" />
@@ -135,12 +140,12 @@
         }
         catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            Notify.Error("Case not found.");
+            Notify.Error(ex.Message);
             Navigation.NavigateTo("/case-overview");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            Notify.Error("Case not found.");
+            Notify.Error(ex.Message);
             Navigation.NavigateTo("/case-overview");
         }
     }
@@ -239,6 +244,8 @@
     private async Task SaveTimeEst()
     {
         await CaseService.UpdateTime(currentCase._id, timeEstInput);
+
+        currentCase.eta = timeEstInput;
 
         var update = new CaseUpdate()
         {

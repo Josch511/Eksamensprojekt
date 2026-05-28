@@ -20,7 +20,10 @@ namespace WebApp.Service
             var response = await _http.GetAsync($"cases/{id}");
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException("Ingen sager fundet", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
 
             return await response.Content.ReadFromJsonAsync<List<Cases>>() ?? new List<Cases>();
         }
@@ -30,7 +33,10 @@ namespace WebApp.Service
             var response = await _http.GetAsync($"cases/single/{id}");
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Sag med id {id} blev ikke fundet", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
 
             return await response.Content.ReadFromJsonAsync<Cases>() ?? new Cases();
         }
@@ -42,7 +48,10 @@ namespace WebApp.Service
             );
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException("Could not assign case", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
         }
 
         public async Task<bool> ReleaseCase(int caseId)
@@ -56,15 +65,20 @@ namespace WebApp.Service
             var response = await _http.PostAsJsonAsync($"cases/{caseId}/updates", message);
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException("Could not add comment", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
         }
 
         public async Task<bool> UpdateStatus(int caseId, string status)
         {
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/status", status);
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException("Could not update case status", null, response.StatusCode);
-
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
             return true;
         }
 
@@ -73,7 +87,10 @@ namespace WebApp.Service
             var response = await _http.PutAsJsonAsync($"cases/{caseId}/time", timeEst);
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException("Could not update estimated time", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
         }
 
         public async Task<List<Cases>> GetFilteredCases(int? departmentId, int? employeeId, int? typeId, string? status)
@@ -87,7 +104,10 @@ namespace WebApp.Service
             var response = await _http.GetAsync(query);
 
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException("Could not fetch filtered cases", null, response.StatusCode);
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
 
             var cases = await response.Content.ReadFromJsonAsync<List<Cases>>();
             return cases ?? new List<Cases>();

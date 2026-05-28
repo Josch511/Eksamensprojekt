@@ -35,15 +35,13 @@ public class CaseRepository : ICaseRepository
         await _cases.InsertOneAsync(newcase);
     }
 
-    public async Task AddCaseUpdate(int caseId, CaseUpdate caseUpdate)
+    public async Task<bool> AddCaseUpdate(int caseId, CaseUpdate caseUpdate)
     {
         var update = Builders<Cases>.Update
             .Push(c => c.caseUpdates, caseUpdate);
 
         var result = await _cases.UpdateOneAsync(c => c._id == caseId, update);
-
-        if (result.MatchedCount == 0)
-            throw new KeyNotFoundException($"Case {caseId} not found.");
+        return result.ModifiedCount > 0;
     }
 
     public async Task<List<Cases>> GetCasesById(int id)
@@ -53,10 +51,10 @@ public class CaseRepository : ICaseRepository
 
     public async Task<Cases> GetCaseByCaseId(int id)
     {
-        var currentCase = await _cases.Find(c => c._id == id).FirstOrDefaultAsync(); 
+        var currentCase = await _cases.Find(c => c._id == id).FirstOrDefaultAsync();
         if (currentCase is null)
         {
-            throw new KeyNotFoundException($"Case {id} not found.");
+            return null;
         }
 
         currentCase.orderItem = await _orderItemsRepository.GetOrderById(currentCase.orderItemId);

@@ -140,10 +140,7 @@
                 orderById[id] = await OrderService.GetOrderById(id);
             }
         }
-        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-        {
-            
-        }
+        
         catch (Exception)
         {
             Notify.Error("Noget gik galt ved hentning af sager.");

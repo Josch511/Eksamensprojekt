@@ -1488,4 +1488,9 @@ code {
     justify-content: space-between;
 }
 
+.inline {
+    display: flex;
+    gap: 8px;
+}
+
 

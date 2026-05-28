@@ -5,7 +5,7 @@ namespace ServerAPI.Interface
     public interface ICaseRepository
     {
         Task SaveCase(Cases newcase);
-        Task AddCaseUpdate(int caseId, CaseUpdate caseUpdate);
+        Task<bool> AddCaseUpdate(int caseId, CaseUpdate caseUpdate);
         Task<List<Cases>> GetCasesById(int id);
         Task<Cases> GetCaseByCaseId(int id);
         Task<List<Cases>> GetMyCasesById(int employeeId);

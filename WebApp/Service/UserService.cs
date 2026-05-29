@@ -31,7 +31,15 @@ namespace WebApp.Services
         }
         public async Task<User> GetUserById(int id)
         {
-            return await _http.GetFromJsonAsync<User>($"user/{id}");
+            var response = await _http.GetAsync($"user/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException(error, null, response.StatusCode);
+            }
+
+            return await response.Content.ReadFromJsonAsync<User>() ?? new User();
         }
     }
 }

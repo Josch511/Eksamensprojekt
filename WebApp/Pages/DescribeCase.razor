@@ -86,9 +86,9 @@
         var res = await FileService.SendFile(file.Name, stream);
         
         if (res.success)
-            Notify.Success(res.info);
-        else 
-            Notify.Error(res.info);
+            Notify.Success("File uploaded!");
+        else
+            Notify.Error(res.info); ;
         
         keys.Add(res.info);
         CreateCaseService.Data.CaseInfo.AttachmentUrl = keys;

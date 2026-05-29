@@ -10,90 +10,87 @@
 @inject NotificationService Notify
 @inject WebApp.Service.IDepartmentService DepartmentService
 
-    <div class="desc-header">
-        <h3>@(EmployeeId.HasValue ? "My Cases" : "All Cases")</h3>
+<div class="desc-header">
+    <h3>@(EmployeeId.HasValue ? "My Cases" : "All Cases")</h3>
+</div>
+
+<div class="status-frame">
+    <div class="status-box">
+        <h3 class="status-text">OPEN</h3>
+        <p class="status-num">@OpenCount</p>
     </div>
 
-    <div class="status-frame">
-        <div class="status-box">
-            <h3 class="status-text">OPEN</h3>
-            <p class="status-num">@OpenCount</p>
-        </div>
+    <div class="status-box">
+        <h3 class="status-text">IN PROGRESS</h3>
+        <p class="status-num">@InProgressCount</p>
+    </div>
 
-        <div class="status-box">
-            <h3 class="status-text">IN PROGRESS</h3>
-            <p class="status-num">@InProgressCount</p>
-        </div>
+    <div class="status-box">
+        <h3 class="status-text">FINISHED</h3>
+        <p class="status-num">@SolvedCount</p>
+    </div>
 
-        <div class="status-box">
-            <h3 class="status-text">FINISHED</h3>
-            <p class="status-num">@SolvedCount</p>
-        </div>
+    <div class="status-box">
+        <h3 class="status-text">TOTAL</h3>
+        <p class="status-num">@TotalCount</p>
+    </div>
+</div>
 
-        <div class="status-box">
-            <h3 class="status-text">TOTAL</h3>
-            <p class="status-num">@TotalCount</p>
+<div class="table-box">
+    <div class="table-filters">
+        <div class="table-filters-left">
+            <select class="table-select" name="Status" @bind="selectedStatus">
+                <option value="All">Status</option>
+                <option value="Case received">OPEN</option>
+                <option value="Assigned employee">ASSIGNED</option>
+                <option value="In progress">IN PROGRESS</option>
+                <option value="Finished">FINISHED</option>
+            </select>
+            <select class="table-select" name="Case Type" @bind="selectedType" @bind:after="ApplyFilters">
+                <option value="">Case Type</option>
+                <option value="1">Problem</option>
+                <option value="2">Feature</option>
+            </select>
         </div>
     </div>
 
-    <div class="table-box">
-        <div class="table-filters">
-            <div class="table-filters-left">
-                <select class="table-select" name="Status" @bind="selectedStatus">
-                    <option value="All">Status</option>
-                    <option value="Open">OPEN</option>
-                    <option value="Assigned">ASSIGNED</option>
-                    <option value="InProgress">IN PROGRESS</option>
-                    <option value="Solved">FINISHED</option>
-                </select>
-                <select class="table-select" name="Case Type" @bind="selectedType" @bind:after="ApplyFilters">
-                    <option value="">Case Type</option>
-                    <option value="1">Problem</option>
-                    <option value="2">Feature</option>
-                </select>
-               
-                
-            </div>
-            
-        </div>
-
-        @if (HasFilteredCases)
-        {
-            <table class="cases-table">
-                <thead>
-                    <tr class="table-header">
-                        <th class="table-id">ID</th>
-                        <th class="table-title">TITLE</th>
-                        <th class="table-dep">CATEGORY</th>
-                        <th class="table-dep">TYPE</th>
-                        <th class="table-assign">ASSIGNED</th>
-                        <th class="table-row-status">STATUS</th>
-                        <th class="table-date">DATE</th>
+    @if (HasFilteredCases)
+    {
+        <table class="cases-table">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-id">ID</th>
+                    <th class="table-title">TITLE</th>
+                    <th class="table-dep">CATEGORY</th>
+                    <th class="table-dep">TYPE</th>
+                    <th class="table-assign">ASSIGNED</th>
+                    <th class="table-row-status">STATUS</th>
+                    <th class="table-date">DATE</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in FilteredCases)
+                {
+                    <tr class="table-row" style="cursor:pointer" @onclick='() => Nav.NavigateTo($"/case/{item._id}")'>
+                        <td>#@item._id</td>
+                        <td>@item.title</td>
+                        <td>@DepName(item.departmentId)</td>
+                        <td>@TypeName(item.typeId)</td>
+                        <td>@GetEmployeeName(item.assignedEmployeeId)</td>
+                        <td>
+                            <span class="table-status @GetStatusClass(item.status)">@item.status</span>
+                        </td>
+                        <td>@item.createdAt.ToShortDateString()</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in FilteredCases)
-                    {
-                        <tr class="table-row" style="cursor:pointer" @onclick='() => Nav.NavigateTo($"/case/{item._id}")'>
-                            <td>#@item._id</td>
-                            <td>@item.title</td>
-                            <td>@DepName(item.departmentId)</td>
-                            <td>@TypeName(item.typeId)</td>
-                            <td>@GetEmployeeName(item.assignedEmployeeId)</td>
-                            <td>
-                                <span class="table-status @GetStatusClass(item.status)">@item.status</span>
-                            </td>
-                            <td>@item.createdAt.ToShortDateString()</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <div class="no-cases">No cases found</div>
-        }
-    </div>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="no-cases">No cases found</div>
+    }
+</div>
 
 @code {
     private string selectedType = "";
@@ -107,13 +104,12 @@
 
     private bool MatchesStatus(string status) => selectedStatus switch
     {
-        "Open" => status == "Open" || status == "Case received",
-        "Assigned" => status == "Assigned employee",
-        "InProgress" => status == "In progress" || status == "Testing",
-        "Solved" => status == "Finished",
+        "Case received" => status == "Case received",
+        "Assigned employee" => status == "Assigned employee",
+        "In progress" => status == "In progress" || status == "Testing",
+        "Finished" => status == "Finished",
         _ => true
     };
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,7 +119,7 @@
         }
         catch (Exception ex)
         {
-           Notify.Error(ex.Message);
+            Notify.Error(ex.Message);
         }
     }
 
@@ -188,7 +184,6 @@
     [Parameter]
     public int? EmployeeId { get; set; }
 
-
     private string GetEmployeeName(int? employeeId)
     {
         if (employeeId == null || employeeId == 0) return "Unassigned";
@@ -212,7 +207,7 @@
         }
         return "Unknown";
     }
-   
+
     private string GetStatusClass(string status) => status switch
     {
         "Case received" => "status-open",
@@ -224,7 +219,7 @@
     };
 
     private int TotalCount => cases.Count;
-    private int OpenCount => cases.Count(c => c.status == "Open" || c.status == "Case received");
+    private int OpenCount => cases.Count(c => c.status == "Case received");
     private int InProgressCount => cases.Count(c => c.status == "In progress" || c.status == "Testing");
     private int SolvedCount => cases.Count(c => c.status == "Finished");
 }

@@ -71,7 +71,7 @@
                 {
                     <div class="order-item">
 
-                        <img class="order-item_image" src="@order.image_url">
+                        <img class="order-item_image" src="@order.imageUrl">
 
                         <div class="order-item_info">
 
@@ -79,7 +79,7 @@
 
                             <div class="order-item_info_details">
                                 <p>Serial: @order.serial</p>
-                                <p>Purchased: @order.purchased_at.ToShortDateString()</p>
+                                <p>Purchased: @order.purchasedAt.ToShortDateString()</p>
                             </div>
 
                             <button @onclick="() => CreateCase(order)">
@@ -193,6 +193,6 @@
 
     private string GetImageForCase(Cases c) =>
         orderById.TryGetValue(c.orderItemId, out var order) && order is not null
-            ? order.image_url
+            ? order.imageUrl
             : "https://www.borncut.com/media/zbuk1uvo/img_1315.png?rmode=max&width=0&height=700&v=1db89da02bedbe0&quality=80";
 }

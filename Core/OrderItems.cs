@@ -9,11 +9,9 @@ namespace Core
         public int _id { get; set; }
 
         public string serial { get; set; }
-        public string image_url { get; set; }
+        public string imageUrl { get; set; }
         public string name { get; set; }
-        public DateTime purchased_at { get; set; }
-
-        [BsonElement("userId")]
+        public DateTime purchasedAt { get; set; }
         public int userId { get; set; }
     }
 }
